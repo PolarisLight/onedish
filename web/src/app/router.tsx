@@ -5,6 +5,7 @@ import { EliminationPage } from "../elimination/EliminationPage";
 import { WinnerPage } from "../winner/WinnerPage";
 import { TasteOrbitPage } from "../history/TasteOrbitPage";
 import { PrivacyPage } from "../privacy/PrivacyPage";
+import { NearbyPage } from "../nearby/NearbyPage";
 
 const routes: RouteObject[] = [
   { path: "/", element: <Layout />, children: [
@@ -12,6 +13,7 @@ const routes: RouteObject[] = [
     { path: "setup", element: <HomePage /> },
     { path: "choose/:decisionId", element: <EliminationPage /> },
     { path: "winner/:decisionId", element: <WinnerPage /> },
+    { path: "nearby/:decisionId", element: <NearbyPage /> },
     { path: "history", element: <TasteOrbitPage /> },
     { path: "privacy", element: <PrivacyPage /> },
   ] },

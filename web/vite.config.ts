@@ -12,7 +12,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["icons/*.png", "food/*", "demo/*.json"],
+      includeAssets: ["icons/*.png", "food/*", "demo/*.json", "data/*.json"],
       manifest: {
         name: "OneDish",
         short_name: "OneDish",

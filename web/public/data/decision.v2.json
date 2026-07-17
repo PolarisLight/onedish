@@ -1,0 +1,138 @@
+{
+  "version": "decision.v2",
+  "stage_order": [
+    "found",
+    "available",
+    "safety",
+    "nutrition",
+    "repetition",
+    "taste",
+    "duration",
+    "budget",
+    "winner"
+  ],
+  "score": {
+    "taste_match": 1000,
+    "comfort_match": 450,
+    "confidence": {
+      "authoritative": 880,
+      "high": 660,
+      "medium": 440,
+      "low": 220
+    },
+    "distance_divisor": 5,
+    "price_divisor": 15,
+    "recent_dish": 800,
+    "recent_base_ingredient": 350,
+    "preference_scale": 1000
+  },
+  "relaxation_order": [
+    "recent_repetition",
+    "taste",
+    "duration",
+    "budget"
+  ],
+  "meal_period_tastes": {
+    "breakfast": [
+      "warm",
+      "light"
+    ],
+    "lunch": [
+      "fresh",
+      "filling"
+    ],
+    "dinner": [
+      "warm",
+      "comforting"
+    ]
+  },
+  "locales": {
+    "en": {
+      "currency": "USD",
+      "budget_minor": 2500,
+      "duration_minutes": 20,
+      "distance_unit": "mile",
+      "usd_multiplier": 1.0
+    },
+    "zh-CN": {
+      "currency": "CNY",
+      "budget_minor": 6000,
+      "duration_minutes": 20,
+      "distance_unit": "kilometer",
+      "usd_multiplier": 7.2
+    }
+  },
+  "quick_states": {
+    "light": {
+      "desired_taste_tags": [
+        "light",
+        "fresh",
+        "crisp"
+      ]
+    },
+    "hungry": {
+      "desired_taste_tags": [
+        "filling",
+        "warm"
+      ],
+      "minimum_protein_g": 30
+    },
+    "surprise": {
+      "avoid_top_recent_cuisine": true
+    }
+  },
+  "reasons": {
+    "allergen_excluded": {
+      "en": "Conflicts with your allergy settings",
+      "zh-CN": "与你的过敏原设置冲突"
+    },
+    "ingredient_excluded": {
+      "en": "Contains an excluded ingredient",
+      "zh-CN": "包含已排除的食材"
+    },
+    "place_closed": {
+      "en": "Not open right now",
+      "zh-CN": "当前未营业"
+    },
+    "missing_order_destination": {
+      "en": "Not available in this catalog",
+      "zh-CN": "当前目录不可用"
+    },
+    "energy_outside_range": {
+      "en": "Outside today's energy range",
+      "zh-CN": "不符合今天的能量范围"
+    },
+    "protein_below_floor": {
+      "en": "Not enough protein today",
+      "zh-CN": "今天的蛋白质不足"
+    },
+    "recent_repetition": {
+      "en": "Too similar to a recent meal",
+      "zh-CN": "与近期用餐过于相似"
+    },
+    "taste_mismatch": {
+      "en": "A weaker taste match today",
+      "zh-CN": "与今天想吃的口味匹配较弱"
+    },
+    "too_slow": {
+      "en": "Takes longer than you want",
+      "zh-CN": "所需时间超过你的预期"
+    },
+    "over_budget": {
+      "en": "Over your usual budget",
+      "zh-CN": "超过你的常用预算"
+    },
+    "lower_score": {
+      "en": "A weaker match for today",
+      "zh-CN": "与今天的状态匹配较弱"
+    },
+    "session_excluded": {
+      "en": "Skipped in this session",
+      "zh-CN": "本次已跳过"
+    },
+    "reserve_or_lower_score": {
+      "en": "A strong alternative, but not today's one",
+      "zh-CN": "是不错的备选，但不是今天这一道"
+    }
+  }
+}

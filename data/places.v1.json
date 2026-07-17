@@ -1,0 +1,125 @@
+{
+  "version": "places.v1",
+  "places": [
+    {
+      "id": "fixture-ember-bowl",
+      "name": "Ember Bowl",
+      "category": "Restaurant",
+      "distance_m": 420,
+      "price_tier": 2,
+      "rating": 8.8,
+      "open_state": "open",
+      "order_destination": "https://example.com/search?q=ember-bowl",
+      "source_kind": "fixture_place",
+      "attribution": "OneDish fixture place"
+    },
+    {
+      "id": "fixture-green-room",
+      "name": "Green Room",
+      "category": "Restaurant",
+      "distance_m": 555,
+      "price_tier": 2,
+      "rating": 8.7,
+      "open_state": "open",
+      "order_destination": "https://example.com/search?q=green-room",
+      "source_kind": "fixture_place",
+      "attribution": "OneDish fixture place"
+    },
+    {
+      "id": "fixture-copper-tandoor",
+      "name": "Copper Tandoor",
+      "category": "Restaurant",
+      "distance_m": 690,
+      "price_tier": 2,
+      "rating": 8.5,
+      "open_state": "open",
+      "order_destination": "https://example.com/search?q=copper-tandoor",
+      "source_kind": "fixture_place",
+      "attribution": "OneDish fixture place"
+    },
+    {
+      "id": "fixture-mesa-luna",
+      "name": "Mesa Luna",
+      "category": "Restaurant",
+      "distance_m": 825,
+      "price_tier": 2,
+      "rating": 8.4,
+      "open_state": "open",
+      "order_destination": "https://example.com/search?q=mesa-luna",
+      "source_kind": "fixture_place",
+      "attribution": "OneDish fixture place"
+    },
+    {
+      "id": "fixture-olive-line",
+      "name": "Olive Line",
+      "category": "Restaurant",
+      "distance_m": 960,
+      "price_tier": 2,
+      "rating": 8.3,
+      "open_state": "open",
+      "order_destination": "https://example.com/search?q=olive-line",
+      "source_kind": "fixture_place",
+      "attribution": "OneDish fixture place"
+    },
+    {
+      "id": "fixture-night-market",
+      "name": "Night Market",
+      "category": "Restaurant",
+      "distance_m": 1095,
+      "price_tier": 2,
+      "rating": 8.2,
+      "open_state": "open",
+      "order_destination": "https://example.com/search?q=night-market",
+      "source_kind": "fixture_place",
+      "attribution": "OneDish fixture place"
+    },
+    {
+      "id": "fixture-grain-signal",
+      "name": "Grain Signal",
+      "category": "Restaurant",
+      "distance_m": 1230,
+      "price_tier": 2,
+      "rating": 8.0,
+      "open_state": "open",
+      "order_destination": "https://example.com/search?q=grain-signal",
+      "source_kind": "fixture_place",
+      "attribution": "OneDish fixture place"
+    },
+    {
+      "id": "fixture-broth-house",
+      "name": "Broth House",
+      "category": "Restaurant",
+      "distance_m": 1365,
+      "price_tier": 2,
+      "rating": 7.9,
+      "open_state": "open",
+      "order_destination": "https://example.com/search?q=broth-house",
+      "source_kind": "fixture_place",
+      "attribution": "OneDish fixture place"
+    },
+    {
+      "id": "fixture-field-fire",
+      "name": "Field & Fire",
+      "category": "Restaurant",
+      "distance_m": 1500,
+      "price_tier": 2,
+      "rating": 7.8,
+      "open_state": "closed",
+      "order_destination": "https://example.com/search?q=field-fire",
+      "source_kind": "fixture_place",
+      "attribution": "OneDish fixture place"
+    },
+    {
+      "id": "fixture-sumac-kitchen",
+      "name": "Sumac Kitchen",
+      "category": "Restaurant",
+      "distance_m": 1635,
+      "price_tier": 2,
+      "rating": 7.6,
+      "open_state": "open",
+      "order_destination": "https://example.com/search?q=sumac-kitchen",
+      "source_kind": "fixture_place",
+      "attribution": "OneDish fixture place"
+    }
+  ]
+}

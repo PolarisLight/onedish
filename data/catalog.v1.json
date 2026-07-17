@@ -1,0 +1,3500 @@
+{
+  "version": "catalog.v1",
+  "restaurants": [
+    {
+      "id": "ember-bowl",
+      "name": "Ember Bowl",
+      "cuisine_tags": [
+        "asian"
+      ],
+      "source_kind": "demo_restaurant"
+    },
+    {
+      "id": "green-room",
+      "name": "Green Room",
+      "cuisine_tags": [
+        "mediterranean"
+      ],
+      "source_kind": "demo_restaurant"
+    },
+    {
+      "id": "copper-tandoor",
+      "name": "Copper Tandoor",
+      "cuisine_tags": [
+        "indian"
+      ],
+      "source_kind": "demo_restaurant"
+    },
+    {
+      "id": "mesa-luna",
+      "name": "Mesa Luna",
+      "cuisine_tags": [
+        "latin"
+      ],
+      "source_kind": "demo_restaurant"
+    },
+    {
+      "id": "olive-line",
+      "name": "Olive Line",
+      "cuisine_tags": [
+        "mediterranean"
+      ],
+      "source_kind": "demo_restaurant"
+    },
+    {
+      "id": "night-market",
+      "name": "Night Market",
+      "cuisine_tags": [
+        "asian"
+      ],
+      "source_kind": "demo_restaurant"
+    },
+    {
+      "id": "grain-signal",
+      "name": "Grain Signal",
+      "cuisine_tags": [
+        "mixed"
+      ],
+      "source_kind": "demo_restaurant"
+    },
+    {
+      "id": "broth-house",
+      "name": "Broth House",
+      "cuisine_tags": [
+        "asian"
+      ],
+      "source_kind": "demo_restaurant"
+    },
+    {
+      "id": "field-fire",
+      "name": "Field & Fire",
+      "cuisine_tags": [
+        "american"
+      ],
+      "source_kind": "demo_restaurant"
+    },
+    {
+      "id": "sumac-kitchen",
+      "name": "Sumac Kitchen",
+      "cuisine_tags": [
+        "middle-eastern"
+      ],
+      "source_kind": "demo_restaurant"
+    }
+  ],
+  "dishes": [
+    {
+      "id": "ember-bowl-charred-chicken-rice",
+      "restaurant_id": "ember-bowl",
+      "name": "Charred Chicken Rice Bowl",
+      "description": "A fictional demo serving of charred chicken rice bowl with an Asian-inspired profile.",
+      "price_minor": 1080,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 545,
+        "max": 645
+      },
+      "protein_g": {
+        "min": 42,
+        "max": 50
+      },
+      "confidence": "high",
+      "allergens": [
+        "soy",
+        "sesame"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "rice",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "rice",
+      "image": "/food/ember-bowl-charred-chicken-rice.webp",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "ember-bowl-ginger-tofu-bowl",
+      "restaurant_id": "ember-bowl",
+      "name": "Ginger Tofu Bowl",
+      "description": "A fictional demo serving of ginger tofu bowl with an Asian-inspired profile.",
+      "price_minor": 1137,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 465,
+        "max": 575
+      },
+      "protein_g": {
+        "min": 25,
+        "max": 34
+      },
+      "confidence": "medium",
+      "allergens": [
+        "soy",
+        "sesame"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "rice",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "fresh"
+      ],
+      "base_ingredient": "rice",
+      "image": "/food/ember-bowl.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "ember-bowl-crisp-herb-salad",
+      "restaurant_id": "ember-bowl",
+      "name": "Crisp Herb Salad",
+      "description": "A fictional demo serving of crisp herb salad with an Asian-inspired profile.",
+      "price_minor": 1194,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 315,
+        "max": 415
+      },
+      "protein_g": {
+        "min": 18,
+        "max": 26
+      },
+      "confidence": "medium",
+      "allergens": [
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "greens",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "cold",
+        "light",
+        "crisp"
+      ],
+      "base_ingredient": "greens",
+      "image": "/food/ember-bowl.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "ember-bowl-fire-noodle-cup",
+      "restaurant_id": "ember-bowl",
+      "name": "Fire Noodle Cup",
+      "description": "A fictional demo serving of fire noodle cup with an Asian-inspired profile.",
+      "price_minor": 1251,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 595,
+        "max": 745
+      },
+      "protein_g": {
+        "min": 21,
+        "max": 30
+      },
+      "confidence": "high",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "noodles",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "spicy",
+        "rich"
+      ],
+      "base_ingredient": "noodles",
+      "image": "/food/ember-bowl.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "ember-bowl-turmeric-chicken-wrap",
+      "restaurant_id": "ember-bowl",
+      "name": "Turmeric Chicken Wrap",
+      "description": "A fictional demo serving of turmeric chicken wrap with an Asian-inspired profile.",
+      "price_minor": 1308,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 495,
+        "max": 615
+      },
+      "protein_g": {
+        "min": 36,
+        "max": 44
+      },
+      "confidence": "medium",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "flatbread",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "flatbread",
+      "image": "/food/ember-bowl.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "ember-bowl-lentil-comfort-curry",
+      "restaurant_id": "ember-bowl",
+      "name": "Lentil Comfort Curry",
+      "description": "A fictional demo serving of lentil comfort curry with an Asian-inspired profile.",
+      "price_minor": 1365,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 455,
+        "max": 585
+      },
+      "protein_g": {
+        "min": 24,
+        "max": 32
+      },
+      "confidence": "medium",
+      "allergens": [],
+      "possible_allergens": [],
+      "ingredients": [
+        "lentils",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "comforting"
+      ],
+      "base_ingredient": "lentils",
+      "image": "/food/ember-bowl.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "ember-bowl-miso-salmon-plate",
+      "restaurant_id": "ember-bowl",
+      "name": "Miso Salmon Plate",
+      "description": "A fictional demo serving of miso salmon plate with an Asian-inspired profile.",
+      "price_minor": 1422,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 505,
+        "max": 635
+      },
+      "protein_g": {
+        "min": 39,
+        "max": 48
+      },
+      "confidence": "high",
+      "allergens": [
+        "fish",
+        "soy"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "fish",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "fresh"
+      ],
+      "base_ingredient": "fish",
+      "image": "/food/ember-bowl.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "ember-bowl-roasted-veg-soup",
+      "restaurant_id": "ember-bowl",
+      "name": "Roasted Vegetable Soup",
+      "description": "A fictional demo serving of roasted vegetable soup with an Asian-inspired profile.",
+      "price_minor": 1479,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 285,
+        "max": 405
+      },
+      "protein_g": {
+        "min": 12,
+        "max": 20
+      },
+      "confidence": "medium",
+      "allergens": [
+        "celery"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "vegetables",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "light",
+        "comforting"
+      ],
+      "base_ingredient": "vegetables",
+      "image": "/food/ember-bowl.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "ember-bowl-smoky-beef-plate",
+      "restaurant_id": "ember-bowl",
+      "name": "Smoky Beef Plate",
+      "description": "A fictional demo serving of smoky beef plate with an Asian-inspired profile.",
+      "price_minor": 1536,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 635,
+        "max": 775
+      },
+      "protein_g": {
+        "min": 45,
+        "max": 55
+      },
+      "confidence": "medium",
+      "allergens": [
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "beef",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "rich",
+        "filling"
+      ],
+      "base_ingredient": "beef",
+      "image": "/food/ember-bowl.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "green-room-charred-chicken-rice",
+      "restaurant_id": "green-room",
+      "name": "Charred Chicken Rice Bowl",
+      "description": "A fictional demo serving of charred chicken rice bowl with a mediterranean profile.",
+      "price_minor": 1125,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 560,
+        "max": 660
+      },
+      "protein_g": {
+        "min": 43,
+        "max": 51
+      },
+      "confidence": "high",
+      "allergens": [
+        "soy",
+        "sesame"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "rice",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mediterranean"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "rice",
+      "image": "/food/green-room.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "green-room-ginger-tofu-bowl",
+      "restaurant_id": "green-room",
+      "name": "Ginger Tofu Bowl",
+      "description": "A fictional demo serving of ginger tofu bowl with a mediterranean profile.",
+      "price_minor": 1182,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 480,
+        "max": 590
+      },
+      "protein_g": {
+        "min": 26,
+        "max": 35
+      },
+      "confidence": "medium",
+      "allergens": [
+        "soy",
+        "sesame"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "rice",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mediterranean"
+      ],
+      "taste_tags": [
+        "warm",
+        "fresh"
+      ],
+      "base_ingredient": "rice",
+      "image": "/food/green-room.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "green-room-crisp-herb-salad",
+      "restaurant_id": "green-room",
+      "name": "Crisp Herb Salad",
+      "description": "A fictional demo serving of crisp herb salad with a mediterranean profile.",
+      "price_minor": 1239,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 330,
+        "max": 430
+      },
+      "protein_g": {
+        "min": 19,
+        "max": 27
+      },
+      "confidence": "medium",
+      "allergens": [
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "greens",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mediterranean"
+      ],
+      "taste_tags": [
+        "cold",
+        "light",
+        "crisp"
+      ],
+      "base_ingredient": "greens",
+      "image": "/food/green-room.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "green-room-fire-noodle-cup",
+      "restaurant_id": "green-room",
+      "name": "Fire Noodle Cup",
+      "description": "A fictional demo serving of fire noodle cup with a mediterranean profile.",
+      "price_minor": 1296,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 610,
+        "max": 760
+      },
+      "protein_g": {
+        "min": 22,
+        "max": 31
+      },
+      "confidence": "high",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "noodles",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mediterranean"
+      ],
+      "taste_tags": [
+        "warm",
+        "spicy",
+        "rich"
+      ],
+      "base_ingredient": "noodles",
+      "image": "/food/green-room.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "green-room-turmeric-chicken-wrap",
+      "restaurant_id": "green-room",
+      "name": "Turmeric Chicken Wrap",
+      "description": "A fictional demo serving of turmeric chicken wrap with a mediterranean profile.",
+      "price_minor": 1353,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 510,
+        "max": 630
+      },
+      "protein_g": {
+        "min": 37,
+        "max": 45
+      },
+      "confidence": "medium",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "flatbread",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mediterranean"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "flatbread",
+      "image": "/food/green-room.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "green-room-lentil-comfort-curry",
+      "restaurant_id": "green-room",
+      "name": "Lentil Comfort Curry",
+      "description": "A fictional demo serving of lentil comfort curry with a mediterranean profile.",
+      "price_minor": 1410,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 470,
+        "max": 600
+      },
+      "protein_g": {
+        "min": 25,
+        "max": 33
+      },
+      "confidence": "medium",
+      "allergens": [],
+      "possible_allergens": [],
+      "ingredients": [
+        "lentils",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mediterranean"
+      ],
+      "taste_tags": [
+        "warm",
+        "comforting"
+      ],
+      "base_ingredient": "lentils",
+      "image": "/food/green-room.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "green-room-miso-salmon-plate",
+      "restaurant_id": "green-room",
+      "name": "Miso Salmon Plate",
+      "description": "A fictional demo serving of miso salmon plate with a mediterranean profile.",
+      "price_minor": 1467,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 520,
+        "max": 650
+      },
+      "protein_g": {
+        "min": 40,
+        "max": 49
+      },
+      "confidence": "high",
+      "allergens": [
+        "fish",
+        "soy"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "fish",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mediterranean"
+      ],
+      "taste_tags": [
+        "warm",
+        "fresh"
+      ],
+      "base_ingredient": "fish",
+      "image": "/food/green-room.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "green-room-roasted-veg-soup",
+      "restaurant_id": "green-room",
+      "name": "Roasted Vegetable Soup",
+      "description": "A fictional demo serving of roasted vegetable soup with a mediterranean profile.",
+      "price_minor": 1524,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 300,
+        "max": 420
+      },
+      "protein_g": {
+        "min": 13,
+        "max": 21
+      },
+      "confidence": "medium",
+      "allergens": [
+        "celery"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "vegetables",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mediterranean"
+      ],
+      "taste_tags": [
+        "warm",
+        "light",
+        "comforting"
+      ],
+      "base_ingredient": "vegetables",
+      "image": "/food/green-room.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "green-room-smoky-beef-plate",
+      "restaurant_id": "green-room",
+      "name": "Smoky Beef Plate",
+      "description": "A fictional demo serving of smoky beef plate with a mediterranean profile.",
+      "price_minor": 1581,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 650,
+        "max": 790
+      },
+      "protein_g": {
+        "min": 46,
+        "max": 56
+      },
+      "confidence": "medium",
+      "allergens": [
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "beef",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mediterranean"
+      ],
+      "taste_tags": [
+        "warm",
+        "rich",
+        "filling"
+      ],
+      "base_ingredient": "beef",
+      "image": "/food/green-room.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "copper-tandoor-charred-chicken-rice",
+      "restaurant_id": "copper-tandoor",
+      "name": "Charred Chicken Rice Bowl",
+      "description": "A fictional demo serving of charred chicken rice bowl with an Indian-inspired profile.",
+      "price_minor": 1170,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 575,
+        "max": 675
+      },
+      "protein_g": {
+        "min": 44,
+        "max": 52
+      },
+      "confidence": "high",
+      "allergens": [
+        "soy",
+        "sesame"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "rice",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "indian"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "rice",
+      "image": "/food/copper-tandoor.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "copper-tandoor-ginger-tofu-bowl",
+      "restaurant_id": "copper-tandoor",
+      "name": "Ginger Tofu Bowl",
+      "description": "A fictional demo serving of ginger tofu bowl with an Indian-inspired profile.",
+      "price_minor": 1227,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 495,
+        "max": 605
+      },
+      "protein_g": {
+        "min": 27,
+        "max": 36
+      },
+      "confidence": "medium",
+      "allergens": [
+        "soy",
+        "sesame"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "rice",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "indian"
+      ],
+      "taste_tags": [
+        "warm",
+        "fresh"
+      ],
+      "base_ingredient": "rice",
+      "image": "/food/copper-tandoor.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "copper-tandoor-crisp-herb-salad",
+      "restaurant_id": "copper-tandoor",
+      "name": "Crisp Herb Salad",
+      "description": "A fictional demo serving of crisp herb salad with an Indian-inspired profile.",
+      "price_minor": 1284,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 345,
+        "max": 445
+      },
+      "protein_g": {
+        "min": 20,
+        "max": 28
+      },
+      "confidence": "medium",
+      "allergens": [
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "greens",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "indian"
+      ],
+      "taste_tags": [
+        "cold",
+        "light",
+        "crisp"
+      ],
+      "base_ingredient": "greens",
+      "image": "/food/copper-tandoor.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "copper-tandoor-fire-noodle-cup",
+      "restaurant_id": "copper-tandoor",
+      "name": "Fire Noodle Cup",
+      "description": "A fictional demo serving of fire noodle cup with an Indian-inspired profile.",
+      "price_minor": 1341,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 625,
+        "max": 775
+      },
+      "protein_g": {
+        "min": 23,
+        "max": 32
+      },
+      "confidence": "high",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "noodles",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "indian"
+      ],
+      "taste_tags": [
+        "warm",
+        "spicy",
+        "rich"
+      ],
+      "base_ingredient": "noodles",
+      "image": "/food/copper-tandoor.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "copper-tandoor-turmeric-chicken-wrap",
+      "restaurant_id": "copper-tandoor",
+      "name": "Turmeric Chicken Wrap",
+      "description": "A fictional demo serving of turmeric chicken wrap with an Indian-inspired profile.",
+      "price_minor": 1398,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 525,
+        "max": 645
+      },
+      "protein_g": {
+        "min": 38,
+        "max": 46
+      },
+      "confidence": "medium",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "flatbread",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "indian"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "flatbread",
+      "image": "/food/copper-tandoor.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "copper-tandoor-lentil-comfort-curry",
+      "restaurant_id": "copper-tandoor",
+      "name": "Lentil Comfort Curry",
+      "description": "A fictional demo serving of lentil comfort curry with an Indian-inspired profile.",
+      "price_minor": 1455,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 485,
+        "max": 615
+      },
+      "protein_g": {
+        "min": 26,
+        "max": 34
+      },
+      "confidence": "medium",
+      "allergens": [],
+      "possible_allergens": [],
+      "ingredients": [
+        "lentils",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "indian"
+      ],
+      "taste_tags": [
+        "warm",
+        "comforting"
+      ],
+      "base_ingredient": "lentils",
+      "image": "/food/copper-tandoor.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "copper-tandoor-miso-salmon-plate",
+      "restaurant_id": "copper-tandoor",
+      "name": "Miso Salmon Plate",
+      "description": "A fictional demo serving of miso salmon plate with an Indian-inspired profile.",
+      "price_minor": 1512,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 535,
+        "max": 665
+      },
+      "protein_g": {
+        "min": 41,
+        "max": 50
+      },
+      "confidence": "high",
+      "allergens": [
+        "fish",
+        "soy"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "fish",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "indian"
+      ],
+      "taste_tags": [
+        "warm",
+        "fresh"
+      ],
+      "base_ingredient": "fish",
+      "image": "/food/copper-tandoor.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "copper-tandoor-roasted-veg-soup",
+      "restaurant_id": "copper-tandoor",
+      "name": "Roasted Vegetable Soup",
+      "description": "A fictional demo serving of roasted vegetable soup with an Indian-inspired profile.",
+      "price_minor": 1569,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 315,
+        "max": 435
+      },
+      "protein_g": {
+        "min": 14,
+        "max": 22
+      },
+      "confidence": "medium",
+      "allergens": [
+        "celery"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "vegetables",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "indian"
+      ],
+      "taste_tags": [
+        "warm",
+        "light",
+        "comforting"
+      ],
+      "base_ingredient": "vegetables",
+      "image": "/food/copper-tandoor.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "copper-tandoor-smoky-beef-plate",
+      "restaurant_id": "copper-tandoor",
+      "name": "Smoky Beef Plate",
+      "description": "A fictional demo serving of smoky beef plate with an Indian-inspired profile.",
+      "price_minor": 1626,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 665,
+        "max": 805
+      },
+      "protein_g": {
+        "min": 47,
+        "max": 57
+      },
+      "confidence": "medium",
+      "allergens": [
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "beef",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "indian"
+      ],
+      "taste_tags": [
+        "warm",
+        "rich",
+        "filling"
+      ],
+      "base_ingredient": "beef",
+      "image": "/food/copper-tandoor.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "mesa-luna-charred-chicken-rice",
+      "restaurant_id": "mesa-luna",
+      "name": "Charred Chicken Rice Bowl",
+      "description": "A fictional demo serving of charred chicken rice bowl with a latin profile.",
+      "price_minor": 1215,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 545,
+        "max": 645
+      },
+      "protein_g": {
+        "min": 45,
+        "max": 53
+      },
+      "confidence": "high",
+      "allergens": [
+        "soy",
+        "sesame"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "rice",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "latin"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "rice",
+      "image": "/food/mesa-luna.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "mesa-luna-ginger-tofu-bowl",
+      "restaurant_id": "mesa-luna",
+      "name": "Ginger Tofu Bowl",
+      "description": "A fictional demo serving of ginger tofu bowl with a latin profile.",
+      "price_minor": 1272,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 465,
+        "max": 575
+      },
+      "protein_g": {
+        "min": 28,
+        "max": 37
+      },
+      "confidence": "medium",
+      "allergens": [
+        "soy",
+        "sesame"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "rice",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "latin"
+      ],
+      "taste_tags": [
+        "warm",
+        "fresh"
+      ],
+      "base_ingredient": "rice",
+      "image": "/food/mesa-luna.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "mesa-luna-crisp-herb-salad",
+      "restaurant_id": "mesa-luna",
+      "name": "Crisp Herb Salad",
+      "description": "A fictional demo serving of crisp herb salad with a latin profile.",
+      "price_minor": 1329,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 315,
+        "max": 415
+      },
+      "protein_g": {
+        "min": 21,
+        "max": 29
+      },
+      "confidence": "medium",
+      "allergens": [
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "greens",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "latin"
+      ],
+      "taste_tags": [
+        "cold",
+        "light",
+        "crisp"
+      ],
+      "base_ingredient": "greens",
+      "image": "/food/mesa-luna.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "mesa-luna-fire-noodle-cup",
+      "restaurant_id": "mesa-luna",
+      "name": "Fire Noodle Cup",
+      "description": "A fictional demo serving of fire noodle cup with a latin profile.",
+      "price_minor": 1386,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 595,
+        "max": 745
+      },
+      "protein_g": {
+        "min": 24,
+        "max": 33
+      },
+      "confidence": "high",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "noodles",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "latin"
+      ],
+      "taste_tags": [
+        "warm",
+        "spicy",
+        "rich"
+      ],
+      "base_ingredient": "noodles",
+      "image": "/food/mesa-luna.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "mesa-luna-turmeric-chicken-wrap",
+      "restaurant_id": "mesa-luna",
+      "name": "Turmeric Chicken Wrap",
+      "description": "A fictional demo serving of turmeric chicken wrap with a latin profile.",
+      "price_minor": 1443,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 495,
+        "max": 615
+      },
+      "protein_g": {
+        "min": 39,
+        "max": 47
+      },
+      "confidence": "medium",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "flatbread",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "latin"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "flatbread",
+      "image": "/food/mesa-luna.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "mesa-luna-lentil-comfort-curry",
+      "restaurant_id": "mesa-luna",
+      "name": "Lentil Comfort Curry",
+      "description": "A fictional demo serving of lentil comfort curry with a latin profile.",
+      "price_minor": 1500,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 455,
+        "max": 585
+      },
+      "protein_g": {
+        "min": 27,
+        "max": 35
+      },
+      "confidence": "medium",
+      "allergens": [],
+      "possible_allergens": [],
+      "ingredients": [
+        "lentils",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "latin"
+      ],
+      "taste_tags": [
+        "warm",
+        "comforting"
+      ],
+      "base_ingredient": "lentils",
+      "image": "/food/mesa-luna.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "mesa-luna-miso-salmon-plate",
+      "restaurant_id": "mesa-luna",
+      "name": "Miso Salmon Plate",
+      "description": "A fictional demo serving of miso salmon plate with a latin profile.",
+      "price_minor": 1557,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 505,
+        "max": 635
+      },
+      "protein_g": {
+        "min": 42,
+        "max": 51
+      },
+      "confidence": "high",
+      "allergens": [
+        "fish",
+        "soy"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "fish",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "latin"
+      ],
+      "taste_tags": [
+        "warm",
+        "fresh"
+      ],
+      "base_ingredient": "fish",
+      "image": "/food/mesa-luna.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "mesa-luna-roasted-veg-soup",
+      "restaurant_id": "mesa-luna",
+      "name": "Roasted Vegetable Soup",
+      "description": "A fictional demo serving of roasted vegetable soup with a latin profile.",
+      "price_minor": 1614,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 285,
+        "max": 405
+      },
+      "protein_g": {
+        "min": 15,
+        "max": 23
+      },
+      "confidence": "medium",
+      "allergens": [
+        "celery"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "vegetables",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "latin"
+      ],
+      "taste_tags": [
+        "warm",
+        "light",
+        "comforting"
+      ],
+      "base_ingredient": "vegetables",
+      "image": "/food/mesa-luna.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "mesa-luna-smoky-beef-plate",
+      "restaurant_id": "mesa-luna",
+      "name": "Smoky Beef Plate",
+      "description": "A fictional demo serving of smoky beef plate with a latin profile.",
+      "price_minor": 1671,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 635,
+        "max": 775
+      },
+      "protein_g": {
+        "min": 48,
+        "max": 58
+      },
+      "confidence": "medium",
+      "allergens": [
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "beef",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "latin"
+      ],
+      "taste_tags": [
+        "warm",
+        "rich",
+        "filling"
+      ],
+      "base_ingredient": "beef",
+      "image": "/food/mesa-luna.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "olive-line-charred-chicken-rice",
+      "restaurant_id": "olive-line",
+      "name": "Charred Chicken Rice Bowl",
+      "description": "A fictional demo serving of charred chicken rice bowl with a mediterranean profile.",
+      "price_minor": 1260,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 560,
+        "max": 660
+      },
+      "protein_g": {
+        "min": 42,
+        "max": 50
+      },
+      "confidence": "high",
+      "allergens": [
+        "soy",
+        "sesame"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "rice",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mediterranean"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "rice",
+      "image": "/food/olive-line.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "olive-line-ginger-tofu-bowl",
+      "restaurant_id": "olive-line",
+      "name": "Ginger Tofu Bowl",
+      "description": "A fictional demo serving of ginger tofu bowl with a mediterranean profile.",
+      "price_minor": 1317,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 480,
+        "max": 590
+      },
+      "protein_g": {
+        "min": 25,
+        "max": 34
+      },
+      "confidence": "medium",
+      "allergens": [
+        "soy",
+        "sesame"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "rice",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mediterranean"
+      ],
+      "taste_tags": [
+        "warm",
+        "fresh"
+      ],
+      "base_ingredient": "rice",
+      "image": "/food/olive-line.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "olive-line-crisp-herb-salad",
+      "restaurant_id": "olive-line",
+      "name": "Crisp Herb Salad",
+      "description": "A fictional demo serving of crisp herb salad with a mediterranean profile.",
+      "price_minor": 1374,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 330,
+        "max": 430
+      },
+      "protein_g": {
+        "min": 18,
+        "max": 26
+      },
+      "confidence": "medium",
+      "allergens": [
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "greens",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mediterranean"
+      ],
+      "taste_tags": [
+        "cold",
+        "light",
+        "crisp"
+      ],
+      "base_ingredient": "greens",
+      "image": "/food/olive-line.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "olive-line-fire-noodle-cup",
+      "restaurant_id": "olive-line",
+      "name": "Fire Noodle Cup",
+      "description": "A fictional demo serving of fire noodle cup with a mediterranean profile.",
+      "price_minor": 1431,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 610,
+        "max": 760
+      },
+      "protein_g": {
+        "min": 21,
+        "max": 30
+      },
+      "confidence": "high",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "noodles",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mediterranean"
+      ],
+      "taste_tags": [
+        "warm",
+        "spicy",
+        "rich"
+      ],
+      "base_ingredient": "noodles",
+      "image": "/food/olive-line.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "olive-line-turmeric-chicken-wrap",
+      "restaurant_id": "olive-line",
+      "name": "Turmeric Chicken Wrap",
+      "description": "A fictional demo serving of turmeric chicken wrap with a mediterranean profile.",
+      "price_minor": 1488,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 510,
+        "max": 630
+      },
+      "protein_g": {
+        "min": 36,
+        "max": 44
+      },
+      "confidence": "medium",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "flatbread",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mediterranean"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "flatbread",
+      "image": "/food/olive-line.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "olive-line-lentil-comfort-curry",
+      "restaurant_id": "olive-line",
+      "name": "Lentil Comfort Curry",
+      "description": "A fictional demo serving of lentil comfort curry with a mediterranean profile.",
+      "price_minor": 1545,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 470,
+        "max": 600
+      },
+      "protein_g": {
+        "min": 24,
+        "max": 32
+      },
+      "confidence": "medium",
+      "allergens": [],
+      "possible_allergens": [],
+      "ingredients": [
+        "lentils",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mediterranean"
+      ],
+      "taste_tags": [
+        "warm",
+        "comforting"
+      ],
+      "base_ingredient": "lentils",
+      "image": "/food/olive-line.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "olive-line-miso-salmon-plate",
+      "restaurant_id": "olive-line",
+      "name": "Miso Salmon Plate",
+      "description": "A fictional demo serving of miso salmon plate with a mediterranean profile.",
+      "price_minor": 1602,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 520,
+        "max": 650
+      },
+      "protein_g": {
+        "min": 39,
+        "max": 48
+      },
+      "confidence": "high",
+      "allergens": [
+        "fish",
+        "soy"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "fish",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mediterranean"
+      ],
+      "taste_tags": [
+        "warm",
+        "fresh"
+      ],
+      "base_ingredient": "fish",
+      "image": "/food/olive-line.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "olive-line-roasted-veg-soup",
+      "restaurant_id": "olive-line",
+      "name": "Roasted Vegetable Soup",
+      "description": "A fictional demo serving of roasted vegetable soup with a mediterranean profile.",
+      "price_minor": 1659,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 300,
+        "max": 420
+      },
+      "protein_g": {
+        "min": 12,
+        "max": 20
+      },
+      "confidence": "medium",
+      "allergens": [
+        "celery"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "vegetables",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mediterranean"
+      ],
+      "taste_tags": [
+        "warm",
+        "light",
+        "comforting"
+      ],
+      "base_ingredient": "vegetables",
+      "image": "/food/olive-line.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "olive-line-smoky-beef-plate",
+      "restaurant_id": "olive-line",
+      "name": "Smoky Beef Plate",
+      "description": "A fictional demo serving of smoky beef plate with a mediterranean profile.",
+      "price_minor": 1716,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 650,
+        "max": 790
+      },
+      "protein_g": {
+        "min": 45,
+        "max": 55
+      },
+      "confidence": "medium",
+      "allergens": [
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "beef",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mediterranean"
+      ],
+      "taste_tags": [
+        "warm",
+        "rich",
+        "filling"
+      ],
+      "base_ingredient": "beef",
+      "image": "/food/olive-line.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "night-market-charred-chicken-rice",
+      "restaurant_id": "night-market",
+      "name": "Charred Chicken Rice Bowl",
+      "description": "A fictional demo serving of charred chicken rice bowl with an Asian-inspired profile.",
+      "price_minor": 1305,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 575,
+        "max": 675
+      },
+      "protein_g": {
+        "min": 43,
+        "max": 51
+      },
+      "confidence": "high",
+      "allergens": [
+        "soy",
+        "sesame"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "rice",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "rice",
+      "image": "/food/night-market.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "night-market-ginger-tofu-bowl",
+      "restaurant_id": "night-market",
+      "name": "Ginger Tofu Bowl",
+      "description": "A fictional demo serving of ginger tofu bowl with an Asian-inspired profile.",
+      "price_minor": 1362,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 495,
+        "max": 605
+      },
+      "protein_g": {
+        "min": 26,
+        "max": 35
+      },
+      "confidence": "medium",
+      "allergens": [
+        "soy",
+        "sesame"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "rice",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "fresh"
+      ],
+      "base_ingredient": "rice",
+      "image": "/food/night-market.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "night-market-crisp-herb-salad",
+      "restaurant_id": "night-market",
+      "name": "Crisp Herb Salad",
+      "description": "A fictional demo serving of crisp herb salad with an Asian-inspired profile.",
+      "price_minor": 1419,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 345,
+        "max": 445
+      },
+      "protein_g": {
+        "min": 19,
+        "max": 27
+      },
+      "confidence": "medium",
+      "allergens": [
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "greens",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "cold",
+        "light",
+        "crisp"
+      ],
+      "base_ingredient": "greens",
+      "image": "/food/night-market.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "night-market-fire-noodle-cup",
+      "restaurant_id": "night-market",
+      "name": "Fire Noodle Cup",
+      "description": "A fictional demo serving of fire noodle cup with an Asian-inspired profile.",
+      "price_minor": 1476,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 625,
+        "max": 775
+      },
+      "protein_g": {
+        "min": 22,
+        "max": 31
+      },
+      "confidence": "high",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "noodles",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "spicy",
+        "rich"
+      ],
+      "base_ingredient": "noodles",
+      "image": "/food/night-market.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "night-market-turmeric-chicken-wrap",
+      "restaurant_id": "night-market",
+      "name": "Turmeric Chicken Wrap",
+      "description": "A fictional demo serving of turmeric chicken wrap with an Asian-inspired profile.",
+      "price_minor": 1533,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 525,
+        "max": 645
+      },
+      "protein_g": {
+        "min": 37,
+        "max": 45
+      },
+      "confidence": "medium",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "flatbread",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "flatbread",
+      "image": "/food/night-market.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "night-market-lentil-comfort-curry",
+      "restaurant_id": "night-market",
+      "name": "Lentil Comfort Curry",
+      "description": "A fictional demo serving of lentil comfort curry with an Asian-inspired profile.",
+      "price_minor": 1590,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 485,
+        "max": 615
+      },
+      "protein_g": {
+        "min": 25,
+        "max": 33
+      },
+      "confidence": "medium",
+      "allergens": [],
+      "possible_allergens": [],
+      "ingredients": [
+        "lentils",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "comforting"
+      ],
+      "base_ingredient": "lentils",
+      "image": "/food/night-market.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "night-market-miso-salmon-plate",
+      "restaurant_id": "night-market",
+      "name": "Miso Salmon Plate",
+      "description": "A fictional demo serving of miso salmon plate with an Asian-inspired profile.",
+      "price_minor": 1647,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 535,
+        "max": 665
+      },
+      "protein_g": {
+        "min": 40,
+        "max": 49
+      },
+      "confidence": "high",
+      "allergens": [
+        "fish",
+        "soy"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "fish",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "fresh"
+      ],
+      "base_ingredient": "fish",
+      "image": "/food/night-market.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "night-market-roasted-veg-soup",
+      "restaurant_id": "night-market",
+      "name": "Roasted Vegetable Soup",
+      "description": "A fictional demo serving of roasted vegetable soup with an Asian-inspired profile.",
+      "price_minor": 1704,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 315,
+        "max": 435
+      },
+      "protein_g": {
+        "min": 13,
+        "max": 21
+      },
+      "confidence": "medium",
+      "allergens": [
+        "celery"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "vegetables",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "light",
+        "comforting"
+      ],
+      "base_ingredient": "vegetables",
+      "image": "/food/night-market.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "night-market-smoky-beef-plate",
+      "restaurant_id": "night-market",
+      "name": "Smoky Beef Plate",
+      "description": "A fictional demo serving of smoky beef plate with an Asian-inspired profile.",
+      "price_minor": 1761,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 665,
+        "max": 805
+      },
+      "protein_g": {
+        "min": 46,
+        "max": 56
+      },
+      "confidence": "medium",
+      "allergens": [
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "beef",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "rich",
+        "filling"
+      ],
+      "base_ingredient": "beef",
+      "image": "/food/night-market.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "grain-signal-charred-chicken-rice",
+      "restaurant_id": "grain-signal",
+      "name": "Charred Chicken Rice Bowl",
+      "description": "A fictional demo serving of charred chicken rice bowl with a mixed profile.",
+      "price_minor": 1350,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 545,
+        "max": 645
+      },
+      "protein_g": {
+        "min": 44,
+        "max": 52
+      },
+      "confidence": "high",
+      "allergens": [
+        "soy",
+        "sesame"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "rice",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mixed"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "rice",
+      "image": "/food/grain-signal.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "grain-signal-ginger-tofu-bowl",
+      "restaurant_id": "grain-signal",
+      "name": "Ginger Tofu Bowl",
+      "description": "A fictional demo serving of ginger tofu bowl with a mixed profile.",
+      "price_minor": 1407,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 465,
+        "max": 575
+      },
+      "protein_g": {
+        "min": 27,
+        "max": 36
+      },
+      "confidence": "medium",
+      "allergens": [
+        "soy",
+        "sesame"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "rice",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mixed"
+      ],
+      "taste_tags": [
+        "warm",
+        "fresh"
+      ],
+      "base_ingredient": "rice",
+      "image": "/food/grain-signal.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "grain-signal-crisp-herb-salad",
+      "restaurant_id": "grain-signal",
+      "name": "Crisp Herb Salad",
+      "description": "A fictional demo serving of crisp herb salad with a mixed profile.",
+      "price_minor": 1464,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 315,
+        "max": 415
+      },
+      "protein_g": {
+        "min": 20,
+        "max": 28
+      },
+      "confidence": "medium",
+      "allergens": [
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "greens",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mixed"
+      ],
+      "taste_tags": [
+        "cold",
+        "light",
+        "crisp"
+      ],
+      "base_ingredient": "greens",
+      "image": "/food/grain-signal.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "grain-signal-fire-noodle-cup",
+      "restaurant_id": "grain-signal",
+      "name": "Fire Noodle Cup",
+      "description": "A fictional demo serving of fire noodle cup with a mixed profile.",
+      "price_minor": 1521,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 595,
+        "max": 745
+      },
+      "protein_g": {
+        "min": 23,
+        "max": 32
+      },
+      "confidence": "high",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "noodles",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mixed"
+      ],
+      "taste_tags": [
+        "warm",
+        "spicy",
+        "rich"
+      ],
+      "base_ingredient": "noodles",
+      "image": "/food/grain-signal.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "grain-signal-turmeric-chicken-wrap",
+      "restaurant_id": "grain-signal",
+      "name": "Turmeric Chicken Wrap",
+      "description": "A fictional demo serving of turmeric chicken wrap with a mixed profile.",
+      "price_minor": 1578,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 495,
+        "max": 615
+      },
+      "protein_g": {
+        "min": 38,
+        "max": 46
+      },
+      "confidence": "medium",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "flatbread",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mixed"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "flatbread",
+      "image": "/food/grain-signal.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "grain-signal-lentil-comfort-curry",
+      "restaurant_id": "grain-signal",
+      "name": "Lentil Comfort Curry",
+      "description": "A fictional demo serving of lentil comfort curry with a mixed profile.",
+      "price_minor": 1635,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 455,
+        "max": 585
+      },
+      "protein_g": {
+        "min": 26,
+        "max": 34
+      },
+      "confidence": "medium",
+      "allergens": [],
+      "possible_allergens": [],
+      "ingredients": [
+        "lentils",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mixed"
+      ],
+      "taste_tags": [
+        "warm",
+        "comforting"
+      ],
+      "base_ingredient": "lentils",
+      "image": "/food/grain-signal.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "grain-signal-miso-salmon-plate",
+      "restaurant_id": "grain-signal",
+      "name": "Miso Salmon Plate",
+      "description": "A fictional demo serving of miso salmon plate with a mixed profile.",
+      "price_minor": 1692,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 505,
+        "max": 635
+      },
+      "protein_g": {
+        "min": 41,
+        "max": 50
+      },
+      "confidence": "high",
+      "allergens": [
+        "fish",
+        "soy"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "fish",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mixed"
+      ],
+      "taste_tags": [
+        "warm",
+        "fresh"
+      ],
+      "base_ingredient": "fish",
+      "image": "/food/grain-signal.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "grain-signal-roasted-veg-soup",
+      "restaurant_id": "grain-signal",
+      "name": "Roasted Vegetable Soup",
+      "description": "A fictional demo serving of roasted vegetable soup with a mixed profile.",
+      "price_minor": 1749,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 285,
+        "max": 405
+      },
+      "protein_g": {
+        "min": 14,
+        "max": 22
+      },
+      "confidence": "medium",
+      "allergens": [
+        "celery"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "vegetables",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mixed"
+      ],
+      "taste_tags": [
+        "warm",
+        "light",
+        "comforting"
+      ],
+      "base_ingredient": "vegetables",
+      "image": "/food/grain-signal.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "grain-signal-smoky-beef-plate",
+      "restaurant_id": "grain-signal",
+      "name": "Smoky Beef Plate",
+      "description": "A fictional demo serving of smoky beef plate with a mixed profile.",
+      "price_minor": 1806,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 635,
+        "max": 775
+      },
+      "protein_g": {
+        "min": 47,
+        "max": 57
+      },
+      "confidence": "medium",
+      "allergens": [
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "beef",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "mixed"
+      ],
+      "taste_tags": [
+        "warm",
+        "rich",
+        "filling"
+      ],
+      "base_ingredient": "beef",
+      "image": "/food/grain-signal.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "broth-house-charred-chicken-rice",
+      "restaurant_id": "broth-house",
+      "name": "Charred Chicken Rice Bowl",
+      "description": "A fictional demo serving of charred chicken rice bowl with an Asian-inspired profile.",
+      "price_minor": 1395,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 560,
+        "max": 660
+      },
+      "protein_g": {
+        "min": 45,
+        "max": 53
+      },
+      "confidence": "high",
+      "allergens": [
+        "soy",
+        "sesame"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "rice",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "rice",
+      "image": "/food/broth-house.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "broth-house-ginger-tofu-bowl",
+      "restaurant_id": "broth-house",
+      "name": "Ginger Tofu Bowl",
+      "description": "A fictional demo serving of ginger tofu bowl with an Asian-inspired profile.",
+      "price_minor": 1452,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 480,
+        "max": 590
+      },
+      "protein_g": {
+        "min": 28,
+        "max": 37
+      },
+      "confidence": "medium",
+      "allergens": [
+        "soy",
+        "sesame"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "rice",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "fresh"
+      ],
+      "base_ingredient": "rice",
+      "image": "/food/broth-house.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "broth-house-crisp-herb-salad",
+      "restaurant_id": "broth-house",
+      "name": "Crisp Herb Salad",
+      "description": "A fictional demo serving of crisp herb salad with an Asian-inspired profile.",
+      "price_minor": 1509,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 330,
+        "max": 430
+      },
+      "protein_g": {
+        "min": 21,
+        "max": 29
+      },
+      "confidence": "medium",
+      "allergens": [
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "greens",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "cold",
+        "light",
+        "crisp"
+      ],
+      "base_ingredient": "greens",
+      "image": "/food/broth-house.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "broth-house-fire-noodle-cup",
+      "restaurant_id": "broth-house",
+      "name": "Fire Noodle Cup",
+      "description": "A fictional demo serving of fire noodle cup with an Asian-inspired profile.",
+      "price_minor": 1566,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 610,
+        "max": 760
+      },
+      "protein_g": {
+        "min": 24,
+        "max": 33
+      },
+      "confidence": "high",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "noodles",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "spicy",
+        "rich"
+      ],
+      "base_ingredient": "noodles",
+      "image": "/food/broth-house.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "broth-house-turmeric-chicken-wrap",
+      "restaurant_id": "broth-house",
+      "name": "Turmeric Chicken Wrap",
+      "description": "A fictional demo serving of turmeric chicken wrap with an Asian-inspired profile.",
+      "price_minor": 1623,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 510,
+        "max": 630
+      },
+      "protein_g": {
+        "min": 39,
+        "max": 47
+      },
+      "confidence": "medium",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "flatbread",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "flatbread",
+      "image": "/food/broth-house.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "broth-house-lentil-comfort-curry",
+      "restaurant_id": "broth-house",
+      "name": "Lentil Comfort Curry",
+      "description": "A fictional demo serving of lentil comfort curry with an Asian-inspired profile.",
+      "price_minor": 1680,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 470,
+        "max": 600
+      },
+      "protein_g": {
+        "min": 27,
+        "max": 35
+      },
+      "confidence": "medium",
+      "allergens": [],
+      "possible_allergens": [],
+      "ingredients": [
+        "lentils",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "comforting"
+      ],
+      "base_ingredient": "lentils",
+      "image": "/food/broth-house.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "broth-house-miso-salmon-plate",
+      "restaurant_id": "broth-house",
+      "name": "Miso Salmon Plate",
+      "description": "A fictional demo serving of miso salmon plate with an Asian-inspired profile.",
+      "price_minor": 1737,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 520,
+        "max": 650
+      },
+      "protein_g": {
+        "min": 42,
+        "max": 51
+      },
+      "confidence": "high",
+      "allergens": [
+        "fish",
+        "soy"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "fish",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "fresh"
+      ],
+      "base_ingredient": "fish",
+      "image": "/food/broth-house.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "broth-house-roasted-veg-soup",
+      "restaurant_id": "broth-house",
+      "name": "Roasted Vegetable Soup",
+      "description": "A fictional demo serving of roasted vegetable soup with an Asian-inspired profile.",
+      "price_minor": 1794,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 300,
+        "max": 420
+      },
+      "protein_g": {
+        "min": 15,
+        "max": 23
+      },
+      "confidence": "medium",
+      "allergens": [
+        "celery"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "vegetables",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "light",
+        "comforting"
+      ],
+      "base_ingredient": "vegetables",
+      "image": "/food/broth-house.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "broth-house-smoky-beef-plate",
+      "restaurant_id": "broth-house",
+      "name": "Smoky Beef Plate",
+      "description": "A fictional demo serving of smoky beef plate with an Asian-inspired profile.",
+      "price_minor": 1851,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 650,
+        "max": 790
+      },
+      "protein_g": {
+        "min": 48,
+        "max": 58
+      },
+      "confidence": "medium",
+      "allergens": [
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "beef",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "rich",
+        "filling"
+      ],
+      "base_ingredient": "beef",
+      "image": "/food/broth-house.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "field-fire-charred-chicken-rice",
+      "restaurant_id": "field-fire",
+      "name": "Charred Chicken Rice Bowl",
+      "description": "A fictional demo serving of charred chicken rice bowl with an American-inspired profile.",
+      "price_minor": 1440,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 575,
+        "max": 675
+      },
+      "protein_g": {
+        "min": 42,
+        "max": 50
+      },
+      "confidence": "high",
+      "allergens": [
+        "soy",
+        "sesame"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "rice",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "american"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "rice",
+      "image": "/food/field-fire.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "field-fire-ginger-tofu-bowl",
+      "restaurant_id": "field-fire",
+      "name": "Ginger Tofu Bowl",
+      "description": "A fictional demo serving of ginger tofu bowl with an American-inspired profile.",
+      "price_minor": 1497,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 495,
+        "max": 605
+      },
+      "protein_g": {
+        "min": 25,
+        "max": 34
+      },
+      "confidence": "medium",
+      "allergens": [
+        "soy",
+        "sesame"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "rice",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "american"
+      ],
+      "taste_tags": [
+        "warm",
+        "fresh"
+      ],
+      "base_ingredient": "rice",
+      "image": "/food/field-fire.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "field-fire-crisp-herb-salad",
+      "restaurant_id": "field-fire",
+      "name": "Crisp Herb Salad",
+      "description": "A fictional demo serving of crisp herb salad with an American-inspired profile.",
+      "price_minor": 1554,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 345,
+        "max": 445
+      },
+      "protein_g": {
+        "min": 18,
+        "max": 26
+      },
+      "confidence": "medium",
+      "allergens": [
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "greens",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "american"
+      ],
+      "taste_tags": [
+        "cold",
+        "light",
+        "crisp"
+      ],
+      "base_ingredient": "greens",
+      "image": "/food/field-fire.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "field-fire-fire-noodle-cup",
+      "restaurant_id": "field-fire",
+      "name": "Fire Noodle Cup",
+      "description": "A fictional demo serving of fire noodle cup with an American-inspired profile.",
+      "price_minor": 1611,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 625,
+        "max": 775
+      },
+      "protein_g": {
+        "min": 21,
+        "max": 30
+      },
+      "confidence": "high",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "noodles",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "american"
+      ],
+      "taste_tags": [
+        "warm",
+        "spicy",
+        "rich"
+      ],
+      "base_ingredient": "noodles",
+      "image": "/food/field-fire.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "field-fire-turmeric-chicken-wrap",
+      "restaurant_id": "field-fire",
+      "name": "Turmeric Chicken Wrap",
+      "description": "A fictional demo serving of turmeric chicken wrap with an American-inspired profile.",
+      "price_minor": 1668,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 525,
+        "max": 645
+      },
+      "protein_g": {
+        "min": 36,
+        "max": 44
+      },
+      "confidence": "medium",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "flatbread",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "american"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "flatbread",
+      "image": "/food/field-fire.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "field-fire-lentil-comfort-curry",
+      "restaurant_id": "field-fire",
+      "name": "Lentil Comfort Curry",
+      "description": "A fictional demo serving of lentil comfort curry with an American-inspired profile.",
+      "price_minor": 1725,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 485,
+        "max": 615
+      },
+      "protein_g": {
+        "min": 24,
+        "max": 32
+      },
+      "confidence": "medium",
+      "allergens": [],
+      "possible_allergens": [],
+      "ingredients": [
+        "lentils",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "american"
+      ],
+      "taste_tags": [
+        "warm",
+        "comforting"
+      ],
+      "base_ingredient": "lentils",
+      "image": "/food/field-fire.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "field-fire-miso-salmon-plate",
+      "restaurant_id": "field-fire",
+      "name": "Miso Salmon Plate",
+      "description": "A fictional demo serving of miso salmon plate with an American-inspired profile.",
+      "price_minor": 1782,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 535,
+        "max": 665
+      },
+      "protein_g": {
+        "min": 39,
+        "max": 48
+      },
+      "confidence": "high",
+      "allergens": [
+        "fish",
+        "soy"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "fish",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "american"
+      ],
+      "taste_tags": [
+        "warm",
+        "fresh"
+      ],
+      "base_ingredient": "fish",
+      "image": "/food/field-fire.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "field-fire-roasted-veg-soup",
+      "restaurant_id": "field-fire",
+      "name": "Roasted Vegetable Soup",
+      "description": "A fictional demo serving of roasted vegetable soup with an American-inspired profile.",
+      "price_minor": 1839,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 315,
+        "max": 435
+      },
+      "protein_g": {
+        "min": 12,
+        "max": 20
+      },
+      "confidence": "medium",
+      "allergens": [
+        "celery"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "vegetables",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "american"
+      ],
+      "taste_tags": [
+        "warm",
+        "light",
+        "comforting"
+      ],
+      "base_ingredient": "vegetables",
+      "image": "/food/field-fire.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "field-fire-smoky-beef-plate",
+      "restaurant_id": "field-fire",
+      "name": "Smoky Beef Plate",
+      "description": "A fictional demo serving of smoky beef plate with an American-inspired profile.",
+      "price_minor": 1896,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 665,
+        "max": 805
+      },
+      "protein_g": {
+        "min": 45,
+        "max": 55
+      },
+      "confidence": "medium",
+      "allergens": [
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "beef",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "american"
+      ],
+      "taste_tags": [
+        "warm",
+        "rich",
+        "filling"
+      ],
+      "base_ingredient": "beef",
+      "image": "/food/field-fire.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "sumac-kitchen-charred-chicken-rice",
+      "restaurant_id": "sumac-kitchen",
+      "name": "Charred Chicken Rice Bowl",
+      "description": "A fictional demo serving of charred chicken rice bowl with a middle-eastern profile.",
+      "price_minor": 1485,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 545,
+        "max": 645
+      },
+      "protein_g": {
+        "min": 43,
+        "max": 51
+      },
+      "confidence": "high",
+      "allergens": [
+        "soy",
+        "sesame"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "rice",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "middle-eastern"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "rice",
+      "image": "/food/sumac-kitchen.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "sumac-kitchen-ginger-tofu-bowl",
+      "restaurant_id": "sumac-kitchen",
+      "name": "Ginger Tofu Bowl",
+      "description": "A fictional demo serving of ginger tofu bowl with a middle-eastern profile.",
+      "price_minor": 1542,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 465,
+        "max": 575
+      },
+      "protein_g": {
+        "min": 26,
+        "max": 35
+      },
+      "confidence": "medium",
+      "allergens": [
+        "soy",
+        "sesame"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "rice",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "middle-eastern"
+      ],
+      "taste_tags": [
+        "warm",
+        "fresh"
+      ],
+      "base_ingredient": "rice",
+      "image": "/food/sumac-kitchen.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "sumac-kitchen-crisp-herb-salad",
+      "restaurant_id": "sumac-kitchen",
+      "name": "Crisp Herb Salad",
+      "description": "A fictional demo serving of crisp herb salad with a middle-eastern profile.",
+      "price_minor": 1599,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 315,
+        "max": 415
+      },
+      "protein_g": {
+        "min": 19,
+        "max": 27
+      },
+      "confidence": "medium",
+      "allergens": [
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "greens",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "middle-eastern"
+      ],
+      "taste_tags": [
+        "cold",
+        "light",
+        "crisp"
+      ],
+      "base_ingredient": "greens",
+      "image": "/food/sumac-kitchen.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "sumac-kitchen-fire-noodle-cup",
+      "restaurant_id": "sumac-kitchen",
+      "name": "Fire Noodle Cup",
+      "description": "A fictional demo serving of fire noodle cup with a middle-eastern profile.",
+      "price_minor": 1656,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 595,
+        "max": 745
+      },
+      "protein_g": {
+        "min": 22,
+        "max": 31
+      },
+      "confidence": "high",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "noodles",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "middle-eastern"
+      ],
+      "taste_tags": [
+        "warm",
+        "spicy",
+        "rich"
+      ],
+      "base_ingredient": "noodles",
+      "image": "/food/sumac-kitchen.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "sumac-kitchen-turmeric-chicken-wrap",
+      "restaurant_id": "sumac-kitchen",
+      "name": "Turmeric Chicken Wrap",
+      "description": "A fictional demo serving of turmeric chicken wrap with a middle-eastern profile.",
+      "price_minor": 1713,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 495,
+        "max": 615
+      },
+      "protein_g": {
+        "min": 37,
+        "max": 45
+      },
+      "confidence": "medium",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "flatbread",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "middle-eastern"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "flatbread",
+      "image": "/food/sumac-kitchen.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "sumac-kitchen-lentil-comfort-curry",
+      "restaurant_id": "sumac-kitchen",
+      "name": "Lentil Comfort Curry",
+      "description": "A fictional demo serving of lentil comfort curry with a middle-eastern profile.",
+      "price_minor": 1770,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 455,
+        "max": 585
+      },
+      "protein_g": {
+        "min": 25,
+        "max": 33
+      },
+      "confidence": "medium",
+      "allergens": [],
+      "possible_allergens": [],
+      "ingredients": [
+        "lentils",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "middle-eastern"
+      ],
+      "taste_tags": [
+        "warm",
+        "comforting"
+      ],
+      "base_ingredient": "lentils",
+      "image": "/food/sumac-kitchen.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "sumac-kitchen-miso-salmon-plate",
+      "restaurant_id": "sumac-kitchen",
+      "name": "Miso Salmon Plate",
+      "description": "A fictional demo serving of miso salmon plate with a middle-eastern profile.",
+      "price_minor": 1827,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 505,
+        "max": 635
+      },
+      "protein_g": {
+        "min": 40,
+        "max": 49
+      },
+      "confidence": "high",
+      "allergens": [
+        "fish",
+        "soy"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "fish",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "middle-eastern"
+      ],
+      "taste_tags": [
+        "warm",
+        "fresh"
+      ],
+      "base_ingredient": "fish",
+      "image": "/food/sumac-kitchen.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "sumac-kitchen-roasted-veg-soup",
+      "restaurant_id": "sumac-kitchen",
+      "name": "Roasted Vegetable Soup",
+      "description": "A fictional demo serving of roasted vegetable soup with a middle-eastern profile.",
+      "price_minor": 1884,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 285,
+        "max": 405
+      },
+      "protein_g": {
+        "min": 13,
+        "max": 21
+      },
+      "confidence": "medium",
+      "allergens": [
+        "celery"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "vegetables",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "middle-eastern"
+      ],
+      "taste_tags": [
+        "warm",
+        "light",
+        "comforting"
+      ],
+      "base_ingredient": "vegetables",
+      "image": "/food/sumac-kitchen.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    },
+    {
+      "id": "sumac-kitchen-smoky-beef-plate",
+      "restaurant_id": "sumac-kitchen",
+      "name": "Smoky Beef Plate",
+      "description": "A fictional demo serving of smoky beef plate with a middle-eastern profile.",
+      "price_minor": 1941,
+      "currency": "USD",
+      "energy_kcal": {
+        "min": 635,
+        "max": 775
+      },
+      "protein_g": {
+        "min": 46,
+        "max": 56
+      },
+      "confidence": "medium",
+      "allergens": [
+        "milk"
+      ],
+      "possible_allergens": [],
+      "ingredients": [
+        "beef",
+        "vegetables",
+        "house seasoning"
+      ],
+      "cuisine_tags": [
+        "middle-eastern"
+      ],
+      "taste_tags": [
+        "warm",
+        "rich",
+        "filling"
+      ],
+      "base_ingredient": "beef",
+      "image": "/food/sumac-kitchen.svg",
+      "nutrition_provenance": "estimated_demo",
+      "source_kind": "demo_menu"
+    }
+  ],
+  "image_attribution": {
+    "/food/ember-bowl-charred-chicken-rice.webp": "Original image generated with OpenAI image generation for OneDish on 2026-07-18; project-owned hackathon asset.",
+    "/food/ember-bowl.svg": "Original geometric placeholder generated for OneDish; replace before publication.",
+    "/food/green-room.svg": "Original geometric placeholder generated for OneDish; replace before publication.",
+    "/food/copper-tandoor.svg": "Original geometric placeholder generated for OneDish; replace before publication.",
+    "/food/mesa-luna.svg": "Original geometric placeholder generated for OneDish; replace before publication.",
+    "/food/olive-line.svg": "Original geometric placeholder generated for OneDish; replace before publication.",
+    "/food/night-market.svg": "Original geometric placeholder generated for OneDish; replace before publication.",
+    "/food/grain-signal.svg": "Original geometric placeholder generated for OneDish; replace before publication.",
+    "/food/broth-house.svg": "Original geometric placeholder generated for OneDish; replace before publication.",
+    "/food/field-fire.svg": "Original geometric placeholder generated for OneDish; replace before publication.",
+    "/food/sumac-kitchen.svg": "Original geometric placeholder generated for OneDish; replace before publication."
+  }
+}

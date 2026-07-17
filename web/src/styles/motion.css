@@ -1,0 +1,11 @@
+@media (prefers-reduced-motion: no-preference) {
+  .hero-copy { animation: rise-in .7s cubic-bezier(.16, 1, .3, 1) both; }
+  .hero-visual { animation: reveal-in .9s .1s cubic-bezier(.16, 1, .3, 1) both; }
+  .decision-stamp { animation: settle-in .8s .45s cubic-bezier(.16, 1, .3, 1) both; }
+}
+@keyframes rise-in { from { opacity: 0; transform: translateY(24px); } }
+@keyframes reveal-in { from { opacity: 0; transform: scale(.965); } }
+@keyframes settle-in { from { opacity: 0; transform: rotate(-18deg) scale(.7); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}

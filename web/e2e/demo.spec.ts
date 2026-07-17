@@ -1,17 +1,18 @@
 import { expect, test } from "@playwright/test";
 
-test("demo explains ninety choices and reveals one winner", async ({ page }) => {
+test("one tap creates a live decision and can pick another", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Stop browsing. Eat this." })).toBeVisible();
-  await page.getByRole("button", { name: "Try the demo" }).click();
+  await expect(page.getByRole("heading", { name: "What should I eat?" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Pick my meal" })).toBeInViewport();
+  await page.getByRole("button", { name: "Pick my meal" }).click();
+  await expect(page).toHaveURL(/\/choose\/decision-/);
   await expect(page.getByRole("heading", { name: "From ninety to one." })).toBeVisible();
-  await expect(page.getByText("Nearby menu set")).toBeVisible();
   await page.getByRole("button", { name: "Show result" }).click();
-  await expect(page.getByRole("heading", { name: "Charred Chicken Rice Bowl" })).toBeVisible();
+  await expect(page).toHaveURL(/\/winner\/decision-/);
+  const firstDish = await page.getByRole("heading", { level: 1 }).textContent();
   await expect(page.getByText("Fictional demo menu")).toBeVisible();
-  await page.getByRole("button", { name: "Not today" }).click();
-  await page.getByRole("button", { name: "Not craving it" }).click();
-  await expect(page.getByText("Your one reserve")).toBeVisible();
-  await page.getByRole("link", { name: "Taste Orbit" }).click();
-  await expect(page.getByRole("heading", { name: "Your taste has an orbit." })).toBeVisible();
+  await page.getByRole("button", { name: "Pick another" }).click();
+  await expect(page.getByRole("heading", { level: 1 })).not.toHaveText(firstDish ?? "");
+  await page.getByRole("button", { name: "Edit preferences" }).click();
+  await expect(page.getByRole("dialog", { name: "Meal preferences" })).toBeVisible();
 });

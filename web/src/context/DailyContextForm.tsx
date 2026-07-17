@@ -1,45 +1,110 @@
 import { useState } from "react";
+import type { SupportedLocale, UserProfile } from "../recommendation/types";
 
-export function DailyContextForm({ onSubmit }: { onSubmit: () => Promise<void> }) {
+const allergens = [
+  ["peanuts", "Peanuts"],
+  ["milk", "Milk"],
+  ["soy", "Soy"],
+  ["gluten", "Gluten"],
+  ["sesame", "Sesame"],
+] as const;
+
+function commaValues(value: string): string[] {
+  return value.split(",").map((item) => item.trim().toLocaleLowerCase()).filter(Boolean);
+}
+
+export function DailyContextForm({
+  initialProfile,
+  onSubmit,
+  onCancel,
+}: {
+  readonly initialProfile: UserProfile;
+  readonly onSubmit: (profile: UserProfile) => Promise<void>;
+  readonly onCancel: () => void;
+}) {
+  const [profile, setProfile] = useState(initialProfile);
+  const [ingredients, setIngredients] = useState(initialProfile.excluded_ingredients.join(", "));
+  const [tastes, setTastes] = useState(initialProfile.desired_taste_tags.join(", "));
   const [busy, setBusy] = useState(false);
+
+  function toggleAllergen(allergen: string) {
+    setProfile((current) => ({
+      ...current,
+      excluded_allergens: current.excluded_allergens.includes(allergen)
+        ? current.excluded_allergens.filter((item) => item !== allergen)
+        : [...current.excluded_allergens, allergen],
+    }));
+  }
+
+  function changeLocale(locale: SupportedLocale) {
+    setProfile((current) => ({
+      ...current,
+      locale,
+      budget_minor: locale === "en" ? 2500 : 6000,
+    }));
+  }
+
   async function submit(event: React.FormEvent) {
     event.preventDefault();
     setBusy(true);
-    try { await onSubmit(); } finally { setBusy(false); }
+    try {
+      await onSubmit({
+        ...profile,
+        excluded_ingredients: commaValues(ingredients),
+        desired_taste_tags: commaValues(tastes),
+      });
+    } finally {
+      setBusy(false);
+    }
   }
+
   return (
-    <form onSubmit={submit} aria-label="Daily meal context">
-      <div className="form-grid">
+    <form onSubmit={submit} aria-label="Meal preferences form">
+      <div className="field">
+        <label htmlFor="profile-locale">Language and currency</label>
+        <select id="profile-locale" value={profile.locale} onChange={(event) => changeLocale(event.target.value as SupportedLocale)}>
+          <option value="en">English · USD</option>
+          <option value="zh-CN">中文 · 人民币</option>
+        </select>
+      </div>
+      <fieldset className="allergen-fieldset">
+        <legend>Never include</legend>
+        <div className="check-grid">
+          {allergens.map(([value, label]) => (
+            <label key={value}>
+              <input type="checkbox" checked={profile.excluded_allergens.includes(value)} onChange={() => toggleAllergen(value)} />
+              <span>{label}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+      <div className="form-grid compact-form-grid">
         <div className="field">
-          <label htmlFor="energy">Energy eaten today</label>
-          <input id="energy" type="number" min="0" max="20000" inputMode="numeric" placeholder="1180 kcal" />
-          <small>Optional. Missing values stay unknown.</small>
+          <label htmlFor="profile-budget">Usual maximum ({profile.locale === "en" ? "$" : "¥"})</label>
+          <input id="profile-budget" type="number" min="1" max="1000" step="1" value={profile.budget_minor / 100} onChange={(event) => setProfile({ ...profile, budget_minor: Math.round(Number(event.target.value) * 100) })} />
         </div>
         <div className="field">
-          <label htmlFor="protein">Protein eaten today</label>
-          <input id="protein" type="number" min="0" max="1000" inputMode="numeric" placeholder="72 g" />
-          <small>Used only to estimate today&apos;s protein gap.</small>
+          <label htmlFor="profile-duration">Time available</label>
+          <select id="profile-duration" value={profile.duration_minutes} onChange={(event) => setProfile({ ...profile, duration_minutes: Number(event.target.value) })}>
+            <option value="15">15 min</option>
+            <option value="20">20 min</option>
+            <option value="30">30 min</option>
+            <option value="45">45 min</option>
+          </select>
         </div>
         <div className="field span-two">
-          <label htmlFor="craving">What sounds good?</label>
-          <textarea id="craving" maxLength={2000} placeholder="Warm, filling, not too greasy" />
+          <label htmlFor="profile-ingredients">Other ingredients to exclude</label>
+          <input id="profile-ingredients" value={ingredients} onChange={(event) => setIngredients(event.target.value)} placeholder="cilantro, shellfish" />
+        </div>
+        <div className="field span-two">
+          <label htmlFor="profile-tastes">Usually like</label>
+          <input id="profile-tastes" value={tastes} onChange={(event) => setTastes(event.target.value)} placeholder="warm, spicy, fresh" />
         </div>
       </div>
-      <details className="advanced">
-        <summary>Allergies and budget</summary>
-        <div className="form-grid" style={{ marginTop: 18 }}>
-          <div className="field">
-            <label htmlFor="allergies">Exclude allergens</label>
-            <input id="allergies" placeholder="Peanuts, milk" />
-            <small>Uncertain allergen matches are excluded conservatively.</small>
-          </div>
-          <div className="field">
-            <label htmlFor="budget">Maximum meal price</label>
-            <input id="budget" type="number" min="1" max="1000" placeholder="$17.50" />
-          </div>
-        </div>
-      </details>
-      <div className="form-actions"><button className="primary-button" disabled={busy}>{busy ? "Loading demo..." : "Run synthetic demo"}</button></div>
+      <div className="form-actions sheet-actions">
+        <button type="button" className="secondary-button" onClick={onCancel}>Cancel</button>
+        <button className="primary-button" disabled={busy}>{busy ? "Saving..." : "Save"}</button>
+      </div>
     </form>
   );
 }

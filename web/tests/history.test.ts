@@ -1,4 +1,4 @@
-import { db, resetLocalData, saveDecision, saveHistoryEvent } from "../src/db/db";
+import { db, getProfile, resetLocalData, saveDecision, saveHistoryEvent, saveProfile } from "../src/db/db";
 
 describe("local history", () => {
   beforeEach(async () => resetLocalData());
@@ -12,9 +12,22 @@ describe("local history", () => {
       rejection_reason: "not_craving",
     });
     await saveDecision({ id: "decision-1", stateId: "day1", payload: { winner: "dish-1" } });
-    expect(db.verno).toBe(1);
+    expect(db.verno).toBe(2);
     expect(await db.historyEvents.count()).toBe(1);
     expect((await db.decisionSessions.get("decision-1"))?.payload).toEqual({ winner: "dish-1" });
+  });
+
+  it("persists the version-two user profile", async () => {
+    await saveProfile({
+      locale: "en",
+      excluded_allergens: ["peanuts"],
+      excluded_ingredients: [],
+      desired_taste_tags: ["warm"],
+      budget_minor: 2500,
+      duration_minutes: 20,
+    });
+
+    expect(await getProfile()).toMatchObject({ locale: "en", budget_minor: 2500 });
   });
 
   it("reset removes local context and history", async () => {

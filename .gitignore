@@ -1,0 +1,14 @@
+.env
+.venv/
+backend/.venv/
+web/node_modules/
+web/dist/
+web/coverage/
+web/playwright-report/
+web/test-results/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+*.sqlite3
+dist/
+build/

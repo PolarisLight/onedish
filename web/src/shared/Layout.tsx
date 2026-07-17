@@ -18,6 +18,11 @@ export function Layout() {
         </nav>
       </header>
       <Outlet />
+      <nav className="mobile-dock" aria-label="Mobile navigation">
+        <Link to="/">Today</Link>
+        <Link to="/history">Taste Orbit</Link>
+        <Link to="/privacy">Privacy</Link>
+      </nav>
     </div>
   );
 }

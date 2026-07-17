@@ -114,3 +114,21 @@ def test_unknown_health_fields_are_rejected() -> None:
         )
     assert response.status_code == 422
     assert "70" not in response.text
+
+
+def test_production_serves_pwa_and_deep_link_fallback() -> None:
+    settings = Settings(
+        mode="demo",
+        environment="production",
+        root_path=ROOT,
+        allowed_hosts=("testserver",),
+    )
+    with TestClient(create_app(settings)) as browser:
+        home = browser.get("/")
+        deep_link = browser.get("/history")
+        api = browser.get("/api/health")
+    assert home.status_code == 200
+    assert "root" in home.text
+    assert deep_link.status_code == 200
+    assert "root" in deep_link.text
+    assert api.json()["status"] == "ready"

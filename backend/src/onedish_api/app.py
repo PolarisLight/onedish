@@ -2,9 +2,14 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
+from starlette.staticfiles import StaticFiles
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from onedish_api.catalog import load_catalog
@@ -17,6 +22,16 @@ from onedish_api.providers.fixtures import FixturePlacesProvider
 from onedish_api.providers.foursquare import FoursquarePlacesProvider
 from onedish_api.routes import build_router
 from onedish_api.settings import Settings
+
+
+class SPAStaticFiles(StaticFiles):
+    async def get_response(self, path: str, scope):  # type: ignore[no-untyped-def]
+        try:
+            return await super().get_response(path, scope)
+        except StarletteHTTPException as exc:
+            if exc.status_code != 404 or "." in path.rsplit("/", 1)[-1]:
+                raise
+            return FileResponse(Path(str(self.directory)) / "index.html")
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -48,6 +63,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         )
     app.add_middleware(PrivacyHeadersMiddleware)
     app.add_middleware(RequestBodyLimitMiddleware, max_bytes=config.max_body_bytes)
+    production_dist = config.root_path / "web" / "dist"
+    if config.environment == "production" and production_dist.is_dir():
+        app.mount("/", SPAStaticFiles(directory=production_dist, html=True), name="pwa")
     return app
 
 

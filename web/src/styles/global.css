@@ -17,6 +17,7 @@ button { cursor: pointer; }
 .nav { display: flex; align-items: center; gap: 20px; }
 .nav a { color: var(--ink-soft); text-decoration: none; font-size: .84rem; font-weight: 650; }
 .nav a:hover { color: var(--ink); }
+.mobile-dock { display: none; }
 .demo-badge { display: inline-flex; align-items: center; min-height: 28px; padding: 4px 10px; border: 1px solid color-mix(in srgb, var(--accent) 70%, var(--ink)); border-radius: var(--radius-pill); color: var(--ink); background: color-mix(in srgb, var(--accent) 22%, var(--surface)); font: 700 .68rem/1 var(--font-mono); text-transform: uppercase; letter-spacing: .055em; }
 
 .home { max-width: 1320px; margin: 0 auto; padding: 12px 22px 70px; }
@@ -102,6 +103,10 @@ details.advanced summary { cursor: pointer; font-weight: 750; }
 @media (max-width: 767px) {
   .site-header { height: 60px; padding: 0 16px; }
   .nav a:not(:last-child) { display: none; }
+  .app-shell { padding-bottom: calc(88px + env(safe-area-inset-bottom)); }
+  .mobile-dock { position: fixed; z-index: 20; left: 12px; right: 12px; bottom: max(10px, env(safe-area-inset-bottom)); display: grid; grid-template-columns: repeat(3, 1fr); min-height: 56px; padding: 5px; border: 1px solid var(--line); border-radius: var(--radius-pill); background: color-mix(in srgb, var(--surface) 94%, transparent); box-shadow: var(--shadow); backdrop-filter: blur(14px); }
+  .mobile-dock a { display: grid; place-items: center; border-radius: var(--radius-pill); color: var(--ink-soft); font-size: .76rem; font-weight: 800; text-decoration: none; }
+  .mobile-dock a:hover, .mobile-dock a:focus-visible { color: var(--accent-ink); background: var(--accent); }
   .home, .page, .winner { padding-left: 16px; padding-right: 16px; }
   .hero { min-height: auto; grid-template-columns: 1fr; gap: 26px; padding-top: 22px; }
   .hero h1 { font-size: clamp(4.2rem, 21vw, 6.4rem); }

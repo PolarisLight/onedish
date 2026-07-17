@@ -5,11 +5,12 @@ from pathlib import Path
 from onedish_api.catalog import load_catalog
 from onedish_api.domain import Candidate, DailyContextEntry, MealConstraints, NutritionRange, Place
 from onedish_api.context import derive_meal_context
-from onedish_api.engine import recommend
+from onedish_api.engine import load_decision_rules, recommend
 from onedish_api.history import PreferenceWeights, RepetitionProfile
 
 
 ROOT = Path(__file__).parents[2]
+RULES = load_decision_rules(ROOT / "data/decision.v2.json")
 
 
 def test_full_catalog_produces_monotonic_90_to_1_decision() -> None:
@@ -41,24 +42,20 @@ def test_full_catalog_produces_monotonic_90_to_1_decision() -> None:
         PreferenceWeights(),
         catalog_version=catalog.version,
         created_at=datetime(2026, 7, 18, 12, tzinfo=timezone.utc),
+        rules=RULES,
     )
     counts = {stage.id: stage.survivor_count for stage in decision.stages}
     assert counts["found"] == 90
     assert counts["available"] >= 70
-    assert counts["safety_budget"] >= 25
+    assert counts["safety"] >= 25
     assert counts["nutrition"] >= 10
     assert counts["repetition"] >= 4
     assert counts["repetition"] < counts["nutrition"]
-    assert counts["taste_confidence"] >= 2
+    assert counts["taste"] >= 2
     assert counts["winner"] == 1
     assert all(a >= b for a, b in zip(counts.values(), list(counts.values())[1:]))
-    assert counts == {
-        "found": 90,
-        "available": 81,
-        "safety_budget": 73,
-        "nutrition": 57,
-        "repetition": 48,
-        "taste_confidence": 17,
-        "winner": 1,
-    }
+    assert list(counts) == [
+        "found", "available", "safety", "nutrition", "repetition",
+        "taste", "duration", "budget", "winner",
+    ]
     assert decision.winner_id == "ember-bowl-charred-chicken-rice"

@@ -114,6 +114,7 @@ class Dish(StrictFrozenModel):
     image: str = Field(pattern=r"^/food/[A-Za-z0-9._-]+$")
     nutrition_provenance: Literal["authoritative_demo", "estimated_demo"]
     source_kind: Literal["demo_menu"]
+    estimated_minutes: int = Field(ge=5, le=180)
 
 
 class Candidate(StrictFrozenModel):
@@ -157,8 +158,16 @@ class MealConstraints(StrictFrozenModel):
     excluded_allergens: tuple[Allergen, ...] = ()
     excluded_ingredients: tuple[str, ...] = ()
     desired_taste_tags: tuple[TasteTag, ...] = ()
+    max_duration_minutes: int | None = Field(default=None, ge=5, le=180)
     allowed_relaxations: tuple[
-        Literal["energy_range", "protein_floor", "recent_repetition"], ...
+        Literal[
+            "energy_range",
+            "protein_floor",
+            "recent_repetition",
+            "taste",
+            "duration",
+            "budget",
+        ], ...
     ] = ()
 
 
@@ -187,9 +196,13 @@ StageId = Literal[
     "found",
     "available",
     "safety_budget",
+    "safety",
     "nutrition",
     "repetition",
     "taste_confidence",
+    "taste",
+    "duration",
+    "budget",
     "winner",
 ]
 
@@ -212,7 +225,7 @@ class EliminationStage(StrictFrozenModel):
 
 class DecisionRecord(StrictFrozenModel):
     decision_id: Identifier
-    engine_version: Literal["engine.v1"]
+    engine_version: Literal["engine.v1", "engine.v2"]
     catalog_version: str = Field(pattern=r"^catalog\.v[0-9]+$")
     input_sha256: Sha256
     created_at: datetime
@@ -220,3 +233,33 @@ class DecisionRecord(StrictFrozenModel):
     winner_id: Identifier
     reserve_id: Identifier | None
     relaxations: tuple[str, ...] = ()
+
+
+class DecisionScoreRules(StrictFrozenModel):
+    taste_match: int = Field(ge=0)
+    comfort_match: int = Field(ge=0)
+    confidence: dict[Confidence, int]
+    distance_divisor: int = Field(gt=0)
+    price_divisor: int = Field(gt=0)
+    recent_dish: int = Field(ge=0)
+    recent_base_ingredient: int = Field(ge=0)
+    preference_scale: int = Field(ge=0)
+
+
+class DecisionLocaleRules(StrictFrozenModel):
+    currency: Currency
+    budget_minor: int = Field(gt=0)
+    duration_minutes: int = Field(ge=5, le=180)
+    distance_unit: Literal["mile", "kilometer"]
+    usd_multiplier: float = Field(gt=0)
+
+
+class DecisionRules(StrictFrozenModel):
+    version: Literal["decision.v2"]
+    stage_order: tuple[str, ...]
+    score: DecisionScoreRules
+    relaxation_order: tuple[Literal["recent_repetition", "taste", "duration", "budget"], ...]
+    meal_period_tastes: dict[str, tuple[TasteTag, ...]]
+    locales: dict[Literal["en", "zh-CN"], DecisionLocaleRules]
+    quick_states: dict[str, dict[str, object]]
+    reasons: dict[str, dict[Literal["en", "zh-CN"], str]]

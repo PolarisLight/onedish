@@ -15,6 +15,7 @@
       "peanuts"
     ],
     "excluded_ingredients": [],
+    "max_duration_minutes": null,
     "max_price_minor": 1750,
     "minimum_protein_g": 20
   },
@@ -35,9 +36,9 @@
   "decision": {
     "catalog_version": "catalog.v1",
     "created_at": "2026-07-18T12:00:00Z",
-    "decision_id": "decision-e72ec195697cbf13",
-    "engine_version": "engine.v1",
-    "input_sha256": "e72ec195697cbf13b1c139c736615d377f054a9919e924a1d58f1cdd414bda8f",
+    "decision_id": "decision-e08f06d82d2bcb1c",
+    "engine_version": "engine.v2",
+    "input_sha256": "e08f06d82d2bcb1cd767c714b66767faf0bb2cfcb04bcd507463f9a014228595",
     "relaxations": [],
     "reserve_id": "green-room-charred-chicken-rice",
     "stages": [
@@ -62,34 +63,28 @@
         "survivor_count": 81
       },
       {
-        "id": "safety_budget",
+        "id": "safety",
         "input_count": 81,
-        "reason_counts": {
-          "over_budget": 8
-        },
-        "representative_removed_ids": [
-          "broth-house-roasted-veg-soup",
-          "broth-house-smoky-beef-plate",
-          "grain-signal-smoky-beef-plate"
-        ],
-        "survivor_count": 73
+        "reason_counts": {},
+        "representative_removed_ids": [],
+        "survivor_count": 81
       },
       {
         "id": "nutrition",
-        "input_count": 73,
+        "input_count": 81,
         "reason_counts": {
-          "energy_outside_range": 16
+          "energy_outside_range": 18
         },
         "representative_removed_ids": [
           "broth-house-crisp-herb-salad",
-          "copper-tandoor-crisp-herb-salad",
-          "copper-tandoor-roasted-veg-soup"
+          "broth-house-roasted-veg-soup",
+          "copper-tandoor-crisp-herb-salad"
         ],
-        "survivor_count": 57
+        "survivor_count": 63
       },
       {
         "id": "repetition",
-        "input_count": 57,
+        "input_count": 63,
         "reason_counts": {
           "recent_repetition": 9
         },
@@ -98,38 +93,52 @@
           "copper-tandoor-fire-noodle-cup",
           "ember-bowl-fire-noodle-cup"
         ],
+        "survivor_count": 54
+      },
+      {
+        "id": "taste",
+        "input_count": 54,
+        "reason_counts": {},
+        "representative_removed_ids": [],
+        "survivor_count": 54
+      },
+      {
+        "id": "duration",
+        "input_count": 54,
+        "reason_counts": {},
+        "representative_removed_ids": [],
+        "survivor_count": 54
+      },
+      {
+        "id": "budget",
+        "input_count": 54,
+        "reason_counts": {
+          "over_budget": 6
+        },
+        "representative_removed_ids": [
+          "broth-house-smoky-beef-plate",
+          "grain-signal-smoky-beef-plate",
+          "night-market-smoky-beef-plate"
+        ],
         "survivor_count": 48
       },
       {
-        "id": "taste_confidence",
+        "id": "winner",
         "input_count": 48,
         "reason_counts": {
-          "lower_score": 31
-        },
-        "representative_removed_ids": [
-          "broth-house-ginger-tofu-bowl",
-          "broth-house-lentil-comfort-curry",
-          "broth-house-miso-salmon-plate"
-        ],
-        "survivor_count": 17
-      },
-      {
-        "id": "winner",
-        "input_count": 17,
-        "reason_counts": {
-          "reserve_or_lower_score": 16
+          "reserve_or_lower_score": 47
         },
         "representative_removed_ids": [
           "broth-house-charred-chicken-rice",
-          "copper-tandoor-charred-chicken-rice",
-          "copper-tandoor-smoky-beef-plate"
+          "broth-house-ginger-tofu-bowl",
+          "broth-house-lentil-comfort-curry"
         ],
         "survivor_count": 1
       }
     ],
     "winner_id": "ember-bowl-charred-chicken-rice"
   },
-  "engine_version": "engine.v1",
+  "engine_version": "engine.v2",
   "feedback": null,
   "generated_at": "2026-07-18T12:00:00Z",
   "history_summary": {
@@ -140,9 +149,9 @@
     },
     "recent_dishes": 2
   },
-  "input_sha256": "e72ec195697cbf13b1c139c736615d377f054a9919e924a1d58f1cdd414bda8f",
+  "input_sha256": "e08f06d82d2bcb1cd767c714b66767faf0bb2cfcb04bcd507463f9a014228595",
   "provenance": {
-    "decision": "canonical deterministic engine.v1",
+    "decision": "canonical deterministic engine.v2",
     "menu": "versioned fictional demo menu",
     "places": "OneDish fixture places",
     "wellness": "synthetic user-entered demo context"
@@ -164,6 +173,7 @@
         "max": 660,
         "min": 560
       },
+      "estimated_minutes": 20,
       "id": "green-room-charred-chicken-rice",
       "image": "/food/green-room.svg",
       "ingredients": [
@@ -215,13 +225,14 @@
         "asian"
       ],
       "currency": "USD",
-      "description": "A fictional demo serving of charred chicken rice bowl with an Asian-inspired profile.",
+      "description": "A fictional demo serving of charred chicken rice bowl with a asian profile.",
       "energy_kcal": {
         "max": 645,
         "min": 545
       },
+      "estimated_minutes": 20,
       "id": "ember-bowl-charred-chicken-rice",
-      "image": "/food/ember-bowl-charred-chicken-rice.webp",
+      "image": "/food/ember-bowl.svg",
       "ingredients": [
         "rice",
         "vegetables",

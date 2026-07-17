@@ -7,13 +7,13 @@ import json
 from collections import Counter
 from dataclasses import asdict
 from datetime import datetime
-from math import ceil
+from pathlib import Path
 from typing import Callable, Sequence
 
 from onedish_api.domain import (
     Candidate,
-    Confidence,
     DecisionRecord,
+    DecisionRules,
     EliminationStage,
     MealConstraints,
     MealContext,
@@ -27,6 +27,10 @@ class NoSafeCandidate(ValueError):
         self.reason_counts = reason_counts
 
 
+def load_decision_rules(path: Path) -> DecisionRules:
+    return DecisionRules.model_validate_json(path.read_text(encoding="utf-8"))
+
+
 def _stage(
     stage_id: str,
     before: Sequence[Candidate],
@@ -35,7 +39,11 @@ def _stage(
 ) -> EliminationStage:
     after_ids = {candidate.dish.id for candidate in after}
     removed = tuple(
-        sorted(candidate.dish.id for candidate in before if candidate.dish.id not in after_ids)[:3]
+        sorted(
+            candidate.dish.id
+            for candidate in before
+            if candidate.dish.id not in after_ids
+        )[:3]
     )
     return EliminationStage(
         id=stage_id,  # type: ignore[arg-type]
@@ -61,17 +69,27 @@ def _filter(
     return survivors, dict(reasons)
 
 
-def _overlaps(candidate_min: int, candidate_max: int, target_min: int, target_max: int) -> bool:
+def _overlaps(
+    candidate_min: int,
+    candidate_max: int,
+    target_min: int,
+    target_max: int,
+) -> bool:
     return candidate_max >= target_min and candidate_min <= target_max
 
 
-def _confidence_rank(confidence: Confidence) -> int:
-    return {
-        Confidence.authoritative: 4,
-        Confidence.high: 3,
-        Confidence.medium: 2,
-        Confidence.low: 1,
-    }[confidence]
+def _localized_price_minor(
+    candidate: Candidate,
+    constraints: MealConstraints,
+    rules: DecisionRules,
+) -> int:
+    locale = next(
+        (value for value in rules.locales.values() if value.currency == constraints.currency),
+        None,
+    )
+    if locale is None:
+        raise NoSafeCandidate({"currency_mismatch": 1})
+    return round(candidate.dish.price_minor * locale.usd_multiplier)
 
 
 def _score(
@@ -80,20 +98,23 @@ def _score(
     constraints: MealConstraints,
     repetition: RepetitionProfile,
     preferences: PreferenceWeights,
+    rules: DecisionRules,
 ) -> int:
     dish = candidate.dish
     desired = set(constraints.desired_taste_tags)
-    taste_match = len(desired.intersection(dish.taste_tags))
-    score = taste_match * 1_000
+    score = len(desired.intersection(dish.taste_tags)) * rules.score.taste_match
     if context.comfort_preference and context.comfort_preference in dish.taste_tags:
-        score += 450
-    score += _confidence_rank(dish.confidence) * 220
-    score -= candidate.place.distance_m // 5
-    score -= dish.price_minor // 15
-    score -= repetition.dish_ids.get(dish.id, 0) * 800
-    score -= repetition.base_ingredients.get(dish.base_ingredient, 0) * 350
+        score += rules.score.comfort_match
+    score += rules.score.confidence[dish.confidence]
+    score -= candidate.place.distance_m // rules.score.distance_divisor
+    score -= dish.price_minor // rules.score.price_divisor
+    score -= repetition.dish_ids.get(dish.id, 0) * rules.score.recent_dish
+    score -= (
+        repetition.base_ingredients.get(dish.base_ingredient, 0)
+        * rules.score.recent_base_ingredient
+    )
     score += round(
-        1_000
+        rules.score.preference_scale
         * (
             sum(preferences.cuisine.get(tag, 0) for tag in dish.cuisine_tags)
             + sum(preferences.taste.get(tag, 0) for tag in dish.taste_tags)
@@ -109,6 +130,8 @@ def _canonical_hash(
     repetition: RepetitionProfile,
     preferences: PreferenceWeights,
     catalog_version: str,
+    rules: DecisionRules,
+    session_exclusions: tuple[str, ...],
 ) -> str:
     payload = {
         "candidates": [
@@ -120,10 +143,29 @@ def _canonical_hash(
         "repetition": asdict(repetition),
         "preferences": asdict(preferences),
         "catalog_version": catalog_version,
-        "engine_version": "engine.v1",
+        "rules": rules.model_dump(mode="json"),
+        "session_exclusions": sorted(session_exclusions),
+        "engine_version": "engine.v2",
     }
     raw = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
     return hashlib.sha256(raw).hexdigest()
+
+
+def _apply_soft_stage(
+    stage_id: str,
+    current: list[Candidate],
+    filtered: list[Candidate],
+    reasons: dict[str, int],
+    relaxation: str,
+    constraints: MealConstraints,
+    relaxations: list[str],
+) -> tuple[list[Candidate], EliminationStage]:
+    if filtered:
+        return filtered, _stage(stage_id, current, filtered, reasons)
+    if relaxation not in constraints.allowed_relaxations:
+        raise NoSafeCandidate(reasons)
+    relaxations.append(relaxation)
+    return current, _stage(stage_id, current, current, reasons)
 
 
 def recommend(
@@ -135,13 +177,13 @@ def recommend(
     *,
     catalog_version: str,
     created_at: datetime,
+    rules: DecisionRules,
+    session_exclusions: tuple[str, ...] = (),
 ) -> DecisionRecord:
     ordered = sorted(candidates, key=lambda candidate: candidate.dish.id)
     if not ordered:
         raise NoSafeCandidate({"empty_catalog": 1})
-    stages: list[EliminationStage] = [
-        _stage("found", ordered, ordered, {})
-    ]
+    stages: list[EliminationStage] = [_stage("found", ordered, ordered, {})]
     relaxations: list[str] = []
 
     available, reasons = _filter(
@@ -160,22 +202,21 @@ def recommend(
 
     excluded_allergens = set(constraints.excluded_allergens)
     excluded_ingredients = {value.casefold() for value in constraints.excluded_ingredients}
+    excluded_session_ids = set(session_exclusions)
 
     def safety_reason(item: Candidate) -> str | None:
         dish = item.dish
+        if dish.id in excluded_session_ids:
+            return "session_excluded"
         if excluded_allergens.intersection((*dish.allergens, *dish.possible_allergens)):
             return "allergen_excluded"
         ingredients = {ingredient.casefold() for ingredient in dish.ingredients}
         if excluded_ingredients.intersection(ingredients):
             return "ingredient_excluded"
-        if constraints.max_price_minor is not None and dish.price_minor > constraints.max_price_minor:
-            return "over_budget"
-        if dish.currency != constraints.currency:
-            return "currency_mismatch"
         return None
 
     safe, reasons = _filter(available, safety_reason)
-    stages.append(_stage("safety_budget", available, safe, reasons))
+    stages.append(_stage("safety", available, safe, reasons))
     if not safe:
         raise NoSafeCandidate(reasons)
 
@@ -206,12 +247,13 @@ def recommend(
             stages.append(_stage("nutrition", nutrition_input, [], dict(nutrition_reasons)))
             raise NoSafeCandidate(dict(nutrition_reasons))
 
-    protein_floor = constraints.minimum_protein_g
-    if protein_floor is not None:
+    if constraints.minimum_protein_g is not None:
         protein, protein_reasons = _filter(
             nutrition,
             lambda item: (
-                None if item.dish.protein_g.min >= protein_floor else "protein_below_floor"
+                None
+                if item.dish.protein_g.min >= constraints.minimum_protein_g
+                else "protein_below_floor"
             ),
         )
         nutrition_reasons.update(protein_reasons)
@@ -225,63 +267,108 @@ def recommend(
     stages.append(_stage("nutrition", nutrition_input, nutrition, dict(nutrition_reasons)))
 
     avoid = set(context.recent_categories_to_avoid)
-    repeated = {
-        item.dish.id
-        for item in nutrition
-        if item.dish.base_ingredient in avoid
-        or repetition.base_ingredients.get(item.dish.base_ingredient, 0) >= 2
-        or repetition.dish_ids.get(item.dish.id, 0) >= 1
-    }
-    non_repeated = [item for item in nutrition if item.dish.id not in repeated]
-    if non_repeated:
-        repetition_survivors = non_repeated
-        repetition_reasons = {"recent_repetition": len(repeated)} if repeated else {}
-    else:
-        repetition_survivors = nutrition
-        repetition_reasons = {"recent_repetition_retained": len(repeated)} if repeated else {}
-        if repeated and "recent_repetition" in constraints.allowed_relaxations:
-            relaxations.append("recent_repetition")
-    stages.append(
-        _stage("repetition", nutrition, repetition_survivors, repetition_reasons)
+    non_repeated, repetition_reasons = _filter(
+        nutrition,
+        lambda item: (
+            "recent_repetition"
+            if item.dish.base_ingredient in avoid
+            or repetition.base_ingredients.get(item.dish.base_ingredient, 0) >= 2
+            or repetition.dish_ids.get(item.dish.id, 0) >= 1
+            else None
+        ),
     )
+    current, trace = _apply_soft_stage(
+        "repetition",
+        nutrition,
+        non_repeated,
+        repetition_reasons,
+        "recent_repetition",
+        constraints,
+        relaxations,
+    )
+    stages.append(trace)
+
+    desired = set(constraints.desired_taste_tags)
+    taste, taste_reasons = _filter(
+        current,
+        lambda item: (
+            None
+            if not desired or desired.intersection(item.dish.taste_tags)
+            else "taste_mismatch"
+        ),
+    )
+    current, trace = _apply_soft_stage(
+        "taste", current, taste, taste_reasons, "taste", constraints, relaxations
+    )
+    stages.append(trace)
+
+    duration, duration_reasons = _filter(
+        current,
+        lambda item: (
+            None
+            if constraints.max_duration_minutes is None
+            or item.dish.estimated_minutes <= constraints.max_duration_minutes
+            else "too_slow"
+        ),
+    )
+    current, trace = _apply_soft_stage(
+        "duration",
+        current,
+        duration,
+        duration_reasons,
+        "duration",
+        constraints,
+        relaxations,
+    )
+    stages.append(trace)
+
+    budget, budget_reasons = _filter(
+        current,
+        lambda item: (
+            None
+            if constraints.max_price_minor is None
+            or _localized_price_minor(item, constraints, rules) <= constraints.max_price_minor
+            else "over_budget"
+        ),
+    )
+    current, trace = _apply_soft_stage(
+        "budget", current, budget, budget_reasons, "budget", constraints, relaxations
+    )
+    stages.append(trace)
 
     ranked = sorted(
-        repetition_survivors,
+        current,
         key=lambda item: (
-            -_score(item, context, constraints, repetition, preferences),
-            -_confidence_rank(item.dish.confidence),
+            -_score(item, context, constraints, repetition, preferences, rules),
             item.place.distance_m,
             item.dish.price_minor,
             item.dish.id,
         ),
     )
-    shortlist_size = min(len(ranked), max(2, ceil(len(ranked) * 0.35)))
-    shortlist = ranked[:shortlist_size]
-    stages.append(
-        _stage(
-            "taste_confidence",
-            repetition_survivors,
-            shortlist,
-            {"lower_score": len(ranked) - len(shortlist)} if len(ranked) > len(shortlist) else {},
-        )
-    )
-    winner = shortlist[0]
-    reserve = shortlist[1] if len(shortlist) > 1 else None
+    winner = ranked[0]
+    reserve = ranked[1] if len(ranked) > 1 else None
     stages.append(
         _stage(
             "winner",
-            shortlist,
+            ranked,
             [winner],
-            {"reserve_or_lower_score": len(shortlist) - 1} if len(shortlist) > 1 else {},
+            {"reserve_or_lower_score": len(ranked) - 1} if len(ranked) > 1 else {},
         )
     )
 
     input_hash = _canonical_hash(
-        ordered, context, constraints, repetition, preferences, catalog_version
+        ordered,
+        context,
+        constraints,
+        repetition,
+        preferences,
+        catalog_version,
+        rules,
+        session_exclusions,
     )
     return DecisionRecord(
         decision_id=f"decision-{input_hash[:16]}",
-        engine_version="engine.v1",
+        engine_version="engine.v2",
         catalog_version=catalog_version,
         input_sha256=input_hash,
         created_at=created_at,

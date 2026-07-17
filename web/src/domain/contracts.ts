@@ -101,7 +101,7 @@ export interface DemoRecord {
   readonly title: string;
   readonly synthetic_demo_context: true;
   readonly catalog_version: string;
-  readonly engine_version: "engine.v1";
+  readonly engine_version: "engine.v1" | "engine.v2";
   readonly input_sha256: string;
   readonly context: MealContext;
   readonly constraints: Readonly<Record<string, unknown>>;

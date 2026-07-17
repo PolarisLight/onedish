@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).parents[1]
 DESTINATION = ROOT / "web" / "public" / "data"
-FILES = ("decision.v2.json", "catalog.v1.json", "places.v1.json")
+FILES = ("decision.v2.json", "catalog.v1.json", "places.v1.json", "parity.v2.json")
 
 
 def main() -> None:

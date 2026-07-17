@@ -33,6 +33,10 @@ class Settings(BaseSettings):
         return self.root_path / "data" / "places.v1.json"
 
     @property
+    def decision_rules_path(self) -> Path:
+        return self.root_path / "data" / "decision.v2.json"
+
+    @property
     def web_public_path(self) -> Path:
         return self.root_path / "web" / "public"
 

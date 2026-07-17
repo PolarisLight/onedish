@@ -23,7 +23,7 @@ from onedish_api.domain import (
     MealHistoryEvent,
     NutritionRange,
 )
-from onedish_api.engine import recommend
+from onedish_api.engine import load_decision_rules, recommend
 from onedish_api.history import preference_weights, recent_repetition
 from onedish_api.providers.fixtures import FixturePlacesProvider
 from onedish_api.providers.base import PlaceQuery
@@ -32,6 +32,7 @@ from onedish_api.providers.base import PlaceQuery
 NOW = datetime(2026, 7, 18, 12, 0, tzinfo=UTC)
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "web" / "public" / "demo"
+RULES = load_decision_rules(ROOT / "data" / "decision.v2.json")
 
 
 def _read_versioned(path: Path, version: str, key: str) -> Any:
@@ -91,6 +92,7 @@ def _envelope(
         preferences,
         catalog_version=catalog.version,
         created_at=NOW,
+        rules=RULES,
     )
     by_id = {candidate.dish.id: candidate for candidate in candidates}
     return {
@@ -122,7 +124,7 @@ def _envelope(
             "menu": "versioned fictional demo menu",
             "places": "OneDish fixture places",
             "wellness": "synthetic user-entered demo context",
-            "decision": "canonical deterministic engine.v1",
+            "decision": "canonical deterministic engine.v2",
         },
     }
 

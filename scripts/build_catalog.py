@@ -25,15 +25,15 @@ RESTAURANTS = (
 )
 
 TEMPLATES = (
-    ("charred-chicken-rice", "Charred Chicken Rice Bowl", "rice", 560, 660, 42, 50, ("warm", "filling"), ("soy", "sesame")),
-    ("ginger-tofu-bowl", "Ginger Tofu Bowl", "rice", 480, 590, 25, 34, ("warm", "fresh"), ("soy", "sesame")),
-    ("crisp-herb-salad", "Crisp Herb Salad", "greens", 330, 430, 18, 26, ("cold", "light", "crisp"), ("milk",)),
-    ("fire-noodle-cup", "Fire Noodle Cup", "noodles", 610, 760, 21, 30, ("warm", "spicy", "rich"), ("gluten", "soy")),
-    ("turmeric-chicken-wrap", "Turmeric Chicken Wrap", "flatbread", 510, 630, 36, 44, ("warm", "filling"), ("gluten", "milk")),
-    ("lentil-comfort-curry", "Lentil Comfort Curry", "lentils", 470, 600, 24, 32, ("warm", "comforting"), ()),
-    ("miso-salmon-plate", "Miso Salmon Plate", "fish", 520, 650, 39, 48, ("warm", "fresh"), ("fish", "soy")),
-    ("roasted-veg-soup", "Roasted Vegetable Soup", "vegetables", 300, 420, 12, 20, ("warm", "light", "comforting"), ("celery",)),
-    ("smoky-beef-plate", "Smoky Beef Plate", "beef", 650, 790, 45, 55, ("warm", "rich", "filling"), ("milk",)),
+    ("charred-chicken-rice", "Charred Chicken Rice Bowl", "rice", 560, 660, 42, 50, 20, ("warm", "filling"), ("soy", "sesame")),
+    ("ginger-tofu-bowl", "Ginger Tofu Bowl", "rice", 480, 590, 25, 34, 20, ("warm", "fresh"), ("soy", "sesame")),
+    ("crisp-herb-salad", "Crisp Herb Salad", "greens", 330, 430, 18, 26, 10, ("cold", "light", "crisp"), ("milk",)),
+    ("fire-noodle-cup", "Fire Noodle Cup", "noodles", 610, 760, 21, 30, 25, ("warm", "spicy", "rich"), ("gluten", "soy")),
+    ("turmeric-chicken-wrap", "Turmeric Chicken Wrap", "flatbread", 510, 630, 36, 44, 20, ("warm", "filling"), ("gluten", "milk")),
+    ("lentil-comfort-curry", "Lentil Comfort Curry", "lentils", 470, 600, 24, 32, 25, ("warm", "comforting"), ()),
+    ("miso-salmon-plate", "Miso Salmon Plate", "fish", 520, 650, 39, 48, 30, ("warm", "fresh"), ("fish", "soy")),
+    ("roasted-veg-soup", "Roasted Vegetable Soup", "vegetables", 300, 420, 12, 20, 15, ("warm", "light", "comforting"), ("celery",)),
+    ("smoky-beef-plate", "Smoky Beef Plate", "beef", 650, 790, 45, 55, 30, ("warm", "rich", "filling"), ("milk",)),
 )
 
 
@@ -60,7 +60,7 @@ def build() -> None:
         (FOOD / f"{rid}.svg").write_text(svg, encoding="utf-8")
 
         for template_index, template in enumerate(TEMPLATES):
-            slug, dish_name, base, emin, emax, pmin, pmax, tastes, allergens = template
+            slug, dish_name, base, emin, emax, pmin, pmax, minutes, tastes, allergens = template
             price = 1_080 + restaurant_index * 45 + template_index * 57
             energy_shift = (restaurant_index % 3 - 1) * 15
             protein_shift = restaurant_index % 4
@@ -85,6 +85,7 @@ def build() -> None:
                     "image": image,
                     "nutrition_provenance": "estimated_demo",
                     "source_kind": "demo_menu",
+                    "estimated_minutes": minutes,
                 }
             )
 

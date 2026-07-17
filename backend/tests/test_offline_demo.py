@@ -24,8 +24,9 @@ def test_records_are_deterministic_and_auditable() -> None:
     assert set(first) == {"day1.json", "day1_rejected.json", "day2.json"}
     day1 = json.loads(first["day1.json"])
     assert [stage["survivor_count"] for stage in day1["decision"]["stages"]] == [
-        90, 81, 73, 57, 48, 17, 1
+        90, 81, 81, 63, 54, 54, 54, 48, 1
     ]
+    assert day1["decision"]["engine_version"] == "engine.v2"
     assert day1["synthetic_demo_context"] is True
     assert day1["input_sha256"] == day1["decision"]["input_sha256"]
 

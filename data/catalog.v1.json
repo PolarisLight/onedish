@@ -87,7 +87,7 @@
       "id": "ember-bowl-charred-chicken-rice",
       "restaurant_id": "ember-bowl",
       "name": "Charred Chicken Rice Bowl",
-      "description": "A fictional demo serving of charred chicken rice bowl with an Asian-inspired profile.",
+      "description": "A fictional demo serving of charred chicken rice bowl with a asian profile.",
       "price_minor": 1080,
       "currency": "USD",
       "energy_kcal": {
@@ -117,15 +117,16 @@
         "filling"
       ],
       "base_ingredient": "rice",
-      "image": "/food/ember-bowl-charred-chicken-rice.webp",
+      "image": "/food/ember-bowl.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "ember-bowl-ginger-tofu-bowl",
       "restaurant_id": "ember-bowl",
       "name": "Ginger Tofu Bowl",
-      "description": "A fictional demo serving of ginger tofu bowl with an Asian-inspired profile.",
+      "description": "A fictional demo serving of ginger tofu bowl with a asian profile.",
       "price_minor": 1137,
       "currency": "USD",
       "energy_kcal": {
@@ -157,13 +158,14 @@
       "base_ingredient": "rice",
       "image": "/food/ember-bowl.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "ember-bowl-crisp-herb-salad",
       "restaurant_id": "ember-bowl",
       "name": "Crisp Herb Salad",
-      "description": "A fictional demo serving of crisp herb salad with an Asian-inspired profile.",
+      "description": "A fictional demo serving of crisp herb salad with a asian profile.",
       "price_minor": 1194,
       "currency": "USD",
       "energy_kcal": {
@@ -195,13 +197,14 @@
       "base_ingredient": "greens",
       "image": "/food/ember-bowl.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 10
     },
     {
       "id": "ember-bowl-fire-noodle-cup",
       "restaurant_id": "ember-bowl",
       "name": "Fire Noodle Cup",
-      "description": "A fictional demo serving of fire noodle cup with an Asian-inspired profile.",
+      "description": "A fictional demo serving of fire noodle cup with a asian profile.",
       "price_minor": 1251,
       "currency": "USD",
       "energy_kcal": {
@@ -234,13 +237,14 @@
       "base_ingredient": "noodles",
       "image": "/food/ember-bowl.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 25
     },
     {
       "id": "ember-bowl-turmeric-chicken-wrap",
       "restaurant_id": "ember-bowl",
       "name": "Turmeric Chicken Wrap",
-      "description": "A fictional demo serving of turmeric chicken wrap with an Asian-inspired profile.",
+      "description": "A fictional demo serving of turmeric chicken wrap with a asian profile.",
       "price_minor": 1308,
       "currency": "USD",
       "energy_kcal": {
@@ -272,13 +276,14 @@
       "base_ingredient": "flatbread",
       "image": "/food/ember-bowl.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "ember-bowl-lentil-comfort-curry",
       "restaurant_id": "ember-bowl",
       "name": "Lentil Comfort Curry",
-      "description": "A fictional demo serving of lentil comfort curry with an Asian-inspired profile.",
+      "description": "A fictional demo serving of lentil comfort curry with a asian profile.",
       "price_minor": 1365,
       "currency": "USD",
       "energy_kcal": {
@@ -307,13 +312,14 @@
       "base_ingredient": "lentils",
       "image": "/food/ember-bowl.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 25
     },
     {
       "id": "ember-bowl-miso-salmon-plate",
       "restaurant_id": "ember-bowl",
       "name": "Miso Salmon Plate",
-      "description": "A fictional demo serving of miso salmon plate with an Asian-inspired profile.",
+      "description": "A fictional demo serving of miso salmon plate with a asian profile.",
       "price_minor": 1422,
       "currency": "USD",
       "energy_kcal": {
@@ -345,13 +351,14 @@
       "base_ingredient": "fish",
       "image": "/food/ember-bowl.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 30
     },
     {
       "id": "ember-bowl-roasted-veg-soup",
       "restaurant_id": "ember-bowl",
       "name": "Roasted Vegetable Soup",
-      "description": "A fictional demo serving of roasted vegetable soup with an Asian-inspired profile.",
+      "description": "A fictional demo serving of roasted vegetable soup with a asian profile.",
       "price_minor": 1479,
       "currency": "USD",
       "energy_kcal": {
@@ -383,13 +390,14 @@
       "base_ingredient": "vegetables",
       "image": "/food/ember-bowl.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 15
     },
     {
       "id": "ember-bowl-smoky-beef-plate",
       "restaurant_id": "ember-bowl",
       "name": "Smoky Beef Plate",
-      "description": "A fictional demo serving of smoky beef plate with an Asian-inspired profile.",
+      "description": "A fictional demo serving of smoky beef plate with a asian profile.",
       "price_minor": 1536,
       "currency": "USD",
       "energy_kcal": {
@@ -421,7 +429,8 @@
       "base_ingredient": "beef",
       "image": "/food/ember-bowl.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 30
     },
     {
       "id": "green-room-charred-chicken-rice",
@@ -459,7 +468,8 @@
       "base_ingredient": "rice",
       "image": "/food/green-room.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "green-room-ginger-tofu-bowl",
@@ -497,7 +507,8 @@
       "base_ingredient": "rice",
       "image": "/food/green-room.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "green-room-crisp-herb-salad",
@@ -535,7 +546,8 @@
       "base_ingredient": "greens",
       "image": "/food/green-room.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 10
     },
     {
       "id": "green-room-fire-noodle-cup",
@@ -574,7 +586,8 @@
       "base_ingredient": "noodles",
       "image": "/food/green-room.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 25
     },
     {
       "id": "green-room-turmeric-chicken-wrap",
@@ -612,7 +625,8 @@
       "base_ingredient": "flatbread",
       "image": "/food/green-room.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "green-room-lentil-comfort-curry",
@@ -647,7 +661,8 @@
       "base_ingredient": "lentils",
       "image": "/food/green-room.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 25
     },
     {
       "id": "green-room-miso-salmon-plate",
@@ -685,7 +700,8 @@
       "base_ingredient": "fish",
       "image": "/food/green-room.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 30
     },
     {
       "id": "green-room-roasted-veg-soup",
@@ -723,7 +739,8 @@
       "base_ingredient": "vegetables",
       "image": "/food/green-room.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 15
     },
     {
       "id": "green-room-smoky-beef-plate",
@@ -761,13 +778,14 @@
       "base_ingredient": "beef",
       "image": "/food/green-room.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 30
     },
     {
       "id": "copper-tandoor-charred-chicken-rice",
       "restaurant_id": "copper-tandoor",
       "name": "Charred Chicken Rice Bowl",
-      "description": "A fictional demo serving of charred chicken rice bowl with an Indian-inspired profile.",
+      "description": "A fictional demo serving of charred chicken rice bowl with a indian profile.",
       "price_minor": 1170,
       "currency": "USD",
       "energy_kcal": {
@@ -799,13 +817,14 @@
       "base_ingredient": "rice",
       "image": "/food/copper-tandoor.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "copper-tandoor-ginger-tofu-bowl",
       "restaurant_id": "copper-tandoor",
       "name": "Ginger Tofu Bowl",
-      "description": "A fictional demo serving of ginger tofu bowl with an Indian-inspired profile.",
+      "description": "A fictional demo serving of ginger tofu bowl with a indian profile.",
       "price_minor": 1227,
       "currency": "USD",
       "energy_kcal": {
@@ -837,13 +856,14 @@
       "base_ingredient": "rice",
       "image": "/food/copper-tandoor.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "copper-tandoor-crisp-herb-salad",
       "restaurant_id": "copper-tandoor",
       "name": "Crisp Herb Salad",
-      "description": "A fictional demo serving of crisp herb salad with an Indian-inspired profile.",
+      "description": "A fictional demo serving of crisp herb salad with a indian profile.",
       "price_minor": 1284,
       "currency": "USD",
       "energy_kcal": {
@@ -875,13 +895,14 @@
       "base_ingredient": "greens",
       "image": "/food/copper-tandoor.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 10
     },
     {
       "id": "copper-tandoor-fire-noodle-cup",
       "restaurant_id": "copper-tandoor",
       "name": "Fire Noodle Cup",
-      "description": "A fictional demo serving of fire noodle cup with an Indian-inspired profile.",
+      "description": "A fictional demo serving of fire noodle cup with a indian profile.",
       "price_minor": 1341,
       "currency": "USD",
       "energy_kcal": {
@@ -914,13 +935,14 @@
       "base_ingredient": "noodles",
       "image": "/food/copper-tandoor.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 25
     },
     {
       "id": "copper-tandoor-turmeric-chicken-wrap",
       "restaurant_id": "copper-tandoor",
       "name": "Turmeric Chicken Wrap",
-      "description": "A fictional demo serving of turmeric chicken wrap with an Indian-inspired profile.",
+      "description": "A fictional demo serving of turmeric chicken wrap with a indian profile.",
       "price_minor": 1398,
       "currency": "USD",
       "energy_kcal": {
@@ -952,13 +974,14 @@
       "base_ingredient": "flatbread",
       "image": "/food/copper-tandoor.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "copper-tandoor-lentil-comfort-curry",
       "restaurant_id": "copper-tandoor",
       "name": "Lentil Comfort Curry",
-      "description": "A fictional demo serving of lentil comfort curry with an Indian-inspired profile.",
+      "description": "A fictional demo serving of lentil comfort curry with a indian profile.",
       "price_minor": 1455,
       "currency": "USD",
       "energy_kcal": {
@@ -987,13 +1010,14 @@
       "base_ingredient": "lentils",
       "image": "/food/copper-tandoor.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 25
     },
     {
       "id": "copper-tandoor-miso-salmon-plate",
       "restaurant_id": "copper-tandoor",
       "name": "Miso Salmon Plate",
-      "description": "A fictional demo serving of miso salmon plate with an Indian-inspired profile.",
+      "description": "A fictional demo serving of miso salmon plate with a indian profile.",
       "price_minor": 1512,
       "currency": "USD",
       "energy_kcal": {
@@ -1025,13 +1049,14 @@
       "base_ingredient": "fish",
       "image": "/food/copper-tandoor.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 30
     },
     {
       "id": "copper-tandoor-roasted-veg-soup",
       "restaurant_id": "copper-tandoor",
       "name": "Roasted Vegetable Soup",
-      "description": "A fictional demo serving of roasted vegetable soup with an Indian-inspired profile.",
+      "description": "A fictional demo serving of roasted vegetable soup with a indian profile.",
       "price_minor": 1569,
       "currency": "USD",
       "energy_kcal": {
@@ -1063,13 +1088,14 @@
       "base_ingredient": "vegetables",
       "image": "/food/copper-tandoor.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 15
     },
     {
       "id": "copper-tandoor-smoky-beef-plate",
       "restaurant_id": "copper-tandoor",
       "name": "Smoky Beef Plate",
-      "description": "A fictional demo serving of smoky beef plate with an Indian-inspired profile.",
+      "description": "A fictional demo serving of smoky beef plate with a indian profile.",
       "price_minor": 1626,
       "currency": "USD",
       "energy_kcal": {
@@ -1101,7 +1127,8 @@
       "base_ingredient": "beef",
       "image": "/food/copper-tandoor.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 30
     },
     {
       "id": "mesa-luna-charred-chicken-rice",
@@ -1139,7 +1166,8 @@
       "base_ingredient": "rice",
       "image": "/food/mesa-luna.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "mesa-luna-ginger-tofu-bowl",
@@ -1177,7 +1205,8 @@
       "base_ingredient": "rice",
       "image": "/food/mesa-luna.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "mesa-luna-crisp-herb-salad",
@@ -1215,7 +1244,8 @@
       "base_ingredient": "greens",
       "image": "/food/mesa-luna.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 10
     },
     {
       "id": "mesa-luna-fire-noodle-cup",
@@ -1254,7 +1284,8 @@
       "base_ingredient": "noodles",
       "image": "/food/mesa-luna.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 25
     },
     {
       "id": "mesa-luna-turmeric-chicken-wrap",
@@ -1292,7 +1323,8 @@
       "base_ingredient": "flatbread",
       "image": "/food/mesa-luna.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "mesa-luna-lentil-comfort-curry",
@@ -1327,7 +1359,8 @@
       "base_ingredient": "lentils",
       "image": "/food/mesa-luna.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 25
     },
     {
       "id": "mesa-luna-miso-salmon-plate",
@@ -1365,7 +1398,8 @@
       "base_ingredient": "fish",
       "image": "/food/mesa-luna.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 30
     },
     {
       "id": "mesa-luna-roasted-veg-soup",
@@ -1403,7 +1437,8 @@
       "base_ingredient": "vegetables",
       "image": "/food/mesa-luna.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 15
     },
     {
       "id": "mesa-luna-smoky-beef-plate",
@@ -1441,7 +1476,8 @@
       "base_ingredient": "beef",
       "image": "/food/mesa-luna.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 30
     },
     {
       "id": "olive-line-charred-chicken-rice",
@@ -1479,7 +1515,8 @@
       "base_ingredient": "rice",
       "image": "/food/olive-line.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "olive-line-ginger-tofu-bowl",
@@ -1517,7 +1554,8 @@
       "base_ingredient": "rice",
       "image": "/food/olive-line.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "olive-line-crisp-herb-salad",
@@ -1555,7 +1593,8 @@
       "base_ingredient": "greens",
       "image": "/food/olive-line.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 10
     },
     {
       "id": "olive-line-fire-noodle-cup",
@@ -1594,7 +1633,8 @@
       "base_ingredient": "noodles",
       "image": "/food/olive-line.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 25
     },
     {
       "id": "olive-line-turmeric-chicken-wrap",
@@ -1632,7 +1672,8 @@
       "base_ingredient": "flatbread",
       "image": "/food/olive-line.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "olive-line-lentil-comfort-curry",
@@ -1667,7 +1708,8 @@
       "base_ingredient": "lentils",
       "image": "/food/olive-line.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 25
     },
     {
       "id": "olive-line-miso-salmon-plate",
@@ -1705,7 +1747,8 @@
       "base_ingredient": "fish",
       "image": "/food/olive-line.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 30
     },
     {
       "id": "olive-line-roasted-veg-soup",
@@ -1743,7 +1786,8 @@
       "base_ingredient": "vegetables",
       "image": "/food/olive-line.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 15
     },
     {
       "id": "olive-line-smoky-beef-plate",
@@ -1781,13 +1825,14 @@
       "base_ingredient": "beef",
       "image": "/food/olive-line.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 30
     },
     {
       "id": "night-market-charred-chicken-rice",
       "restaurant_id": "night-market",
       "name": "Charred Chicken Rice Bowl",
-      "description": "A fictional demo serving of charred chicken rice bowl with an Asian-inspired profile.",
+      "description": "A fictional demo serving of charred chicken rice bowl with a asian profile.",
       "price_minor": 1305,
       "currency": "USD",
       "energy_kcal": {
@@ -1819,13 +1864,14 @@
       "base_ingredient": "rice",
       "image": "/food/night-market.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "night-market-ginger-tofu-bowl",
       "restaurant_id": "night-market",
       "name": "Ginger Tofu Bowl",
-      "description": "A fictional demo serving of ginger tofu bowl with an Asian-inspired profile.",
+      "description": "A fictional demo serving of ginger tofu bowl with a asian profile.",
       "price_minor": 1362,
       "currency": "USD",
       "energy_kcal": {
@@ -1857,13 +1903,14 @@
       "base_ingredient": "rice",
       "image": "/food/night-market.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "night-market-crisp-herb-salad",
       "restaurant_id": "night-market",
       "name": "Crisp Herb Salad",
-      "description": "A fictional demo serving of crisp herb salad with an Asian-inspired profile.",
+      "description": "A fictional demo serving of crisp herb salad with a asian profile.",
       "price_minor": 1419,
       "currency": "USD",
       "energy_kcal": {
@@ -1895,13 +1942,14 @@
       "base_ingredient": "greens",
       "image": "/food/night-market.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 10
     },
     {
       "id": "night-market-fire-noodle-cup",
       "restaurant_id": "night-market",
       "name": "Fire Noodle Cup",
-      "description": "A fictional demo serving of fire noodle cup with an Asian-inspired profile.",
+      "description": "A fictional demo serving of fire noodle cup with a asian profile.",
       "price_minor": 1476,
       "currency": "USD",
       "energy_kcal": {
@@ -1934,13 +1982,14 @@
       "base_ingredient": "noodles",
       "image": "/food/night-market.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 25
     },
     {
       "id": "night-market-turmeric-chicken-wrap",
       "restaurant_id": "night-market",
       "name": "Turmeric Chicken Wrap",
-      "description": "A fictional demo serving of turmeric chicken wrap with an Asian-inspired profile.",
+      "description": "A fictional demo serving of turmeric chicken wrap with a asian profile.",
       "price_minor": 1533,
       "currency": "USD",
       "energy_kcal": {
@@ -1972,13 +2021,14 @@
       "base_ingredient": "flatbread",
       "image": "/food/night-market.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "night-market-lentil-comfort-curry",
       "restaurant_id": "night-market",
       "name": "Lentil Comfort Curry",
-      "description": "A fictional demo serving of lentil comfort curry with an Asian-inspired profile.",
+      "description": "A fictional demo serving of lentil comfort curry with a asian profile.",
       "price_minor": 1590,
       "currency": "USD",
       "energy_kcal": {
@@ -2007,13 +2057,14 @@
       "base_ingredient": "lentils",
       "image": "/food/night-market.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 25
     },
     {
       "id": "night-market-miso-salmon-plate",
       "restaurant_id": "night-market",
       "name": "Miso Salmon Plate",
-      "description": "A fictional demo serving of miso salmon plate with an Asian-inspired profile.",
+      "description": "A fictional demo serving of miso salmon plate with a asian profile.",
       "price_minor": 1647,
       "currency": "USD",
       "energy_kcal": {
@@ -2045,13 +2096,14 @@
       "base_ingredient": "fish",
       "image": "/food/night-market.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 30
     },
     {
       "id": "night-market-roasted-veg-soup",
       "restaurant_id": "night-market",
       "name": "Roasted Vegetable Soup",
-      "description": "A fictional demo serving of roasted vegetable soup with an Asian-inspired profile.",
+      "description": "A fictional demo serving of roasted vegetable soup with a asian profile.",
       "price_minor": 1704,
       "currency": "USD",
       "energy_kcal": {
@@ -2083,13 +2135,14 @@
       "base_ingredient": "vegetables",
       "image": "/food/night-market.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 15
     },
     {
       "id": "night-market-smoky-beef-plate",
       "restaurant_id": "night-market",
       "name": "Smoky Beef Plate",
-      "description": "A fictional demo serving of smoky beef plate with an Asian-inspired profile.",
+      "description": "A fictional demo serving of smoky beef plate with a asian profile.",
       "price_minor": 1761,
       "currency": "USD",
       "energy_kcal": {
@@ -2121,7 +2174,8 @@
       "base_ingredient": "beef",
       "image": "/food/night-market.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 30
     },
     {
       "id": "grain-signal-charred-chicken-rice",
@@ -2159,7 +2213,8 @@
       "base_ingredient": "rice",
       "image": "/food/grain-signal.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "grain-signal-ginger-tofu-bowl",
@@ -2197,7 +2252,8 @@
       "base_ingredient": "rice",
       "image": "/food/grain-signal.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "grain-signal-crisp-herb-salad",
@@ -2235,7 +2291,8 @@
       "base_ingredient": "greens",
       "image": "/food/grain-signal.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 10
     },
     {
       "id": "grain-signal-fire-noodle-cup",
@@ -2274,7 +2331,8 @@
       "base_ingredient": "noodles",
       "image": "/food/grain-signal.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 25
     },
     {
       "id": "grain-signal-turmeric-chicken-wrap",
@@ -2312,7 +2370,8 @@
       "base_ingredient": "flatbread",
       "image": "/food/grain-signal.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "grain-signal-lentil-comfort-curry",
@@ -2347,7 +2406,8 @@
       "base_ingredient": "lentils",
       "image": "/food/grain-signal.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 25
     },
     {
       "id": "grain-signal-miso-salmon-plate",
@@ -2385,7 +2445,8 @@
       "base_ingredient": "fish",
       "image": "/food/grain-signal.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 30
     },
     {
       "id": "grain-signal-roasted-veg-soup",
@@ -2423,7 +2484,8 @@
       "base_ingredient": "vegetables",
       "image": "/food/grain-signal.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 15
     },
     {
       "id": "grain-signal-smoky-beef-plate",
@@ -2461,13 +2523,14 @@
       "base_ingredient": "beef",
       "image": "/food/grain-signal.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 30
     },
     {
       "id": "broth-house-charred-chicken-rice",
       "restaurant_id": "broth-house",
       "name": "Charred Chicken Rice Bowl",
-      "description": "A fictional demo serving of charred chicken rice bowl with an Asian-inspired profile.",
+      "description": "A fictional demo serving of charred chicken rice bowl with a asian profile.",
       "price_minor": 1395,
       "currency": "USD",
       "energy_kcal": {
@@ -2499,13 +2562,14 @@
       "base_ingredient": "rice",
       "image": "/food/broth-house.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "broth-house-ginger-tofu-bowl",
       "restaurant_id": "broth-house",
       "name": "Ginger Tofu Bowl",
-      "description": "A fictional demo serving of ginger tofu bowl with an Asian-inspired profile.",
+      "description": "A fictional demo serving of ginger tofu bowl with a asian profile.",
       "price_minor": 1452,
       "currency": "USD",
       "energy_kcal": {
@@ -2537,13 +2601,14 @@
       "base_ingredient": "rice",
       "image": "/food/broth-house.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "broth-house-crisp-herb-salad",
       "restaurant_id": "broth-house",
       "name": "Crisp Herb Salad",
-      "description": "A fictional demo serving of crisp herb salad with an Asian-inspired profile.",
+      "description": "A fictional demo serving of crisp herb salad with a asian profile.",
       "price_minor": 1509,
       "currency": "USD",
       "energy_kcal": {
@@ -2575,13 +2640,14 @@
       "base_ingredient": "greens",
       "image": "/food/broth-house.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 10
     },
     {
       "id": "broth-house-fire-noodle-cup",
       "restaurant_id": "broth-house",
       "name": "Fire Noodle Cup",
-      "description": "A fictional demo serving of fire noodle cup with an Asian-inspired profile.",
+      "description": "A fictional demo serving of fire noodle cup with a asian profile.",
       "price_minor": 1566,
       "currency": "USD",
       "energy_kcal": {
@@ -2614,13 +2680,14 @@
       "base_ingredient": "noodles",
       "image": "/food/broth-house.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 25
     },
     {
       "id": "broth-house-turmeric-chicken-wrap",
       "restaurant_id": "broth-house",
       "name": "Turmeric Chicken Wrap",
-      "description": "A fictional demo serving of turmeric chicken wrap with an Asian-inspired profile.",
+      "description": "A fictional demo serving of turmeric chicken wrap with a asian profile.",
       "price_minor": 1623,
       "currency": "USD",
       "energy_kcal": {
@@ -2652,13 +2719,14 @@
       "base_ingredient": "flatbread",
       "image": "/food/broth-house.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "broth-house-lentil-comfort-curry",
       "restaurant_id": "broth-house",
       "name": "Lentil Comfort Curry",
-      "description": "A fictional demo serving of lentil comfort curry with an Asian-inspired profile.",
+      "description": "A fictional demo serving of lentil comfort curry with a asian profile.",
       "price_minor": 1680,
       "currency": "USD",
       "energy_kcal": {
@@ -2687,13 +2755,14 @@
       "base_ingredient": "lentils",
       "image": "/food/broth-house.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 25
     },
     {
       "id": "broth-house-miso-salmon-plate",
       "restaurant_id": "broth-house",
       "name": "Miso Salmon Plate",
-      "description": "A fictional demo serving of miso salmon plate with an Asian-inspired profile.",
+      "description": "A fictional demo serving of miso salmon plate with a asian profile.",
       "price_minor": 1737,
       "currency": "USD",
       "energy_kcal": {
@@ -2725,13 +2794,14 @@
       "base_ingredient": "fish",
       "image": "/food/broth-house.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 30
     },
     {
       "id": "broth-house-roasted-veg-soup",
       "restaurant_id": "broth-house",
       "name": "Roasted Vegetable Soup",
-      "description": "A fictional demo serving of roasted vegetable soup with an Asian-inspired profile.",
+      "description": "A fictional demo serving of roasted vegetable soup with a asian profile.",
       "price_minor": 1794,
       "currency": "USD",
       "energy_kcal": {
@@ -2763,13 +2833,14 @@
       "base_ingredient": "vegetables",
       "image": "/food/broth-house.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 15
     },
     {
       "id": "broth-house-smoky-beef-plate",
       "restaurant_id": "broth-house",
       "name": "Smoky Beef Plate",
-      "description": "A fictional demo serving of smoky beef plate with an Asian-inspired profile.",
+      "description": "A fictional demo serving of smoky beef plate with a asian profile.",
       "price_minor": 1851,
       "currency": "USD",
       "energy_kcal": {
@@ -2801,13 +2872,14 @@
       "base_ingredient": "beef",
       "image": "/food/broth-house.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 30
     },
     {
       "id": "field-fire-charred-chicken-rice",
       "restaurant_id": "field-fire",
       "name": "Charred Chicken Rice Bowl",
-      "description": "A fictional demo serving of charred chicken rice bowl with an American-inspired profile.",
+      "description": "A fictional demo serving of charred chicken rice bowl with a american profile.",
       "price_minor": 1440,
       "currency": "USD",
       "energy_kcal": {
@@ -2839,13 +2911,14 @@
       "base_ingredient": "rice",
       "image": "/food/field-fire.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "field-fire-ginger-tofu-bowl",
       "restaurant_id": "field-fire",
       "name": "Ginger Tofu Bowl",
-      "description": "A fictional demo serving of ginger tofu bowl with an American-inspired profile.",
+      "description": "A fictional demo serving of ginger tofu bowl with a american profile.",
       "price_minor": 1497,
       "currency": "USD",
       "energy_kcal": {
@@ -2877,13 +2950,14 @@
       "base_ingredient": "rice",
       "image": "/food/field-fire.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "field-fire-crisp-herb-salad",
       "restaurant_id": "field-fire",
       "name": "Crisp Herb Salad",
-      "description": "A fictional demo serving of crisp herb salad with an American-inspired profile.",
+      "description": "A fictional demo serving of crisp herb salad with a american profile.",
       "price_minor": 1554,
       "currency": "USD",
       "energy_kcal": {
@@ -2915,13 +2989,14 @@
       "base_ingredient": "greens",
       "image": "/food/field-fire.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 10
     },
     {
       "id": "field-fire-fire-noodle-cup",
       "restaurant_id": "field-fire",
       "name": "Fire Noodle Cup",
-      "description": "A fictional demo serving of fire noodle cup with an American-inspired profile.",
+      "description": "A fictional demo serving of fire noodle cup with a american profile.",
       "price_minor": 1611,
       "currency": "USD",
       "energy_kcal": {
@@ -2954,13 +3029,14 @@
       "base_ingredient": "noodles",
       "image": "/food/field-fire.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 25
     },
     {
       "id": "field-fire-turmeric-chicken-wrap",
       "restaurant_id": "field-fire",
       "name": "Turmeric Chicken Wrap",
-      "description": "A fictional demo serving of turmeric chicken wrap with an American-inspired profile.",
+      "description": "A fictional demo serving of turmeric chicken wrap with a american profile.",
       "price_minor": 1668,
       "currency": "USD",
       "energy_kcal": {
@@ -2992,13 +3068,14 @@
       "base_ingredient": "flatbread",
       "image": "/food/field-fire.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "field-fire-lentil-comfort-curry",
       "restaurant_id": "field-fire",
       "name": "Lentil Comfort Curry",
-      "description": "A fictional demo serving of lentil comfort curry with an American-inspired profile.",
+      "description": "A fictional demo serving of lentil comfort curry with a american profile.",
       "price_minor": 1725,
       "currency": "USD",
       "energy_kcal": {
@@ -3027,13 +3104,14 @@
       "base_ingredient": "lentils",
       "image": "/food/field-fire.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 25
     },
     {
       "id": "field-fire-miso-salmon-plate",
       "restaurant_id": "field-fire",
       "name": "Miso Salmon Plate",
-      "description": "A fictional demo serving of miso salmon plate with an American-inspired profile.",
+      "description": "A fictional demo serving of miso salmon plate with a american profile.",
       "price_minor": 1782,
       "currency": "USD",
       "energy_kcal": {
@@ -3065,13 +3143,14 @@
       "base_ingredient": "fish",
       "image": "/food/field-fire.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 30
     },
     {
       "id": "field-fire-roasted-veg-soup",
       "restaurant_id": "field-fire",
       "name": "Roasted Vegetable Soup",
-      "description": "A fictional demo serving of roasted vegetable soup with an American-inspired profile.",
+      "description": "A fictional demo serving of roasted vegetable soup with a american profile.",
       "price_minor": 1839,
       "currency": "USD",
       "energy_kcal": {
@@ -3103,13 +3182,14 @@
       "base_ingredient": "vegetables",
       "image": "/food/field-fire.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 15
     },
     {
       "id": "field-fire-smoky-beef-plate",
       "restaurant_id": "field-fire",
       "name": "Smoky Beef Plate",
-      "description": "A fictional demo serving of smoky beef plate with an American-inspired profile.",
+      "description": "A fictional demo serving of smoky beef plate with a american profile.",
       "price_minor": 1896,
       "currency": "USD",
       "energy_kcal": {
@@ -3141,7 +3221,8 @@
       "base_ingredient": "beef",
       "image": "/food/field-fire.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 30
     },
     {
       "id": "sumac-kitchen-charred-chicken-rice",
@@ -3179,7 +3260,8 @@
       "base_ingredient": "rice",
       "image": "/food/sumac-kitchen.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "sumac-kitchen-ginger-tofu-bowl",
@@ -3217,7 +3299,8 @@
       "base_ingredient": "rice",
       "image": "/food/sumac-kitchen.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "sumac-kitchen-crisp-herb-salad",
@@ -3255,7 +3338,8 @@
       "base_ingredient": "greens",
       "image": "/food/sumac-kitchen.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 10
     },
     {
       "id": "sumac-kitchen-fire-noodle-cup",
@@ -3294,7 +3378,8 @@
       "base_ingredient": "noodles",
       "image": "/food/sumac-kitchen.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 25
     },
     {
       "id": "sumac-kitchen-turmeric-chicken-wrap",
@@ -3332,7 +3417,8 @@
       "base_ingredient": "flatbread",
       "image": "/food/sumac-kitchen.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 20
     },
     {
       "id": "sumac-kitchen-lentil-comfort-curry",
@@ -3367,7 +3453,8 @@
       "base_ingredient": "lentils",
       "image": "/food/sumac-kitchen.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 25
     },
     {
       "id": "sumac-kitchen-miso-salmon-plate",
@@ -3405,7 +3492,8 @@
       "base_ingredient": "fish",
       "image": "/food/sumac-kitchen.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 30
     },
     {
       "id": "sumac-kitchen-roasted-veg-soup",
@@ -3443,7 +3531,8 @@
       "base_ingredient": "vegetables",
       "image": "/food/sumac-kitchen.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 15
     },
     {
       "id": "sumac-kitchen-smoky-beef-plate",
@@ -3481,11 +3570,11 @@
       "base_ingredient": "beef",
       "image": "/food/sumac-kitchen.svg",
       "nutrition_provenance": "estimated_demo",
-      "source_kind": "demo_menu"
+      "source_kind": "demo_menu",
+      "estimated_minutes": 30
     }
   ],
   "image_attribution": {
-    "/food/ember-bowl-charred-chicken-rice.webp": "Original image generated with OpenAI image generation for OneDish on 2026-07-18; project-owned hackathon asset.",
     "/food/ember-bowl.svg": "Original geometric placeholder generated for OneDish; replace before publication.",
     "/food/green-room.svg": "Original geometric placeholder generated for OneDish; replace before publication.",
     "/food/copper-tandoor.svg": "Original geometric placeholder generated for OneDish; replace before publication.",

@@ -1,0 +1,195 @@
+{
+  "version": "parity.v2",
+  "candidates": [
+    {
+      "dish": {
+        "id": "light-cheap",
+        "restaurant_id": "restaurant-1",
+        "name": "Light Cheap",
+        "description": "A light and fresh test dish.",
+        "price_minor": 900,
+        "currency": "USD",
+        "energy_kcal": { "min": 350, "max": 450 },
+        "protein_g": { "min": 20, "max": 28 },
+        "confidence": "high",
+        "allergens": [],
+        "possible_allergens": [],
+        "ingredients": ["greens", "vegetables"],
+        "cuisine_tags": ["mediterranean"],
+        "taste_tags": ["light", "fresh"],
+        "base_ingredient": "greens",
+        "image": "/food/test.svg",
+        "nutrition_provenance": "estimated_demo",
+        "source_kind": "demo_menu",
+        "estimated_minutes": 10
+      },
+      "place": {
+        "id": "place-light-cheap",
+        "name": "Test Place",
+        "category": "Restaurant",
+        "distance_m": 300,
+        "price_tier": 1,
+        "rating": 8.5,
+        "open_state": "open",
+        "order_destination": "https://example.com/search",
+        "source_kind": "fixture_place",
+        "attribution": "OneDish parity fixture"
+      }
+    },
+    {
+      "dish": {
+        "id": "rich-expensive",
+        "restaurant_id": "restaurant-1",
+        "name": "Rich Expensive",
+        "description": "A rich and filling test dish.",
+        "price_minor": 2400,
+        "currency": "USD",
+        "energy_kcal": { "min": 650, "max": 780 },
+        "protein_g": { "min": 45, "max": 55 },
+        "confidence": "high",
+        "allergens": [],
+        "possible_allergens": [],
+        "ingredients": ["beef", "vegetables"],
+        "cuisine_tags": ["american"],
+        "taste_tags": ["rich", "filling"],
+        "base_ingredient": "beef",
+        "image": "/food/test.svg",
+        "nutrition_provenance": "estimated_demo",
+        "source_kind": "demo_menu",
+        "estimated_minutes": 30
+      },
+      "place": {
+        "id": "place-rich-expensive",
+        "name": "Test Place",
+        "category": "Restaurant",
+        "distance_m": 500,
+        "price_tier": 3,
+        "rating": 8.5,
+        "open_state": "open",
+        "order_destination": "https://example.com/search",
+        "source_kind": "fixture_place",
+        "attribution": "OneDish parity fixture"
+      }
+    },
+    {
+      "dish": {
+        "id": "peanut-noodles",
+        "restaurant_id": "restaurant-1",
+        "name": "Peanut Noodles",
+        "description": "A spicy noodle test dish.",
+        "price_minor": 1200,
+        "currency": "USD",
+        "energy_kcal": { "min": 520, "max": 650 },
+        "protein_g": { "min": 25, "max": 32 },
+        "confidence": "high",
+        "allergens": ["peanuts"],
+        "possible_allergens": [],
+        "ingredients": ["noodles", "peanuts"],
+        "cuisine_tags": ["asian"],
+        "taste_tags": ["spicy"],
+        "base_ingredient": "noodles",
+        "image": "/food/test.svg",
+        "nutrition_provenance": "estimated_demo",
+        "source_kind": "demo_menu",
+        "estimated_minutes": 20
+      },
+      "place": {
+        "id": "place-peanut-noodles",
+        "name": "Test Place",
+        "category": "Restaurant",
+        "distance_m": 400,
+        "price_tier": 2,
+        "rating": 8.5,
+        "open_state": "open",
+        "order_destination": "https://example.com/search",
+        "source_kind": "fixture_place",
+        "attribution": "OneDish parity fixture"
+      }
+    },
+    {
+      "dish": {
+        "id": "warm-rice",
+        "restaurant_id": "restaurant-1",
+        "name": "Warm Rice",
+        "description": "A warm and filling rice test dish.",
+        "price_minor": 1400,
+        "currency": "USD",
+        "energy_kcal": { "min": 500, "max": 640 },
+        "protein_g": { "min": 35, "max": 44 },
+        "confidence": "high",
+        "allergens": [],
+        "possible_allergens": [],
+        "ingredients": ["rice", "vegetables"],
+        "cuisine_tags": ["asian"],
+        "taste_tags": ["warm", "filling"],
+        "base_ingredient": "rice",
+        "image": "/food/test.svg",
+        "nutrition_provenance": "estimated_demo",
+        "source_kind": "demo_menu",
+        "estimated_minutes": 20
+      },
+      "place": {
+        "id": "place-warm-rice",
+        "name": "Test Place",
+        "category": "Restaurant",
+        "distance_m": 200,
+        "price_tier": 2,
+        "rating": 8.5,
+        "open_state": "open",
+        "order_destination": "https://example.com/search",
+        "source_kind": "fixture_place",
+        "attribution": "OneDish parity fixture"
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "budget-and-light-taste",
+      "candidate_ids": ["light-cheap", "rich-expensive", "peanut-noodles", "warm-rice"],
+      "locale": "en",
+      "context": { "protein_gap_g": null, "energy_range_kcal": null, "recent_categories_to_avoid": [], "comfort_preference": null, "source_freshness": "unavailable", "wellness_context_used": false, "context_source": "none" },
+      "constraints": { "max_price_minor": 1200, "currency": "USD", "energy_range_kcal": null, "minimum_protein_g": null, "excluded_allergens": [], "excluded_ingredients": [], "desired_taste_tags": ["light"], "max_duration_minutes": 30, "allowed_relaxations": ["recent_repetition", "taste", "duration", "budget"] },
+      "repetition": { "dish_ids": {}, "cuisines": {}, "base_ingredients": {} },
+      "preferences": { "cuisine": {}, "taste": {} },
+      "session_exclusions": [],
+      "now": "2026-07-18T12:00:00Z",
+      "expected": { "winner_id": "light-cheap", "reserve_id": null, "stage_counts": [4, 4, 4, 4, 4, 1, 1, 1, 1], "reason_codes": ["taste_mismatch"], "relaxations": [] }
+    },
+    {
+      "id": "allergen-is-hard",
+      "candidate_ids": ["light-cheap", "rich-expensive", "peanut-noodles", "warm-rice"],
+      "locale": "en",
+      "context": { "protein_gap_g": null, "energy_range_kcal": null, "recent_categories_to_avoid": [], "comfort_preference": null, "source_freshness": "unavailable", "wellness_context_used": false, "context_source": "none" },
+      "constraints": { "max_price_minor": 3000, "currency": "USD", "energy_range_kcal": null, "minimum_protein_g": null, "excluded_allergens": ["peanuts"], "excluded_ingredients": [], "desired_taste_tags": ["warm"], "max_duration_minutes": 30, "allowed_relaxations": ["recent_repetition", "taste", "duration", "budget"] },
+      "repetition": { "dish_ids": {}, "cuisines": {}, "base_ingredients": {} },
+      "preferences": { "cuisine": {}, "taste": {} },
+      "session_exclusions": [],
+      "now": "2026-07-18T12:00:00Z",
+      "expected": { "winner_id": "warm-rice", "reserve_id": null, "stage_counts": [4, 4, 3, 3, 3, 1, 1, 1, 1], "reason_codes": ["allergen_excluded", "taste_mismatch"], "relaxations": [] }
+    },
+    {
+      "id": "session-exclusion-changes-winner",
+      "candidate_ids": ["light-cheap", "rich-expensive", "peanut-noodles", "warm-rice"],
+      "locale": "en",
+      "context": { "protein_gap_g": null, "energy_range_kcal": null, "recent_categories_to_avoid": [], "comfort_preference": null, "source_freshness": "unavailable", "wellness_context_used": false, "context_source": "none" },
+      "constraints": { "max_price_minor": 3000, "currency": "USD", "energy_range_kcal": null, "minimum_protein_g": null, "excluded_allergens": [], "excluded_ingredients": [], "desired_taste_tags": ["warm"], "max_duration_minutes": 30, "allowed_relaxations": ["recent_repetition", "taste", "duration", "budget"] },
+      "repetition": { "dish_ids": {}, "cuisines": {}, "base_ingredients": {} },
+      "preferences": { "cuisine": {}, "taste": {} },
+      "session_exclusions": ["warm-rice"],
+      "now": "2026-07-18T12:00:00Z",
+      "expected": { "winner_id": "light-cheap", "reserve_id": "peanut-noodles", "stage_counts": [4, 4, 3, 3, 3, 3, 3, 3, 1], "reason_codes": ["reserve_or_lower_score", "session_excluded", "taste_mismatch"], "relaxations": ["taste"] }
+    },
+    {
+      "id": "soft-relaxation-order",
+      "candidate_ids": ["rich-expensive"],
+      "locale": "en",
+      "context": { "protein_gap_g": null, "energy_range_kcal": null, "recent_categories_to_avoid": [], "comfort_preference": null, "source_freshness": "unavailable", "wellness_context_used": false, "context_source": "none" },
+      "constraints": { "max_price_minor": 1200, "currency": "USD", "energy_range_kcal": null, "minimum_protein_g": null, "excluded_allergens": [], "excluded_ingredients": [], "desired_taste_tags": ["light"], "max_duration_minutes": 10, "allowed_relaxations": ["recent_repetition", "taste", "duration", "budget"] },
+      "repetition": { "dish_ids": {}, "cuisines": {}, "base_ingredients": {} },
+      "preferences": { "cuisine": {}, "taste": {} },
+      "session_exclusions": [],
+      "now": "2026-07-18T12:00:00Z",
+      "expected": { "winner_id": "rich-expensive", "reserve_id": null, "stage_counts": [1, 1, 1, 1, 1, 1, 1, 1, 1], "reason_codes": ["over_budget", "taste_mismatch", "too_slow"], "relaxations": ["taste", "duration", "budget"] }
+    }
+  ]
+}

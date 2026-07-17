@@ -11,6 +11,7 @@ from pydantic import Field
 from onedish_api.domain import (
     Candidate,
     Catalog,
+    DecisionRules,
     MealConstraints,
     MealContext,
     Place,
@@ -65,7 +66,12 @@ def _candidates(catalog: Catalog, places: tuple[Place, ...]) -> tuple[Candidate,
     )
 
 
-def build_router(*, catalog: Catalog, places_provider: PlacesProvider) -> APIRouter:
+def build_router(
+    *,
+    catalog: Catalog,
+    places_provider: PlacesProvider,
+    decision_rules: DecisionRules,
+) -> APIRouter:
     router = APIRouter()
 
     @router.get("/api/health")
@@ -73,7 +79,8 @@ def build_router(*, catalog: Catalog, places_provider: PlacesProvider) -> APIRou
         return {
             "status": "ready",
             "catalog_version": catalog.version,
-            "engine_version": "engine.v1",
+            "engine_version": "engine.v2",
+            "decision_rules_version": decision_rules.version,
         }
 
     @router.get("/api/v1/catalog")
@@ -111,6 +118,7 @@ def build_router(*, catalog: Catalog, places_provider: PlacesProvider) -> APIRou
                 PreferenceWeights(**request.preferences.model_dump()),
                 catalog_version=catalog.version,
                 created_at=datetime.now(UTC),
+                rules=decision_rules,
             )
         except NoSafeCandidate as exc:
             raise HTTPException(

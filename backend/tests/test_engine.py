@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from pathlib import Path
 
 import pytest
 
@@ -11,11 +12,13 @@ from onedish_api.domain import (
     NutritionRange,
     Place,
 )
-from onedish_api.engine import NoSafeCandidate, recommend
+from onedish_api.engine import NoSafeCandidate, load_decision_rules, recommend
 from onedish_api.history import PreferenceWeights, RepetitionProfile
 
 
 NOW = datetime(2026, 7, 18, 12, 0, tzinfo=timezone.utc)
+ROOT = Path(__file__).parents[2]
+RULES = load_decision_rules(ROOT / "data/decision.v2.json")
 
 
 def candidate(
@@ -32,6 +35,7 @@ def candidate(
     destination: str | None = "https://example.com/search",
     distance: int = 900,
     confidence: Confidence = Confidence.medium,
+    duration: int = 20,
 ) -> Candidate:
     return Candidate(
         dish=Dish(
@@ -53,6 +57,7 @@ def candidate(
             image="/food/test.svg",
             nutrition_provenance="estimated_demo",
             source_kind="demo_menu",
+            estimated_minutes=duration,
         ),
         place=Place(
             id=f"place-{dish_id}",
@@ -113,10 +118,11 @@ def test_pipeline_preserves_auditable_stage_counts_and_one_winner() -> None:
         PreferenceWeights(),
         catalog_version="catalog.v1",
         created_at=NOW,
+        rules=RULES,
     )
     assert [stage.id for stage in decision.stages] == [
-        "found", "available", "safety_budget", "nutrition", "repetition",
-        "taste_confidence", "winner",
+        "found", "available", "safety", "nutrition", "repetition",
+        "taste", "duration", "budget", "winner",
     ]
     counts = [stage.survivor_count for stage in decision.stages]
     assert counts == sorted(counts, reverse=True)
@@ -136,6 +142,7 @@ def test_allergens_are_never_relaxed() -> None:
             PreferenceWeights(),
             catalog_version="catalog.v1",
             created_at=NOW,
+            rules=RULES,
         )
     assert error.value.reason_counts["allergen_excluded"] == 1
 
@@ -144,8 +151,14 @@ def test_input_order_does_not_change_canonical_decision() -> None:
     first = candidate("alpha", distance=500)
     second = candidate("beta", distance=700)
     arguments = (context(), constraints(), RepetitionProfile(), PreferenceWeights())
-    left = recommend([first, second], *arguments, catalog_version="catalog.v1", created_at=NOW)
-    right = recommend([second, first], *arguments, catalog_version="catalog.v1", created_at=NOW)
+    left = recommend(
+        [first, second], *arguments,
+        catalog_version="catalog.v1", created_at=NOW, rules=RULES,
+    )
+    right = recommend(
+        [second, first], *arguments,
+        catalog_version="catalog.v1", created_at=NOW, rules=RULES,
+    )
     assert left.model_dump_json() == right.model_dump_json()
 
 
@@ -155,6 +168,7 @@ def test_soft_protein_floor_relaxes_only_when_explicitly_allowed() -> None:
         recommend(
             [dish], context(), constraints(), RepetitionProfile(), PreferenceWeights(),
             catalog_version="catalog.v1", created_at=NOW,
+            rules=RULES,
         )
     decision = recommend(
         [dish],
@@ -164,5 +178,6 @@ def test_soft_protein_floor_relaxes_only_when_explicitly_allowed() -> None:
         PreferenceWeights(),
         catalog_version="catalog.v1",
         created_at=NOW,
+        rules=RULES,
     )
     assert decision.relaxations == ("protein_floor",)

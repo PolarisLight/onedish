@@ -13,6 +13,7 @@ from starlette.staticfiles import StaticFiles
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from onedish_api.catalog import load_catalog
+from onedish_api.engine import load_decision_rules
 from onedish_api.privacy import (
     PrivacyHeadersMiddleware,
     RequestBodyLimitMiddleware,
@@ -40,6 +41,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         config.catalog_path,
         asset_root=config.web_public_path,
     )
+    decision_rules = load_decision_rules(config.decision_rules_path)
     if config.mode == "live" and config.foursquare_api_key:
         places_provider = FoursquarePlacesProvider(config.foursquare_api_key)
     else:
@@ -48,9 +50,16 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app = FastAPI(title="OneDish API", version="0.1.0", docs_url=None, redoc_url=None)
     app.state.settings = config
     app.state.catalog = catalog
+    app.state.decision_rules = decision_rules
     app.state.places_provider = places_provider
     app.add_exception_handler(RequestValidationError, sanitized_validation_error)
-    app.include_router(build_router(catalog=catalog, places_provider=places_provider))
+    app.include_router(
+        build_router(
+            catalog=catalog,
+            places_provider=places_provider,
+            decision_rules=decision_rules,
+        )
+    )
 
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=list(config.allowed_hosts))
     if config.environment == "development":

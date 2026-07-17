@@ -3,6 +3,7 @@
 backend/.venv/
 web/node_modules/
 web/dist/
+web/*.tsbuildinfo
 web/coverage/
 web/playwright-report/
 web/test-results/

@@ -7,10 +7,11 @@ test("installed demo remains usable after the network disappears", async ({ cont
   await context.setOffline(true);
   await page.reload();
   await expect(page.getByText("Synthetic demo context")).toBeVisible();
-  await page.getByRole("button", { name: "Try the demo" }).click();
+  await page.getByRole("button", { name: "Pick my meal" }).click();
   await expect(page.getByRole("heading", { name: "From ninety to one." })).toBeVisible();
-  await page.getByRole("button", { name: "Show result" }).click();
-  await expect(page.getByRole("heading", { name: "Charred Chicken Rice Bowl" })).toBeVisible();
+  await page.getByRole("button", { name: "Skip" }).click();
+  await page.getByRole("button", { name: "Meet your dish" }).click();
+  await expect(page.getByRole("heading", { name: "Why this one" })).toBeVisible();
 });
 
 test("manifest exposes standalone mode and required icons", async ({ request }) => {

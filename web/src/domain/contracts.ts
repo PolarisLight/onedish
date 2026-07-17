@@ -2,9 +2,13 @@ export const stageIds = [
   "found",
   "available",
   "safety_budget",
+  "safety",
   "nutrition",
   "repetition",
   "taste_confidence",
+  "taste",
+  "duration",
+  "budget",
   "winner",
 ] as const;
 
@@ -50,6 +54,7 @@ export interface Dish {
   readonly image: string;
   readonly nutrition_provenance: string;
   readonly source_kind: "demo_menu";
+  readonly estimated_minutes: number;
 }
 
 export interface Place {
@@ -70,7 +75,10 @@ export interface Candidate {
 
 export interface DecisionRecord {
   readonly decision_id: string;
+  readonly engine_version: "engine.v1" | "engine.v2";
+  readonly catalog_version: string;
   readonly input_sha256: string;
+  readonly created_at: string;
   readonly stages: readonly EliminationStage[];
   readonly winner_id: string;
   readonly reserve_id: string | null;

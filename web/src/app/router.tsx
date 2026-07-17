@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, createHashRouter, type RouteObject } from "react-router";
 import { Layout } from "../shared/Layout";
 import { HomePage } from "../home/HomePage";
 import { EliminationPage } from "../elimination/EliminationPage";
@@ -6,7 +6,7 @@ import { WinnerPage } from "../winner/WinnerPage";
 import { TasteOrbitPage } from "../history/TasteOrbitPage";
 import { PrivacyPage } from "../privacy/PrivacyPage";
 
-export const router = createBrowserRouter([
+const routes: RouteObject[] = [
   { path: "/", element: <Layout />, children: [
     { index: true, element: <HomePage /> },
     { path: "setup", element: <HomePage /> },
@@ -15,4 +15,8 @@ export const router = createBrowserRouter([
     { path: "history", element: <TasteOrbitPage /> },
     { path: "privacy", element: <PrivacyPage /> },
   ] },
-], { basename: import.meta.env.BASE_URL });
+];
+
+export const router = import.meta.env.BASE_URL === "/"
+  ? createBrowserRouter(routes)
+  : createHashRouter(routes);

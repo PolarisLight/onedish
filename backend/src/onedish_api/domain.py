@@ -116,6 +116,11 @@ class Dish(StrictFrozenModel):
     source_kind: Literal["demo_menu"]
 
 
+class Candidate(StrictFrozenModel):
+    dish: Dish
+    place: Place
+
+
 class Catalog(StrictFrozenModel):
     version: Literal["catalog.v1"]
     restaurants: tuple[Restaurant, ...] = Field(min_length=8, max_length=12)

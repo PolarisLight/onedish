@@ -1,10 +1,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-
-function App() {
-  return <main><h1>OneDish</h1></main>;
-}
+import { RouterProvider } from "react-router";
+import { router } from "./app/router";
+import "./styles/global.css";
 
 const root = document.getElementById("root");
 if (!root) throw new Error("Missing #root");
-createRoot(root).render(<StrictMode><App /></StrictMode>);
+createRoot(root).render(<StrictMode><RouterProvider router={router} /></StrictMode>);

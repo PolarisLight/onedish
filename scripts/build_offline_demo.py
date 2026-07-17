@@ -162,7 +162,7 @@ async def generate_records() -> dict[str, bytes]:
     rejection_events = _rejection_events(rejected_candidate)
     day1_rejected = _envelope(
         state_id="day1_rejected",
-        title="Not this one — show the reserve",
+        title="Not this one. Show the reserve",
         catalog=catalog,
         candidates=candidates,
         context=context,

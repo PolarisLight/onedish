@@ -35,9 +35,9 @@
   "decision": {
     "catalog_version": "catalog.v1",
     "created_at": "2026-07-18T12:00:00Z",
-    "decision_id": "decision-5915bd2c7a726ddc",
+    "decision_id": "decision-b26701e6807a49de",
     "engine_version": "engine.v1",
-    "input_sha256": "5915bd2c7a726ddcf835e60ce6386d729db4115d8057e8b6c9f9d778be646ffc",
+    "input_sha256": "b26701e6807a49def9e1e8af08c1121d89b92b05fea5f07f05f01d8b0fd1ece6",
     "relaxations": [],
     "reserve_id": "copper-tandoor-charred-chicken-rice",
     "stages": [
@@ -149,7 +149,7 @@
     },
     "recent_dishes": 2
   },
-  "input_sha256": "5915bd2c7a726ddcf835e60ce6386d729db4115d8057e8b6c9f9d778be646ffc",
+  "input_sha256": "b26701e6807a49def9e1e8af08c1121d89b92b05fea5f07f05f01d8b0fd1ece6",
   "provenance": {
     "decision": "canonical deterministic engine.v1",
     "menu": "versioned fictional demo menu",
@@ -168,7 +168,7 @@
         "indian"
       ],
       "currency": "USD",
-      "description": "A fictional demo serving of charred chicken rice bowl with a indian profile.",
+      "description": "A fictional demo serving of charred chicken rice bowl with an Indian-inspired profile.",
       "energy_kcal": {
         "max": 675,
         "min": 575

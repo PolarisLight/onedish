@@ -87,7 +87,7 @@
       "id": "ember-bowl-charred-chicken-rice",
       "restaurant_id": "ember-bowl",
       "name": "Charred Chicken Rice Bowl",
-      "description": "A fictional demo serving of charred chicken rice bowl with a asian profile.",
+      "description": "A fictional demo serving of charred chicken rice bowl with an Asian-inspired profile.",
       "price_minor": 1080,
       "currency": "USD",
       "energy_kcal": {
@@ -117,7 +117,7 @@
         "filling"
       ],
       "base_ingredient": "rice",
-      "image": "/food/ember-bowl.svg",
+      "image": "/food/ember-bowl-charred-chicken-rice.webp",
       "nutrition_provenance": "estimated_demo",
       "source_kind": "demo_menu"
     },
@@ -125,7 +125,7 @@
       "id": "ember-bowl-ginger-tofu-bowl",
       "restaurant_id": "ember-bowl",
       "name": "Ginger Tofu Bowl",
-      "description": "A fictional demo serving of ginger tofu bowl with a asian profile.",
+      "description": "A fictional demo serving of ginger tofu bowl with an Asian-inspired profile.",
       "price_minor": 1137,
       "currency": "USD",
       "energy_kcal": {
@@ -163,7 +163,7 @@
       "id": "ember-bowl-crisp-herb-salad",
       "restaurant_id": "ember-bowl",
       "name": "Crisp Herb Salad",
-      "description": "A fictional demo serving of crisp herb salad with a asian profile.",
+      "description": "A fictional demo serving of crisp herb salad with an Asian-inspired profile.",
       "price_minor": 1194,
       "currency": "USD",
       "energy_kcal": {
@@ -201,7 +201,7 @@
       "id": "ember-bowl-fire-noodle-cup",
       "restaurant_id": "ember-bowl",
       "name": "Fire Noodle Cup",
-      "description": "A fictional demo serving of fire noodle cup with a asian profile.",
+      "description": "A fictional demo serving of fire noodle cup with an Asian-inspired profile.",
       "price_minor": 1251,
       "currency": "USD",
       "energy_kcal": {
@@ -240,7 +240,7 @@
       "id": "ember-bowl-turmeric-chicken-wrap",
       "restaurant_id": "ember-bowl",
       "name": "Turmeric Chicken Wrap",
-      "description": "A fictional demo serving of turmeric chicken wrap with a asian profile.",
+      "description": "A fictional demo serving of turmeric chicken wrap with an Asian-inspired profile.",
       "price_minor": 1308,
       "currency": "USD",
       "energy_kcal": {
@@ -278,7 +278,7 @@
       "id": "ember-bowl-lentil-comfort-curry",
       "restaurant_id": "ember-bowl",
       "name": "Lentil Comfort Curry",
-      "description": "A fictional demo serving of lentil comfort curry with a asian profile.",
+      "description": "A fictional demo serving of lentil comfort curry with an Asian-inspired profile.",
       "price_minor": 1365,
       "currency": "USD",
       "energy_kcal": {
@@ -313,7 +313,7 @@
       "id": "ember-bowl-miso-salmon-plate",
       "restaurant_id": "ember-bowl",
       "name": "Miso Salmon Plate",
-      "description": "A fictional demo serving of miso salmon plate with a asian profile.",
+      "description": "A fictional demo serving of miso salmon plate with an Asian-inspired profile.",
       "price_minor": 1422,
       "currency": "USD",
       "energy_kcal": {
@@ -351,7 +351,7 @@
       "id": "ember-bowl-roasted-veg-soup",
       "restaurant_id": "ember-bowl",
       "name": "Roasted Vegetable Soup",
-      "description": "A fictional demo serving of roasted vegetable soup with a asian profile.",
+      "description": "A fictional demo serving of roasted vegetable soup with an Asian-inspired profile.",
       "price_minor": 1479,
       "currency": "USD",
       "energy_kcal": {
@@ -389,7 +389,7 @@
       "id": "ember-bowl-smoky-beef-plate",
       "restaurant_id": "ember-bowl",
       "name": "Smoky Beef Plate",
-      "description": "A fictional demo serving of smoky beef plate with a asian profile.",
+      "description": "A fictional demo serving of smoky beef plate with an Asian-inspired profile.",
       "price_minor": 1536,
       "currency": "USD",
       "energy_kcal": {
@@ -767,7 +767,7 @@
       "id": "copper-tandoor-charred-chicken-rice",
       "restaurant_id": "copper-tandoor",
       "name": "Charred Chicken Rice Bowl",
-      "description": "A fictional demo serving of charred chicken rice bowl with a indian profile.",
+      "description": "A fictional demo serving of charred chicken rice bowl with an Indian-inspired profile.",
       "price_minor": 1170,
       "currency": "USD",
       "energy_kcal": {
@@ -805,7 +805,7 @@
       "id": "copper-tandoor-ginger-tofu-bowl",
       "restaurant_id": "copper-tandoor",
       "name": "Ginger Tofu Bowl",
-      "description": "A fictional demo serving of ginger tofu bowl with a indian profile.",
+      "description": "A fictional demo serving of ginger tofu bowl with an Indian-inspired profile.",
       "price_minor": 1227,
       "currency": "USD",
       "energy_kcal": {
@@ -843,7 +843,7 @@
       "id": "copper-tandoor-crisp-herb-salad",
       "restaurant_id": "copper-tandoor",
       "name": "Crisp Herb Salad",
-      "description": "A fictional demo serving of crisp herb salad with a indian profile.",
+      "description": "A fictional demo serving of crisp herb salad with an Indian-inspired profile.",
       "price_minor": 1284,
       "currency": "USD",
       "energy_kcal": {
@@ -881,7 +881,7 @@
       "id": "copper-tandoor-fire-noodle-cup",
       "restaurant_id": "copper-tandoor",
       "name": "Fire Noodle Cup",
-      "description": "A fictional demo serving of fire noodle cup with a indian profile.",
+      "description": "A fictional demo serving of fire noodle cup with an Indian-inspired profile.",
       "price_minor": 1341,
       "currency": "USD",
       "energy_kcal": {
@@ -920,7 +920,7 @@
       "id": "copper-tandoor-turmeric-chicken-wrap",
       "restaurant_id": "copper-tandoor",
       "name": "Turmeric Chicken Wrap",
-      "description": "A fictional demo serving of turmeric chicken wrap with a indian profile.",
+      "description": "A fictional demo serving of turmeric chicken wrap with an Indian-inspired profile.",
       "price_minor": 1398,
       "currency": "USD",
       "energy_kcal": {
@@ -958,7 +958,7 @@
       "id": "copper-tandoor-lentil-comfort-curry",
       "restaurant_id": "copper-tandoor",
       "name": "Lentil Comfort Curry",
-      "description": "A fictional demo serving of lentil comfort curry with a indian profile.",
+      "description": "A fictional demo serving of lentil comfort curry with an Indian-inspired profile.",
       "price_minor": 1455,
       "currency": "USD",
       "energy_kcal": {
@@ -993,7 +993,7 @@
       "id": "copper-tandoor-miso-salmon-plate",
       "restaurant_id": "copper-tandoor",
       "name": "Miso Salmon Plate",
-      "description": "A fictional demo serving of miso salmon plate with a indian profile.",
+      "description": "A fictional demo serving of miso salmon plate with an Indian-inspired profile.",
       "price_minor": 1512,
       "currency": "USD",
       "energy_kcal": {
@@ -1031,7 +1031,7 @@
       "id": "copper-tandoor-roasted-veg-soup",
       "restaurant_id": "copper-tandoor",
       "name": "Roasted Vegetable Soup",
-      "description": "A fictional demo serving of roasted vegetable soup with a indian profile.",
+      "description": "A fictional demo serving of roasted vegetable soup with an Indian-inspired profile.",
       "price_minor": 1569,
       "currency": "USD",
       "energy_kcal": {
@@ -1069,7 +1069,7 @@
       "id": "copper-tandoor-smoky-beef-plate",
       "restaurant_id": "copper-tandoor",
       "name": "Smoky Beef Plate",
-      "description": "A fictional demo serving of smoky beef plate with a indian profile.",
+      "description": "A fictional demo serving of smoky beef plate with an Indian-inspired profile.",
       "price_minor": 1626,
       "currency": "USD",
       "energy_kcal": {
@@ -1787,7 +1787,7 @@
       "id": "night-market-charred-chicken-rice",
       "restaurant_id": "night-market",
       "name": "Charred Chicken Rice Bowl",
-      "description": "A fictional demo serving of charred chicken rice bowl with a asian profile.",
+      "description": "A fictional demo serving of charred chicken rice bowl with an Asian-inspired profile.",
       "price_minor": 1305,
       "currency": "USD",
       "energy_kcal": {
@@ -1825,7 +1825,7 @@
       "id": "night-market-ginger-tofu-bowl",
       "restaurant_id": "night-market",
       "name": "Ginger Tofu Bowl",
-      "description": "A fictional demo serving of ginger tofu bowl with a asian profile.",
+      "description": "A fictional demo serving of ginger tofu bowl with an Asian-inspired profile.",
       "price_minor": 1362,
       "currency": "USD",
       "energy_kcal": {
@@ -1863,7 +1863,7 @@
       "id": "night-market-crisp-herb-salad",
       "restaurant_id": "night-market",
       "name": "Crisp Herb Salad",
-      "description": "A fictional demo serving of crisp herb salad with a asian profile.",
+      "description": "A fictional demo serving of crisp herb salad with an Asian-inspired profile.",
       "price_minor": 1419,
       "currency": "USD",
       "energy_kcal": {
@@ -1901,7 +1901,7 @@
       "id": "night-market-fire-noodle-cup",
       "restaurant_id": "night-market",
       "name": "Fire Noodle Cup",
-      "description": "A fictional demo serving of fire noodle cup with a asian profile.",
+      "description": "A fictional demo serving of fire noodle cup with an Asian-inspired profile.",
       "price_minor": 1476,
       "currency": "USD",
       "energy_kcal": {
@@ -1940,7 +1940,7 @@
       "id": "night-market-turmeric-chicken-wrap",
       "restaurant_id": "night-market",
       "name": "Turmeric Chicken Wrap",
-      "description": "A fictional demo serving of turmeric chicken wrap with a asian profile.",
+      "description": "A fictional demo serving of turmeric chicken wrap with an Asian-inspired profile.",
       "price_minor": 1533,
       "currency": "USD",
       "energy_kcal": {
@@ -1978,7 +1978,7 @@
       "id": "night-market-lentil-comfort-curry",
       "restaurant_id": "night-market",
       "name": "Lentil Comfort Curry",
-      "description": "A fictional demo serving of lentil comfort curry with a asian profile.",
+      "description": "A fictional demo serving of lentil comfort curry with an Asian-inspired profile.",
       "price_minor": 1590,
       "currency": "USD",
       "energy_kcal": {
@@ -2013,7 +2013,7 @@
       "id": "night-market-miso-salmon-plate",
       "restaurant_id": "night-market",
       "name": "Miso Salmon Plate",
-      "description": "A fictional demo serving of miso salmon plate with a asian profile.",
+      "description": "A fictional demo serving of miso salmon plate with an Asian-inspired profile.",
       "price_minor": 1647,
       "currency": "USD",
       "energy_kcal": {
@@ -2051,7 +2051,7 @@
       "id": "night-market-roasted-veg-soup",
       "restaurant_id": "night-market",
       "name": "Roasted Vegetable Soup",
-      "description": "A fictional demo serving of roasted vegetable soup with a asian profile.",
+      "description": "A fictional demo serving of roasted vegetable soup with an Asian-inspired profile.",
       "price_minor": 1704,
       "currency": "USD",
       "energy_kcal": {
@@ -2089,7 +2089,7 @@
       "id": "night-market-smoky-beef-plate",
       "restaurant_id": "night-market",
       "name": "Smoky Beef Plate",
-      "description": "A fictional demo serving of smoky beef plate with a asian profile.",
+      "description": "A fictional demo serving of smoky beef plate with an Asian-inspired profile.",
       "price_minor": 1761,
       "currency": "USD",
       "energy_kcal": {
@@ -2467,7 +2467,7 @@
       "id": "broth-house-charred-chicken-rice",
       "restaurant_id": "broth-house",
       "name": "Charred Chicken Rice Bowl",
-      "description": "A fictional demo serving of charred chicken rice bowl with a asian profile.",
+      "description": "A fictional demo serving of charred chicken rice bowl with an Asian-inspired profile.",
       "price_minor": 1395,
       "currency": "USD",
       "energy_kcal": {
@@ -2505,7 +2505,7 @@
       "id": "broth-house-ginger-tofu-bowl",
       "restaurant_id": "broth-house",
       "name": "Ginger Tofu Bowl",
-      "description": "A fictional demo serving of ginger tofu bowl with a asian profile.",
+      "description": "A fictional demo serving of ginger tofu bowl with an Asian-inspired profile.",
       "price_minor": 1452,
       "currency": "USD",
       "energy_kcal": {
@@ -2543,7 +2543,7 @@
       "id": "broth-house-crisp-herb-salad",
       "restaurant_id": "broth-house",
       "name": "Crisp Herb Salad",
-      "description": "A fictional demo serving of crisp herb salad with a asian profile.",
+      "description": "A fictional demo serving of crisp herb salad with an Asian-inspired profile.",
       "price_minor": 1509,
       "currency": "USD",
       "energy_kcal": {
@@ -2581,7 +2581,7 @@
       "id": "broth-house-fire-noodle-cup",
       "restaurant_id": "broth-house",
       "name": "Fire Noodle Cup",
-      "description": "A fictional demo serving of fire noodle cup with a asian profile.",
+      "description": "A fictional demo serving of fire noodle cup with an Asian-inspired profile.",
       "price_minor": 1566,
       "currency": "USD",
       "energy_kcal": {
@@ -2620,7 +2620,7 @@
       "id": "broth-house-turmeric-chicken-wrap",
       "restaurant_id": "broth-house",
       "name": "Turmeric Chicken Wrap",
-      "description": "A fictional demo serving of turmeric chicken wrap with a asian profile.",
+      "description": "A fictional demo serving of turmeric chicken wrap with an Asian-inspired profile.",
       "price_minor": 1623,
       "currency": "USD",
       "energy_kcal": {
@@ -2658,7 +2658,7 @@
       "id": "broth-house-lentil-comfort-curry",
       "restaurant_id": "broth-house",
       "name": "Lentil Comfort Curry",
-      "description": "A fictional demo serving of lentil comfort curry with a asian profile.",
+      "description": "A fictional demo serving of lentil comfort curry with an Asian-inspired profile.",
       "price_minor": 1680,
       "currency": "USD",
       "energy_kcal": {
@@ -2693,7 +2693,7 @@
       "id": "broth-house-miso-salmon-plate",
       "restaurant_id": "broth-house",
       "name": "Miso Salmon Plate",
-      "description": "A fictional demo serving of miso salmon plate with a asian profile.",
+      "description": "A fictional demo serving of miso salmon plate with an Asian-inspired profile.",
       "price_minor": 1737,
       "currency": "USD",
       "energy_kcal": {
@@ -2731,7 +2731,7 @@
       "id": "broth-house-roasted-veg-soup",
       "restaurant_id": "broth-house",
       "name": "Roasted Vegetable Soup",
-      "description": "A fictional demo serving of roasted vegetable soup with a asian profile.",
+      "description": "A fictional demo serving of roasted vegetable soup with an Asian-inspired profile.",
       "price_minor": 1794,
       "currency": "USD",
       "energy_kcal": {
@@ -2769,7 +2769,7 @@
       "id": "broth-house-smoky-beef-plate",
       "restaurant_id": "broth-house",
       "name": "Smoky Beef Plate",
-      "description": "A fictional demo serving of smoky beef plate with a asian profile.",
+      "description": "A fictional demo serving of smoky beef plate with an Asian-inspired profile.",
       "price_minor": 1851,
       "currency": "USD",
       "energy_kcal": {
@@ -2807,7 +2807,7 @@
       "id": "field-fire-charred-chicken-rice",
       "restaurant_id": "field-fire",
       "name": "Charred Chicken Rice Bowl",
-      "description": "A fictional demo serving of charred chicken rice bowl with a american profile.",
+      "description": "A fictional demo serving of charred chicken rice bowl with an American-inspired profile.",
       "price_minor": 1440,
       "currency": "USD",
       "energy_kcal": {
@@ -2845,7 +2845,7 @@
       "id": "field-fire-ginger-tofu-bowl",
       "restaurant_id": "field-fire",
       "name": "Ginger Tofu Bowl",
-      "description": "A fictional demo serving of ginger tofu bowl with a american profile.",
+      "description": "A fictional demo serving of ginger tofu bowl with an American-inspired profile.",
       "price_minor": 1497,
       "currency": "USD",
       "energy_kcal": {
@@ -2883,7 +2883,7 @@
       "id": "field-fire-crisp-herb-salad",
       "restaurant_id": "field-fire",
       "name": "Crisp Herb Salad",
-      "description": "A fictional demo serving of crisp herb salad with a american profile.",
+      "description": "A fictional demo serving of crisp herb salad with an American-inspired profile.",
       "price_minor": 1554,
       "currency": "USD",
       "energy_kcal": {
@@ -2921,7 +2921,7 @@
       "id": "field-fire-fire-noodle-cup",
       "restaurant_id": "field-fire",
       "name": "Fire Noodle Cup",
-      "description": "A fictional demo serving of fire noodle cup with a american profile.",
+      "description": "A fictional demo serving of fire noodle cup with an American-inspired profile.",
       "price_minor": 1611,
       "currency": "USD",
       "energy_kcal": {
@@ -2960,7 +2960,7 @@
       "id": "field-fire-turmeric-chicken-wrap",
       "restaurant_id": "field-fire",
       "name": "Turmeric Chicken Wrap",
-      "description": "A fictional demo serving of turmeric chicken wrap with a american profile.",
+      "description": "A fictional demo serving of turmeric chicken wrap with an American-inspired profile.",
       "price_minor": 1668,
       "currency": "USD",
       "energy_kcal": {
@@ -2998,7 +2998,7 @@
       "id": "field-fire-lentil-comfort-curry",
       "restaurant_id": "field-fire",
       "name": "Lentil Comfort Curry",
-      "description": "A fictional demo serving of lentil comfort curry with a american profile.",
+      "description": "A fictional demo serving of lentil comfort curry with an American-inspired profile.",
       "price_minor": 1725,
       "currency": "USD",
       "energy_kcal": {
@@ -3033,7 +3033,7 @@
       "id": "field-fire-miso-salmon-plate",
       "restaurant_id": "field-fire",
       "name": "Miso Salmon Plate",
-      "description": "A fictional demo serving of miso salmon plate with a american profile.",
+      "description": "A fictional demo serving of miso salmon plate with an American-inspired profile.",
       "price_minor": 1782,
       "currency": "USD",
       "energy_kcal": {
@@ -3071,7 +3071,7 @@
       "id": "field-fire-roasted-veg-soup",
       "restaurant_id": "field-fire",
       "name": "Roasted Vegetable Soup",
-      "description": "A fictional demo serving of roasted vegetable soup with a american profile.",
+      "description": "A fictional demo serving of roasted vegetable soup with an American-inspired profile.",
       "price_minor": 1839,
       "currency": "USD",
       "energy_kcal": {
@@ -3109,7 +3109,7 @@
       "id": "field-fire-smoky-beef-plate",
       "restaurant_id": "field-fire",
       "name": "Smoky Beef Plate",
-      "description": "A fictional demo serving of smoky beef plate with a american profile.",
+      "description": "A fictional demo serving of smoky beef plate with an American-inspired profile.",
       "price_minor": 1896,
       "currency": "USD",
       "energy_kcal": {
@@ -3485,6 +3485,7 @@
     }
   ],
   "image_attribution": {
+    "/food/ember-bowl-charred-chicken-rice.webp": "Original image generated with OpenAI image generation for OneDish on 2026-07-18; project-owned hackathon asset.",
     "/food/ember-bowl.svg": "Original geometric placeholder generated for OneDish; replace before publication.",
     "/food/green-room.svg": "Original geometric placeholder generated for OneDish; replace before publication.",
     "/food/copper-tandoor.svg": "Original geometric placeholder generated for OneDish; replace before publication.",

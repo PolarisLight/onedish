@@ -35,9 +35,9 @@
   "decision": {
     "catalog_version": "catalog.v1",
     "created_at": "2026-07-18T12:00:00Z",
-    "decision_id": "decision-80622e08d66a5158",
+    "decision_id": "decision-e72ec195697cbf13",
     "engine_version": "engine.v1",
-    "input_sha256": "80622e08d66a51585114d92b718b5e160106e7c3f3b0560f49ff24268d81dae2",
+    "input_sha256": "e72ec195697cbf13b1c139c736615d377f054a9919e924a1d58f1cdd414bda8f",
     "relaxations": [],
     "reserve_id": "green-room-charred-chicken-rice",
     "stages": [
@@ -140,7 +140,7 @@
     },
     "recent_dishes": 2
   },
-  "input_sha256": "80622e08d66a51585114d92b718b5e160106e7c3f3b0560f49ff24268d81dae2",
+  "input_sha256": "e72ec195697cbf13b1c139c736615d377f054a9919e924a1d58f1cdd414bda8f",
   "provenance": {
     "decision": "canonical deterministic engine.v1",
     "menu": "versioned fictional demo menu",
@@ -215,13 +215,13 @@
         "asian"
       ],
       "currency": "USD",
-      "description": "A fictional demo serving of charred chicken rice bowl with a asian profile.",
+      "description": "A fictional demo serving of charred chicken rice bowl with an Asian-inspired profile.",
       "energy_kcal": {
         "max": 645,
         "min": 545
       },
       "id": "ember-bowl-charred-chicken-rice",
-      "image": "/food/ember-bowl.svg",
+      "image": "/food/ember-bowl-charred-chicken-rice.webp",
       "ingredients": [
         "rice",
         "vegetables",

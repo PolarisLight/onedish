@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { db } from "../db/db";
-import { parseDemoRecord, type DemoRecord } from "../domain/contracts";
+import { parseStoredDecision, type StoredDecision } from "../domain/contracts";
 import { StageDetails } from "./StageDetails";
 
 export function EliminationPage() {
   const { decisionId = "" } = useParams();
   const navigate = useNavigate();
-  const [record, setRecord] = useState<DemoRecord | null>(null);
+  const [record, setRecord] = useState<StoredDecision | null>(null);
   const [error, setError] = useState("");
   const [stageIndex, setStageIndex] = useState(0);
 
   useEffect(() => {
     void db.decisionSessions.get(decisionId).then((row) => {
       if (!row) { setError("This decision is no longer stored on this device."); return; }
-      try { setRecord(parseDemoRecord(row.payload)); } catch { setError("This decision record is invalid."); }
+      try { setRecord(parseStoredDecision(row.payload)); } catch { setError("This decision record is invalid."); }
     });
   }, [decisionId]);
 

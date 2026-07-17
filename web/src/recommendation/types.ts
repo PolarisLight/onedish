@@ -83,6 +83,7 @@ export interface RecommendationInput {
 export interface RecommendationRecord {
   readonly schema_version: "recommendation.v2";
   readonly locale: SupportedLocale;
+  readonly input: RecommendationInput;
   readonly context: MealContext;
   readonly constraints: RecommendationConstraints;
   readonly decision: DecisionRecord;

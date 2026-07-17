@@ -1,19 +1,65 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { db, saveHistoryEvent } from "../db/db";
-import { parseDemoRecord, type Candidate, type DemoRecord, type RejectionReason } from "../domain/contracts";
+import {
+  parseStoredDecision,
+  type Candidate,
+  type RejectionReason,
+  type StoredDecision,
+} from "../domain/contracts";
+import { RecommendationExhausted, retryRecommendation } from "../recommendation/session";
 import { ProvenanceChip } from "../shared/ProvenanceChip";
 import { RejectionSheet } from "./RejectionSheet";
 
 export function WinnerPage() {
   const { decisionId = "" } = useParams();
-  const [record, setRecord] = useState<DemoRecord | null>(null);
+  const navigate = useNavigate();
+  const [record, setRecord] = useState<StoredDecision | null>(null);
   const [rejectionOpen, setRejectionOpen] = useState(false);
   const [showReserve, setShowReserve] = useState(false);
+  const [retrying, setRetrying] = useState(false);
+  const [error, setError] = useState("");
 
-  useEffect(() => { void db.decisionSessions.get(decisionId).then((row) => { if (row) setRecord(parseDemoRecord(row.payload)); }); }, [decisionId]);
+  useEffect(() => {
+    void db.decisionSessions.get(decisionId).then((row) => {
+      if (!row) return;
+      try { setRecord(parseStoredDecision(row.payload)); } catch { setError("This decision record is invalid."); }
+    });
+  }, [decisionId]);
   if (!record) return <main className="page"><p>Loading the winner...</p></main>;
-  const candidate = showReserve && record.reserve ? record.reserve : record.winner;
+  const currentRecord = record;
+  const candidate = showReserve && currentRecord.reserve ? currentRecord.reserve : currentRecord.winner;
+  const live = currentRecord.schema_version === "recommendation.v2";
+
+  async function pickAnother() {
+    if (!live || currentRecord.schema_version !== "recommendation.v2") return;
+    setRetrying(true);
+    setError("");
+    try {
+      await saveHistoryEvent({
+        id: `dismiss-${decisionId}-${Date.now()}`,
+        occurred_at: new Date().toISOString(),
+        kind: "dismissed",
+        dish_id: candidate.dish.id,
+        cuisine_tags: candidate.dish.cuisine_tags,
+        taste_tags: candidate.dish.taste_tags,
+        base_ingredient: candidate.dish.base_ingredient,
+        price_minor: candidate.dish.price_minor,
+        protein_g: candidate.dish.protein_g.min,
+      });
+      const next = await retryRecommendation(currentRecord);
+      setRecord(next);
+      await navigate(`/winner/${next.decision.decision_id}`, { replace: true });
+    } catch (caught) {
+      setError(caught instanceof RecommendationExhausted
+        ? "No more safe choices remain. Edit your preferences to continue."
+        : caught instanceof Error
+          ? `We could not pick another dish: ${caught.message}`
+          : "We could not pick another dish. Try again.");
+    } finally {
+      setRetrying(false);
+    }
+  }
 
   async function reject(reason: RejectionReason) {
     await saveHistoryEvent({
@@ -24,16 +70,30 @@ export function WinnerPage() {
       rejection_reason: reason,
       cuisine_tags: candidate.dish.cuisine_tags,
       taste_tags: candidate.dish.taste_tags,
+      base_ingredient: candidate.dish.base_ingredient,
       price_minor: candidate.dish.price_minor,
       protein_g: candidate.dish.protein_g.min,
     });
     setRejectionOpen(false);
-    setShowReserve(true);
+    if (live && currentRecord.schema_version === "recommendation.v2") await pickAnother();
+    else setShowReserve(true);
   }
-  return <WinnerView candidate={candidate} reserve={showReserve} canReject={!showReserve} rejectionOpen={rejectionOpen} setRejectionOpen={setRejectionOpen} onReject={reject} />;
+  return <WinnerView
+    candidate={candidate}
+    reserve={showReserve}
+    canReject={!showReserve}
+    live={live}
+    retrying={retrying}
+    error={error}
+    rejectionOpen={rejectionOpen}
+    setRejectionOpen={setRejectionOpen}
+    onReject={reject}
+    onRetry={pickAnother}
+    onEdit={() => navigate("/?adjust=1")}
+  />;
 }
 
-function WinnerView({ candidate, reserve, canReject, rejectionOpen, setRejectionOpen, onReject }: { candidate: Candidate; reserve: boolean; canReject: boolean; rejectionOpen: boolean; setRejectionOpen: (value: boolean) => void; onReject: (reason: RejectionReason) => void }) {
+function WinnerView({ candidate, reserve, canReject, live, retrying, error, rejectionOpen, setRejectionOpen, onReject, onRetry, onEdit }: { candidate: Candidate; reserve: boolean; canReject: boolean; live: boolean; retrying: boolean; error: string; rejectionOpen: boolean; setRejectionOpen: (value: boolean) => void; onReject: (reason: RejectionReason) => void; onRetry: () => void; onEdit: () => void }) {
   const { dish, place } = candidate;
   const safeLink = place.order_destination?.startsWith("https://") ? place.order_destination : null;
   return (
@@ -58,8 +118,12 @@ function WinnerView({ candidate, reserve, canReject, rejectionOpen, setRejection
           </div>
           <div className="winner-actions">
             {safeLink ? <a className="primary-button" href={safeLink} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", textDecoration: "none" }}>Search on web</a> : null}
-            {canReject ? <button className="secondary-button" onClick={() => setRejectionOpen(!rejectionOpen)}>Not today</button> : <span className="page-lede">That is the reserve. The session ends here.</span>}
+            {live ? <>
+              <button className="secondary-button" disabled={retrying} onClick={onRetry}>{retrying ? "Picking..." : "Pick another"}</button>
+              <button className="text-button" onClick={onEdit}>Edit preferences</button>
+            </> : canReject ? <button className="secondary-button" onClick={() => setRejectionOpen(!rejectionOpen)}>Not today</button> : <span className="page-lede">That is the reserve. The session ends here.</span>}
           </div>
+          {error ? <p role="alert" className="page-lede">{error}</p> : null}
           {rejectionOpen ? <RejectionSheet onChoose={onReject} /> : null}
         </section>
       </div>

@@ -118,6 +118,10 @@ export interface DemoRecord {
   readonly provenance: Readonly<Record<string, string>>;
 }
 
+import type { RecommendationRecord } from "../recommendation/types";
+
+export type StoredDecision = DemoRecord | RecommendationRecord;
+
 function object(value: unknown, label: string): Record<string, unknown> {
   if (typeof value !== "object" || value === null || Array.isArray(value)) {
     throw new Error(`${label} must be an object`);
@@ -152,4 +156,57 @@ export function parseDemoRecord(value: unknown): DemoRecord {
   const last = object(decision.stages.at(-1), "last stage");
   if (last.survivor_count !== 1) throw new Error("A demo decision must end with one winner");
   return value as DemoRecord;
+}
+
+function validateTrace(root: Record<string, unknown>): void {
+  const decision = object(root.decision, "decision");
+  if (typeof decision.input_sha256 !== "string" || !/^[a-f0-9]{64}$/.test(decision.input_sha256)) {
+    throw new Error("Invalid input hash");
+  }
+  if (!Array.isArray(decision.stages) || decision.stages.length === 0) {
+    throw new Error("Decision stages are required");
+  }
+  let previous = Number.POSITIVE_INFINITY;
+  for (const rawStage of decision.stages) {
+    const stage = object(rawStage, "stage");
+    const count = stage.survivor_count;
+    if (typeof count !== "number" || count < 0 || count > previous) {
+      throw new Error("Stage counts must be non-increasing");
+    }
+    if (!stageIds.includes(stage.id as StageId)) throw new Error("Unknown stage id");
+    previous = count;
+  }
+  const last = object(decision.stages.at(-1), "last stage");
+  if (last.survivor_count !== 1) throw new Error("A decision must end with one winner");
+}
+
+export function parseRecommendationRecord(value: unknown): RecommendationRecord {
+  const root = object(value, "recommendation record");
+  if (root.schema_version !== "recommendation.v2") {
+    throw new Error("Unsupported recommendation schema");
+  }
+  validateTrace(root);
+  const decision = object(root.decision, "decision");
+  const winner = object(root.winner, "winner");
+  const winnerDish = object(winner.dish, "winner dish");
+  if (typeof decision.winner_id !== "string" || winnerDish.id !== decision.winner_id) {
+    throw new Error("Recommendation winner mismatch");
+  }
+  if (!Array.isArray(root.ranked_candidates) || !root.ranked_candidates.some((candidate) => {
+    const raw = object(candidate, "ranked candidate");
+    return object(raw.dish, "ranked dish").id === decision.winner_id;
+  })) throw new Error("Winner must exist in ranked candidates");
+  if (!Array.isArray(root.session_exclusions)) throw new Error("Session exclusions are required");
+  if (root.session_exclusions.includes(decision.winner_id)) {
+    throw new Error("Winner cannot be session excluded");
+  }
+  const input = object(root.input, "recommendation input");
+  if (!Array.isArray(input.session_exclusions)) throw new Error("Input exclusions are required");
+  return value as RecommendationRecord;
+}
+
+export function parseStoredDecision(value: unknown): StoredDecision {
+  const root = object(value, "stored decision");
+  if (root.schema_version === "demo.v1") return parseDemoRecord(value);
+  return parseRecommendationRecord(value);
 }

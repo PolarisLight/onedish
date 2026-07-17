@@ -5,9 +5,9 @@ budget, safety constraints, optional daily context, and recent meal history.
 
 ![OneDish winner card](docs/assets/onedish-hero.png)
 
-The included Demo Mode needs no API key and works offline after its first load. It uses a labeled
-synthetic wellness profile, ten fictional restaurants, ninety versioned demo dishes, and the same
-deterministic Python decision engine used by the API.
+The default browser experience needs no API key and works offline after its first load. It makes a
+fresh deterministic choice from ten fictional restaurants and ninety versioned demo dishes, using
+settings and meal history stored only on the device. The FastAPI service is optional.
 
 **Live demo:** [polarislight.github.io/onedish](https://polarislight.github.io/onedish/)
 
@@ -15,10 +15,11 @@ deterministic Python decision engine used by the API.
 
 ## Why it is different
 
-- One winner and one reserve, never another recommendation feed.
-- A visible `90 → 81 → 73 → 57 → 48 → 17 → 1` elimination record.
+- One winner at a time, never another recommendation feed.
+- A visible, auditable elimination record generated for the current request.
 - Allergen exclusions are hard constraints and are never relaxed.
-- GPT-5.6 interprets food language into strict fields; it cannot select or rank the winner.
+- An optional OpenAI Responses integration can interpret food language into strict fields; it
+  cannot select or rank the winner.
 - Foursquare can discover nearby places, but it does not prove delivery coverage or provide the
   fictional demo menus.
 - Search links open a platform search. OneDish does not claim stock, delivery, or cart access.
@@ -29,11 +30,11 @@ Requirements: Python 3.12+, Node 22+, and pnpm.
 
 ```bash
 make install
-make demo-data
+make runtime-data
 pnpm --dir web dev
 ```
 
-Open `http://127.0.0.1:5173` and choose **Try the demo**. To run the optional API separately:
+Open `http://127.0.0.1:5173` and choose **Pick my meal**. To run the optional API separately:
 
 ```bash
 backend/.venv/bin/uvicorn onedish_api.app:app --host 127.0.0.1 --port 8000
@@ -52,7 +53,7 @@ ONEDISH_FOURSQUARE_API_KEY=...
 ONEDISH_OPENAI_API_KEY=...
 ```
 
-No key is bundled into the browser. Without keys, Demo Mode remains fully judgeable. The MVP has no
+No key is bundled into the browser. Without keys, the local browser engine remains fully judgeable. The MVP has no
 Apple Health integration, accounts, analytics, payments, marketplace inventory, or automated order.
 
 ## Architecture
@@ -60,14 +61,16 @@ Apple Health integration, accounts, analytics, payments, marketplace inventory, 
 ```text
 React PWA + IndexedDB
   ├─ local context and history
-  ├─ generated offline decision records
+  ├─ deterministic engine.v2 (default)
+  ├─ versioned catalog, place fixtures, and decision rules
   └─ FastAPI /api (optional live mode)
        ├─ Foursquare or fixture places
        ├─ GPT-5.6 strict semantic interpretation
        └─ deterministic engine.v1
 ```
 
-The browser stores the complete decision before animation. The animation explains an existing
+Fixture restaurants are not live merchants. Chinese display prices use the fixed conversion in
+`decision.v2.json` for a deterministic demo; they are not live exchange quotes. The browser stores the complete decision before animation. The animation explains an existing
 record; it is not fake loading and never manufactures survivor counts.
 
 ## Verification
@@ -86,11 +89,11 @@ See [privacy](docs/privacy.md), [data provenance](docs/data-provenance.md), and 
 
 ## Built with
 
-OpenAI GPT-5.6 Responses API, Codex, FastAPI, Pydantic, React, TypeScript, Dexie, Vite, Vitest,
+OpenAI Responses API (optional), Codex, FastAPI, Pydantic, React, TypeScript, Dexie, Vite, Vitest,
 Playwright, and vite-plugin-pwa.
 
 Codex helped brainstorm, specify, implement, test, visually inspect, and document the product.
-GPT-5.6 is deliberately bounded to structured food-language interpretation; deterministic code owns
+The model is deliberately bounded to structured food-language interpretation; deterministic code owns
 hard constraints and final selection.
 
 MIT licensed.

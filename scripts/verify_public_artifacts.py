@@ -45,6 +45,16 @@ def main() -> int:
     for path in required:
         if not path.is_file():
             errors.append(f"missing demo record: {path.name}")
+    runtime_names = ("decision.v2.json", "catalog.v1.json", "places.v1.json", "parity.v2.json")
+    for name in runtime_names:
+        canonical = ROOT / "data" / name
+        generated = ROOT / "web" / "public" / "data" / name
+        if not canonical.is_file():
+            errors.append(f"missing canonical runtime data: {name}")
+        if not generated.is_file():
+            errors.append(f"missing browser runtime data: {name}")
+        elif canonical.is_file() and generated.read_bytes() != canonical.read_bytes():
+            errors.append(f"stale browser runtime data: {name}")
     if errors:
         for error in sorted(set(errors)):
             print(f"ERROR: {error}")

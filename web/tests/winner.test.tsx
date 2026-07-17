@@ -66,8 +66,11 @@ test("live winner can pick another or edit preferences", async () => {
   ); });
 
   expect(await screen.findByRole("heading", { name: first.winner.dish.name })).toBeVisible();
+  expect(screen.getAllByRole("listitem", { name: /reason/i })).toHaveLength(3);
+  expect(screen.getByRole("button", { name: "Find nearby" })).toBeVisible();
+  expect(screen.queryByText("Fictional demo menu")).not.toBeInTheDocument();
   await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Pick another" })); });
-  await waitFor(() => expect(screen.getByRole("heading")).not.toHaveTextContent(first.winner.dish.name));
+  await waitFor(() => expect(screen.getByRole("heading", { level: 1 })).not.toHaveTextContent(first.winner.dish.name));
   fireEvent.click(screen.getByRole("button", { name: "Edit preferences" }));
   expect(screen.getByLabelText("location")).toHaveTextContent("/?adjust=1");
   fetchMock.mockRestore();

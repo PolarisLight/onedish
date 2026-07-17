@@ -128,6 +128,16 @@ details.advanced summary { cursor: pointer; font-weight: 750; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0; }
 .chip { padding: 7px 10px; border: 1px solid var(--line); border-radius: var(--radius-pill); color: var(--ink-soft); font-size: .72rem; }
 .winner-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.winner-evidence { margin: 24px 0; }
+.winner-evidence h2 { margin: 0 0 10px; font: 900 1.1rem/1.1 var(--font-display); }
+.winner-evidence ol { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0; padding: 0; list-style: none; }
+.winner-evidence li { min-height: 92px; padding: 13px; border: 1px solid var(--line); border-radius: var(--radius-control); background: var(--surface); }
+.winner-evidence li strong, .winner-evidence li span { display: block; }
+.winner-evidence li strong { font-size: .78rem; line-height: 1.25; }
+.winner-evidence li span { margin-top: 8px; color: var(--ink-soft); font-size: .68rem; }
+.winner-action-block { margin-top: 18px; }
+.winner-details { margin-top: 20px; color: var(--ink-soft); font-size: .78rem; }
+.winner-details summary { cursor: pointer; color: var(--ink); font-weight: 800; }
 .rejection-sheet { margin-top: 20px; padding: 22px; border-radius: var(--radius-card); background: var(--surface); }
 .reason-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; }
 .reason-grid button { min-height: 44px; border: 1px solid var(--line); border-radius: var(--radius-control); color: var(--ink); background: var(--canvas); }
@@ -198,6 +208,8 @@ details.advanced summary { cursor: pointer; font-weight: 750; }
   .winner-grid { padding-top: 16px; }
   .winner-media { min-height: 420px; height: 52vh; }
   .winner-copy h1 { font-size: clamp(3.8rem, 18vw, 6rem); }
+  .winner-evidence ol { grid-template-columns: 1fr; }
+  .winner-evidence li { min-height: 64px; }
   .nutrition { gap: 7px; }
   .metric strong { font-size: .98rem; }
   .orbit-grid { margin-top: 12px; }

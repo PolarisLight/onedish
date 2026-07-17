@@ -15,4 +15,4 @@ export const router = createBrowserRouter([
     { path: "history", element: <TasteOrbitPage /> },
     { path: "privacy", element: <PrivacyPage /> },
   ] },
-]);
+], { basename: import.meta.env.BASE_URL });

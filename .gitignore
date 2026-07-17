@@ -14,3 +14,5 @@ __pycache__/
 *.sqlite3
 dist/
 build/
+docs/demo/.build/
+docs/demo/frames/

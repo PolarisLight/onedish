@@ -39,7 +39,7 @@ export function DailyContextForm({ onSubmit }: { onSubmit: () => Promise<void> }
           </div>
         </div>
       </details>
-      <div className="form-actions"><button className="primary-button" disabled={busy}>{busy ? "Choosing..." : "Choose for me"}</button></div>
+      <div className="form-actions"><button className="primary-button" disabled={busy}>{busy ? "Loading demo..." : "Run synthetic demo"}</button></div>
     </form>
   );
 }

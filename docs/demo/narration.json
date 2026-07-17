@@ -1,0 +1,38 @@
+[
+  {
+    "scene": "home",
+    "text": "Food apps keep giving us more options when the real problem is deciding. OneDish starts with ninety nearby demo meals, removes the noise, and gives you one clear answer. No feed, no endless swiping, and no list of ten almost-identical recommendations."
+  },
+  {
+    "scene": "context",
+    "text": "Daily context is optional. You can enter energy, protein, a craving, allergies, and a budget. Missing values stay unknown instead of becoming zero. This walkthrough is always labeled as synthetic demo context, so judges never confuse sample wellness data with a real health connection."
+  },
+  {
+    "scene": "home",
+    "text": "GPT-5.6 has a narrow role. It turns food descriptions or craving language into strict fields such as likely ingredients, nutrition ranges, and taste tags. It never sees raw health samples, and it cannot rank, recommend, or override a safety rule."
+  },
+  {
+    "scene": "elimination",
+    "text": "The final choice belongs to deterministic code. The complete decision is stored before this animation begins. What you are seeing is an explanation, not fake loading: ninety found, eighty-one searchable, seventy-three safe and in budget, fifty-seven nutritionally relevant, forty-eight not repetitive, seventeen strong matches, then one."
+  },
+  {
+    "scene": "elimination-final",
+    "text": "Every stage carries reason counts and a canonical input hash. Allergen exclusions are hard constraints and are never relaxed. Budget, nutrition, recent repetition, taste, confidence, distance, and price remain inspectable, making the result reproducible instead of mysterious."
+  },
+  {
+    "scene": "winner",
+    "text": "OneDish reveals exactly one winner and one precomputed reserve. The card shows bounded calorie and protein estimates, a fictional demo menu label, place provenance, and a search link. It never claims the dish is in stock, deliverable, or already in a cart."
+  },
+  {
+    "scene": "rejection",
+    "text": "If the answer misses, one bounded reason is enough. OneDish records that correction locally and reveals only the reserve, not another feed. After three similar rejections, tomorrow's deterministic preference weights change and a different winner can emerge from the same safe pool."
+  },
+  {
+    "scene": "orbit",
+    "text": "Taste Orbit turns the last seven days into a stable visual memory. Repeated cuisines and taste signals move closer and grow larger, while equivalent text remains available for accessibility. History, daily context, and decisions live in IndexedDB and can be reset at any time."
+  },
+  {
+    "scene": "privacy",
+    "text": "Codex helped brainstorm, specify, implement, test, and visually inspect this PWA. It runs offline with no key, while optional Foursquare and OpenAI providers stay behind FastAPI. The MVP deliberately has no Apple Health, live marketplace inventory, payment, or automated ordering. OneDish does one thing: stop browsing, and eat this."
+  }
+]

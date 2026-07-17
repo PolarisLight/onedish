@@ -6,11 +6,15 @@ function hash(value: string) { return [...value].reduce((total, char) => (total 
 export function TasteOrbitPage() {
   const [events, setEvents] = useState<HistoryEventRow[]>([]);
   useEffect(() => { void db.historyEvents.orderBy("occurred_at").reverse().toArray().then(setEvents); }, []);
-  const demoEvents = useMemo<HistoryEventRow[]>(() => events.length ? events : [
+  const recentEvents = useMemo(
+    () => events.filter((event) => Date.now() - new Date(event.occurred_at).getTime() <= 7 * 86_400_000),
+    [events],
+  );
+  const demoEvents = useMemo<HistoryEventRow[]>(() => recentEvents.length ? recentEvents : [
     { id: "demo-1", occurred_at: "2026-07-18T12:00:00Z", kind: "accepted", cuisine_tags: ["asian"], taste_tags: ["warm", "filling"], price_minor: 1650, protein_g: 38 },
     { id: "demo-2", occurred_at: "2026-07-17T12:00:00Z", kind: "rejected", cuisine_tags: ["mixed"], taste_tags: ["rich"], price_minor: 1450, protein_g: 28 },
     { id: "demo-3", occurred_at: "2026-07-16T12:00:00Z", kind: "eaten", cuisine_tags: ["asian"], taste_tags: ["warm", "spicy"], price_minor: 1550, protein_g: 32 },
-  ], [events]);
+  ], [recentEvents]);
   const tags = useMemo(() => {
     const counts = new Map<string, number>();
     for (const event of demoEvents) for (const tag of [...(event.cuisine_tags ?? []), ...(event.taste_tags ?? [])]) counts.set(tag, (counts.get(tag) ?? 0) + 1);

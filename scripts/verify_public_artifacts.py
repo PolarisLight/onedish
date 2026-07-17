@@ -11,6 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 TEXT_SUFFIXES = {".css", ".html", ".js", ".json", ".md", ".py", ".svg", ".ts", ".tsx", ".txt", ".yml", ".yaml"}
 MAX_ASSET_BYTES = 3 * 1024 * 1024
+MAX_VIDEO_BYTES = 25 * 1024 * 1024
 
 
 def tracked_files() -> list[Path]:
@@ -25,7 +26,8 @@ def main() -> int:
     private_host = re.compile(r"\b(?:10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+|59\.77\.\d+\.\d+)\b")
     for path in tracked_files():
         relative = path.relative_to(ROOT)
-        if path.stat().st_size > MAX_ASSET_BYTES:
+        limit = MAX_VIDEO_BYTES if path.suffix.lower() == ".mp4" else MAX_ASSET_BYTES
+        if path.stat().st_size > limit:
             errors.append(f"oversized artifact: {relative}")
         if path.suffix.lower() not in TEXT_SUFFIXES:
             continue

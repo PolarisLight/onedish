@@ -39,7 +39,7 @@ function WinnerView({ candidate, reserve, canReject, rejectionOpen, setRejection
   return (
     <main className="winner">
       <div className="winner-grid">
-        <div className="winner-media"><img src={dish.image} alt={dish.name} /></div>
+        <div className="winner-media"><img src={`${import.meta.env.BASE_URL}${dish.image.replace(/^\//, "")}`} alt={dish.name} /></div>
         <section className="winner-copy">
           <p className="hero-kicker">{reserve ? "Your one reserve" : "Tonight's one dish"}</p>
           <p className="restaurant-name">{place.name} · {Math.round(place.distance_m / 10) * 10} m away</p>

@@ -34,7 +34,7 @@ class OrderLinkProvider:
     def build(self, *, restaurant_name: str, dish_name: str) -> OrderLink:
         if any(ord(char) < 32 for char in f"{restaurant_name}{dish_name}"):
             raise ValueError("search text contains control characters")
-        copy_text = f"{dish_name} — {restaurant_name}"
+        copy_text = f"{dish_name} - {restaurant_name}"
         if self._base_url is None or self._platform is None:
             return OrderLink(label="Copy dish name", url=None, copy_text=copy_text)
         query = urlencode({"q": f"{dish_name} {restaurant_name}"})

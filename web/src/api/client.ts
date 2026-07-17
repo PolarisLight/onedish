@@ -27,5 +27,7 @@ export async function loadDemo(
   state: "day1" | "day1_rejected" | "day2" = "day1",
   signal?: AbortSignal,
 ): Promise<DemoRecord> {
-  return parseDemoRecord(await boundedFetch(`/demo/${state}.json`, { method: "GET" }, signal));
+  return parseDemoRecord(
+    await boundedFetch(`${import.meta.env.BASE_URL}demo/${state}.json`, { method: "GET" }, signal),
+  );
 }

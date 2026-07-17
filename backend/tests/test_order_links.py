@@ -17,7 +17,7 @@ def test_missing_host_returns_copy_action() -> None:
     result = OrderLinkProvider(None).build(restaurant_name="Ember Bowl", dish_name="Rice Bowl")
     assert result.url is None
     assert result.label == "Copy dish name"
-    assert result.copy_text == "Rice Bowl — Ember Bowl"
+    assert result.copy_text == "Rice Bowl - Ember Bowl"
 
 
 @pytest.mark.parametrize("url", ["http://example.com", "https://evil.example", "javascript:alert(1)"])

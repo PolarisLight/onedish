@@ -3,8 +3,11 @@ import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 
+const basePath = process.env.VITE_BASE_PATH ?? "/";
+
 export default defineConfig({
   root: fileURLToPath(new URL(".", import.meta.url)),
+  base: basePath,
   plugins: [
     react(),
     VitePWA({
@@ -17,15 +20,15 @@ export default defineConfig({
         display: "standalone",
         theme_color: "#100d0b",
         background_color: "#100d0b",
-        start_url: "/",
+        start_url: basePath,
         icons: [
-          { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
-          { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
-          { src: "/icons/icon-maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
+          { src: `${basePath}icons/icon-192.png`, sizes: "192x192", type: "image/png" },
+          { src: `${basePath}icons/icon-512.png`, sizes: "512x512", type: "image/png" },
+          { src: `${basePath}icons/icon-maskable-512.png`, sizes: "512x512", type: "image/png", purpose: "maskable" },
         ],
       },
       workbox: {
-        navigateFallback: "/index.html",
+        navigateFallback: `${basePath}index.html`,
         globPatterns: ["**/*.{js,css,html,png,svg,json,webp,avif}"],
         runtimeCaching: [],
       },

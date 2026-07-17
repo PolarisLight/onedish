@@ -21,6 +21,7 @@ dev = [
   "build>=1.2,<2",
   "pytest>=8.4,<9",
   "pytest-asyncio>=1.1,<2",
+  "pillow>=12,<13",
   "respx>=0.22,<1",
   "ruff>=0.12,<1",
 ]

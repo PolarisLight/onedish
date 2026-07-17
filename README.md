@@ -3,9 +3,15 @@
 **Stop browsing. Eat this.** OneDish turns nearby meal options into one auditable answer, using your
 budget, safety constraints, optional daily context, and recent meal history.
 
+![OneDish winner card](docs/assets/onedish-hero.png)
+
 The included Demo Mode needs no API key and works offline after its first load. It uses a labeled
 synthetic wellness profile, ten fictional restaurants, ninety versioned demo dishes, and the same
 deterministic Python decision engine used by the API.
+
+**Live demo:** [polarislight.github.io/onedish](https://polarislight.github.io/onedish/)
+
+**Demo video:** [watch the 2:55 narrated walkthrough](docs/demo/onedish-demo.mp4)
 
 ## Why it is different
 

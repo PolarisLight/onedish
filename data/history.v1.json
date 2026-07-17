@@ -1,0 +1,149 @@
+{
+  "version": "history.v1",
+  "events": [
+    {
+      "id": "meal-1",
+      "occurred_at": "2026-07-17T11:00:00+00:00",
+      "kind": "eaten",
+      "dish_id": "night-market-fire-noodle-cup",
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "noodles",
+      "energy_kcal": {
+        "min": 560,
+        "max": 680
+      },
+      "protein_g": {
+        "min": 22,
+        "max": 30
+      },
+      "price_minor": 1450,
+      "rejection_reason": null
+    },
+    {
+      "id": "meal-2",
+      "occurred_at": "2026-07-16T11:00:00+00:00",
+      "kind": "eaten",
+      "dish_id": "night-market-fire-noodle-cup",
+      "cuisine_tags": [
+        "asian"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "noodles",
+      "energy_kcal": {
+        "min": 560,
+        "max": 680
+      },
+      "protein_g": {
+        "min": 22,
+        "max": 30
+      },
+      "price_minor": 1450,
+      "rejection_reason": null
+    },
+    {
+      "id": "meal-3",
+      "occurred_at": "2026-07-15T11:00:00+00:00",
+      "kind": "eaten",
+      "dish_id": "meal-demo-2",
+      "cuisine_tags": [
+        "mixed"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "rice",
+      "energy_kcal": {
+        "min": 560,
+        "max": 680
+      },
+      "protein_g": {
+        "min": 22,
+        "max": 30
+      },
+      "price_minor": 1450,
+      "rejection_reason": null
+    },
+    {
+      "id": "meal-4",
+      "occurred_at": "2026-07-14T11:00:00+00:00",
+      "kind": "eaten",
+      "dish_id": "meal-demo-3",
+      "cuisine_tags": [
+        "mixed"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "rice",
+      "energy_kcal": {
+        "min": 560,
+        "max": 680
+      },
+      "protein_g": {
+        "min": 22,
+        "max": 30
+      },
+      "price_minor": 1450,
+      "rejection_reason": null
+    },
+    {
+      "id": "meal-5",
+      "occurred_at": "2026-07-13T11:00:00+00:00",
+      "kind": "eaten",
+      "dish_id": "meal-demo-4",
+      "cuisine_tags": [
+        "mixed"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "rice",
+      "energy_kcal": {
+        "min": 560,
+        "max": 680
+      },
+      "protein_g": {
+        "min": 22,
+        "max": 30
+      },
+      "price_minor": 1450,
+      "rejection_reason": null
+    },
+    {
+      "id": "meal-6",
+      "occurred_at": "2026-07-12T11:00:00+00:00",
+      "kind": "eaten",
+      "dish_id": "meal-demo-5",
+      "cuisine_tags": [
+        "mixed"
+      ],
+      "taste_tags": [
+        "warm",
+        "filling"
+      ],
+      "base_ingredient": "rice",
+      "energy_kcal": {
+        "min": 560,
+        "max": 680
+      },
+      "protein_g": {
+        "min": 22,
+        "max": 30
+      },
+      "price_minor": 1450,
+      "rejection_reason": null
+    }
+  ]
+}

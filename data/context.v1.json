@@ -1,0 +1,16 @@
+{
+  "version": "context.v1",
+  "entry": {
+    "source": "synthetic",
+    "energy_consumed_kcal": 1180,
+    "protein_consumed_g": 72,
+    "daily_energy_goal_kcal": 1900,
+    "daily_protein_goal_g": 110,
+    "meal_energy_range_kcal": {
+      "min": 500,
+      "max": 720
+    },
+    "sleep_minutes": 342,
+    "comfort_from_sleep_enabled": true
+  }
+}

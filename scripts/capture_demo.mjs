@@ -188,18 +188,24 @@ try {
     await page.getByRole("button", { name: "Meet your dish", exact: true }).click();
     await page.getByText("Why this one", { exact: true }).waitFor();
     const heading = page.locator("main.winner h1");
-    const firstDish = (await heading.textContent())?.trim();
-    if (!firstDish) throw new Error("Winner scene did not expose a dish heading");
+    if (!(await heading.textContent())?.trim()) throw new Error("Winner scene did not expose a dish heading");
     await waitTo(0.27);
     await page.getByText("Why this one", { exact: true }).scrollIntoViewIfNeeded();
     await waitTo(0.48);
     await page.getByRole("button", { name: "Pick another", exact: true }).scrollIntoViewIfNeeded();
     await waitTo(0.66);
+    const firstDecisionUrl = page.url();
     await page.getByRole("button", { name: "Pick another", exact: true }).click();
-    await page.waitForFunction(
-      (previous) => document.querySelector("main.winner h1")?.textContent?.trim() !== previous,
-      firstDish,
+    await page.waitForURL(
+      (url) => url.href !== firstDecisionUrl && url.pathname.startsWith("/winner/"),
     );
+    await page.waitForFunction(() => {
+      const retry = [...document.querySelectorAll("button")].find(
+        (button) => button.textContent?.trim() === "Pick another",
+      );
+      return retry instanceof HTMLButtonElement && !retry.disabled;
+    });
+    if (!(await heading.textContent())?.trim()) throw new Error("Retry did not expose a winner result");
     await waitTo(0.80);
     await heading.scrollIntoViewIfNeeded();
   });

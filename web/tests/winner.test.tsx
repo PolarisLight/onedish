@@ -72,6 +72,8 @@ test("live winner can pick another or edit preferences", async () => {
   expect(screen.queryByText("Fictional demo menu")).not.toBeInTheDocument();
   await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Pick another" })); });
   await waitFor(() => expect(screen.getByLabelText("location")).not.toHaveTextContent(first.decision.decision_id));
+  expect(screen.getByRole("heading", { level: 1 })).toBeVisible();
+  expect(screen.getByRole("button", { name: "Pick another" })).toBeEnabled();
   fireEvent.click(screen.getByRole("button", { name: "Edit preferences" }));
   expect(screen.getByLabelText("location")).toHaveTextContent("/?adjust=1");
   fetchMock.mockRestore();

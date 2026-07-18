@@ -25,6 +25,16 @@ def test_catalog_hash_is_stable() -> None:
     assert catalog_sha256(catalog) == catalog_sha256(catalog.model_copy(deep=True))
 
 
+def test_catalog_has_complete_natural_chinese_dish_copy() -> None:
+    catalog = load_catalog(ROOT / "data/catalog.v1.json", asset_root=ROOT / "web/public")
+    assert len(catalog.dishes) == 90
+    assert len({dish.id for dish in catalog.dishes}) == 90
+    assert all(set(dish.translations) == {"zh-CN"} for dish in catalog.dishes)
+    by_id = {dish.id: dish for dish in catalog.dishes}
+    assert by_id["ember-bowl-charred-chicken-rice"].translations["zh-CN"].name == "炭烤鸡肉饭"
+    assert by_id["night-market-fire-noodle-cup"].translations["zh-CN"].name == "香辣热拌面"
+
+
 def test_catalog_rejects_missing_image(tmp_path: Path) -> None:
     path = ROOT / "data/catalog.v1.json"
     with pytest.raises(CatalogError, match="missing image"):

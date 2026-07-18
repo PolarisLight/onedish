@@ -36,6 +36,45 @@ TEMPLATES = (
     ("smoky-beef-plate", "Smoky Beef Plate", "beef", 650, 790, 45, 55, 30, ("warm", "rich", "filling"), ("milk",)),
 )
 
+DISH_COPY = {
+    "charred-chicken-rice": (
+        "炭烤鸡肉饭",
+        "炭烤鸡肉搭配米饭和时蔬，香气浓郁，饱腹感十足。",
+    ),
+    "ginger-tofu-bowl": (
+        "姜香豆腐饭",
+        "嫩豆腐裹上姜香酱汁，搭配米饭和时蔬，清新又温暖。",
+    ),
+    "crisp-herb-salad": (
+        "脆爽香草沙拉",
+        "新鲜叶菜与香草拌成的轻盈沙拉，口感脆爽。",
+    ),
+    "fire-noodle-cup": (
+        "香辣热拌面",
+        "热面拌入香辣酱汁和时蔬，味道浓郁，辣度醒目。",
+    ),
+    "turmeric-chicken-wrap": (
+        "姜黄鸡肉卷",
+        "姜黄香料鸡肉与时蔬裹入柔软饼皮，温热又饱腹。",
+    ),
+    "lentil-comfort-curry": (
+        "暖香扁豆咖喱",
+        "扁豆与温和香料慢煮成浓郁咖喱，温暖舒心。",
+    ),
+    "miso-salmon-plate": (
+        "味噌三文鱼餐盘",
+        "味噌调味的三文鱼搭配时蔬，鲜香清爽，蛋白质充足。",
+    ),
+    "roasted-veg-soup": (
+        "烤蔬菜浓汤",
+        "烤蔬菜慢煮成温热浓汤，口感轻盈，柔和舒心。",
+    ),
+    "smoky-beef-plate": (
+        "烟熏牛肉餐盘",
+        "烟香牛肉搭配时蔬，风味浓厚，饱腹感十足。",
+    ),
+}
+
 
 def write_json(path: Path, payload: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -61,6 +100,7 @@ def build() -> None:
 
         for template_index, template in enumerate(TEMPLATES):
             slug, dish_name, base, emin, emax, pmin, pmax, minutes, tastes, allergens = template
+            zh_name, zh_description = DISH_COPY[slug]
             price = 1_080 + restaurant_index * 45 + template_index * 57
             energy_shift = (restaurant_index % 3 - 1) * 15
             protein_shift = restaurant_index % 4
@@ -71,6 +111,12 @@ def build() -> None:
                     "restaurant_id": rid,
                     "name": dish_name,
                     "description": description,
+                    "translations": {
+                        "zh-CN": {
+                            "name": zh_name,
+                            "description": zh_description,
+                        }
+                    },
                     "price_minor": price,
                     "currency": "USD",
                     "energy_kcal": {"min": emin + energy_shift, "max": emax + energy_shift},

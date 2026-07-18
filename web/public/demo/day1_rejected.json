@@ -36,9 +36,9 @@
   "decision": {
     "catalog_version": "catalog.v1",
     "created_at": "2026-07-18T12:00:00Z",
-    "decision_id": "decision-e08f06d82d2bcb1c",
+    "decision_id": "decision-ca28f9f08481c99e",
     "engine_version": "engine.v2",
-    "input_sha256": "e08f06d82d2bcb1cd767c714b66767faf0bb2cfcb04bcd507463f9a014228595",
+    "input_sha256": "ca28f9f08481c99e7ba7819d95a723d5be231abb0d85e17d974aaf3215a19fb2",
     "relaxations": [],
     "reserve_id": "green-room-charred-chicken-rice",
     "stages": [
@@ -154,7 +154,7 @@
     },
     "recent_dishes": 2
   },
-  "input_sha256": "e08f06d82d2bcb1cd767c714b66767faf0bb2cfcb04bcd507463f9a014228595",
+  "input_sha256": "ca28f9f08481c99e7ba7819d95a723d5be231abb0d85e17d974aaf3215a19fb2",
   "provenance": {
     "decision": "canonical deterministic engine.v2",
     "menu": "versioned fictional demo menu",
@@ -199,7 +199,13 @@
       "taste_tags": [
         "warm",
         "filling"
-      ]
+      ],
+      "translations": {
+        "zh-CN": {
+          "description": "炭烤鸡肉搭配米饭和时蔬，香气浓郁，饱腹感十足。",
+          "name": "炭烤鸡肉饭"
+        }
+      }
     },
     "place": {
       "attribution": "OneDish fixture place",
@@ -256,7 +262,13 @@
       "taste_tags": [
         "warm",
         "filling"
-      ]
+      ],
+      "translations": {
+        "zh-CN": {
+          "description": "炭烤鸡肉搭配米饭和时蔬，香气浓郁，饱腹感十足。",
+          "name": "炭烤鸡肉饭"
+        }
+      }
     },
     "place": {
       "attribution": "OneDish fixture place",

@@ -88,6 +88,12 @@
       "restaurant_id": "ember-bowl",
       "name": "Charred Chicken Rice Bowl",
       "description": "A fictional demo serving of charred chicken rice bowl with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "炭烤鸡肉饭",
+          "description": "炭烤鸡肉搭配米饭和时蔬，香气浓郁，饱腹感十足。"
+        }
+      },
       "price_minor": 1080,
       "currency": "USD",
       "energy_kcal": {
@@ -127,6 +133,12 @@
       "restaurant_id": "ember-bowl",
       "name": "Ginger Tofu Bowl",
       "description": "A fictional demo serving of ginger tofu bowl with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "姜香豆腐饭",
+          "description": "嫩豆腐裹上姜香酱汁，搭配米饭和时蔬，清新又温暖。"
+        }
+      },
       "price_minor": 1137,
       "currency": "USD",
       "energy_kcal": {
@@ -166,6 +178,12 @@
       "restaurant_id": "ember-bowl",
       "name": "Crisp Herb Salad",
       "description": "A fictional demo serving of crisp herb salad with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "脆爽香草沙拉",
+          "description": "新鲜叶菜与香草拌成的轻盈沙拉，口感脆爽。"
+        }
+      },
       "price_minor": 1194,
       "currency": "USD",
       "energy_kcal": {
@@ -205,6 +223,12 @@
       "restaurant_id": "ember-bowl",
       "name": "Fire Noodle Cup",
       "description": "A fictional demo serving of fire noodle cup with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "香辣热拌面",
+          "description": "热面拌入香辣酱汁和时蔬，味道浓郁，辣度醒目。"
+        }
+      },
       "price_minor": 1251,
       "currency": "USD",
       "energy_kcal": {
@@ -245,6 +269,12 @@
       "restaurant_id": "ember-bowl",
       "name": "Turmeric Chicken Wrap",
       "description": "A fictional demo serving of turmeric chicken wrap with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "姜黄鸡肉卷",
+          "description": "姜黄香料鸡肉与时蔬裹入柔软饼皮，温热又饱腹。"
+        }
+      },
       "price_minor": 1308,
       "currency": "USD",
       "energy_kcal": {
@@ -284,6 +314,12 @@
       "restaurant_id": "ember-bowl",
       "name": "Lentil Comfort Curry",
       "description": "A fictional demo serving of lentil comfort curry with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "暖香扁豆咖喱",
+          "description": "扁豆与温和香料慢煮成浓郁咖喱，温暖舒心。"
+        }
+      },
       "price_minor": 1365,
       "currency": "USD",
       "energy_kcal": {
@@ -320,6 +356,12 @@
       "restaurant_id": "ember-bowl",
       "name": "Miso Salmon Plate",
       "description": "A fictional demo serving of miso salmon plate with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "味噌三文鱼餐盘",
+          "description": "味噌调味的三文鱼搭配时蔬，鲜香清爽，蛋白质充足。"
+        }
+      },
       "price_minor": 1422,
       "currency": "USD",
       "energy_kcal": {
@@ -359,6 +401,12 @@
       "restaurant_id": "ember-bowl",
       "name": "Roasted Vegetable Soup",
       "description": "A fictional demo serving of roasted vegetable soup with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "烤蔬菜浓汤",
+          "description": "烤蔬菜慢煮成温热浓汤，口感轻盈，柔和舒心。"
+        }
+      },
       "price_minor": 1479,
       "currency": "USD",
       "energy_kcal": {
@@ -398,6 +446,12 @@
       "restaurant_id": "ember-bowl",
       "name": "Smoky Beef Plate",
       "description": "A fictional demo serving of smoky beef plate with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "烟熏牛肉餐盘",
+          "description": "烟香牛肉搭配时蔬，风味浓厚，饱腹感十足。"
+        }
+      },
       "price_minor": 1536,
       "currency": "USD",
       "energy_kcal": {
@@ -437,6 +491,12 @@
       "restaurant_id": "green-room",
       "name": "Charred Chicken Rice Bowl",
       "description": "A fictional demo serving of charred chicken rice bowl with a mediterranean profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "炭烤鸡肉饭",
+          "description": "炭烤鸡肉搭配米饭和时蔬，香气浓郁，饱腹感十足。"
+        }
+      },
       "price_minor": 1125,
       "currency": "USD",
       "energy_kcal": {
@@ -476,6 +536,12 @@
       "restaurant_id": "green-room",
       "name": "Ginger Tofu Bowl",
       "description": "A fictional demo serving of ginger tofu bowl with a mediterranean profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "姜香豆腐饭",
+          "description": "嫩豆腐裹上姜香酱汁，搭配米饭和时蔬，清新又温暖。"
+        }
+      },
       "price_minor": 1182,
       "currency": "USD",
       "energy_kcal": {
@@ -515,6 +581,12 @@
       "restaurant_id": "green-room",
       "name": "Crisp Herb Salad",
       "description": "A fictional demo serving of crisp herb salad with a mediterranean profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "脆爽香草沙拉",
+          "description": "新鲜叶菜与香草拌成的轻盈沙拉，口感脆爽。"
+        }
+      },
       "price_minor": 1239,
       "currency": "USD",
       "energy_kcal": {
@@ -554,6 +626,12 @@
       "restaurant_id": "green-room",
       "name": "Fire Noodle Cup",
       "description": "A fictional demo serving of fire noodle cup with a mediterranean profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "香辣热拌面",
+          "description": "热面拌入香辣酱汁和时蔬，味道浓郁，辣度醒目。"
+        }
+      },
       "price_minor": 1296,
       "currency": "USD",
       "energy_kcal": {
@@ -594,6 +672,12 @@
       "restaurant_id": "green-room",
       "name": "Turmeric Chicken Wrap",
       "description": "A fictional demo serving of turmeric chicken wrap with a mediterranean profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "姜黄鸡肉卷",
+          "description": "姜黄香料鸡肉与时蔬裹入柔软饼皮，温热又饱腹。"
+        }
+      },
       "price_minor": 1353,
       "currency": "USD",
       "energy_kcal": {
@@ -633,6 +717,12 @@
       "restaurant_id": "green-room",
       "name": "Lentil Comfort Curry",
       "description": "A fictional demo serving of lentil comfort curry with a mediterranean profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "暖香扁豆咖喱",
+          "description": "扁豆与温和香料慢煮成浓郁咖喱，温暖舒心。"
+        }
+      },
       "price_minor": 1410,
       "currency": "USD",
       "energy_kcal": {
@@ -669,6 +759,12 @@
       "restaurant_id": "green-room",
       "name": "Miso Salmon Plate",
       "description": "A fictional demo serving of miso salmon plate with a mediterranean profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "味噌三文鱼餐盘",
+          "description": "味噌调味的三文鱼搭配时蔬，鲜香清爽，蛋白质充足。"
+        }
+      },
       "price_minor": 1467,
       "currency": "USD",
       "energy_kcal": {
@@ -708,6 +804,12 @@
       "restaurant_id": "green-room",
       "name": "Roasted Vegetable Soup",
       "description": "A fictional demo serving of roasted vegetable soup with a mediterranean profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "烤蔬菜浓汤",
+          "description": "烤蔬菜慢煮成温热浓汤，口感轻盈，柔和舒心。"
+        }
+      },
       "price_minor": 1524,
       "currency": "USD",
       "energy_kcal": {
@@ -747,6 +849,12 @@
       "restaurant_id": "green-room",
       "name": "Smoky Beef Plate",
       "description": "A fictional demo serving of smoky beef plate with a mediterranean profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "烟熏牛肉餐盘",
+          "description": "烟香牛肉搭配时蔬，风味浓厚，饱腹感十足。"
+        }
+      },
       "price_minor": 1581,
       "currency": "USD",
       "energy_kcal": {
@@ -786,6 +894,12 @@
       "restaurant_id": "copper-tandoor",
       "name": "Charred Chicken Rice Bowl",
       "description": "A fictional demo serving of charred chicken rice bowl with a indian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "炭烤鸡肉饭",
+          "description": "炭烤鸡肉搭配米饭和时蔬，香气浓郁，饱腹感十足。"
+        }
+      },
       "price_minor": 1170,
       "currency": "USD",
       "energy_kcal": {
@@ -825,6 +939,12 @@
       "restaurant_id": "copper-tandoor",
       "name": "Ginger Tofu Bowl",
       "description": "A fictional demo serving of ginger tofu bowl with a indian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "姜香豆腐饭",
+          "description": "嫩豆腐裹上姜香酱汁，搭配米饭和时蔬，清新又温暖。"
+        }
+      },
       "price_minor": 1227,
       "currency": "USD",
       "energy_kcal": {
@@ -864,6 +984,12 @@
       "restaurant_id": "copper-tandoor",
       "name": "Crisp Herb Salad",
       "description": "A fictional demo serving of crisp herb salad with a indian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "脆爽香草沙拉",
+          "description": "新鲜叶菜与香草拌成的轻盈沙拉，口感脆爽。"
+        }
+      },
       "price_minor": 1284,
       "currency": "USD",
       "energy_kcal": {
@@ -903,6 +1029,12 @@
       "restaurant_id": "copper-tandoor",
       "name": "Fire Noodle Cup",
       "description": "A fictional demo serving of fire noodle cup with a indian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "香辣热拌面",
+          "description": "热面拌入香辣酱汁和时蔬，味道浓郁，辣度醒目。"
+        }
+      },
       "price_minor": 1341,
       "currency": "USD",
       "energy_kcal": {
@@ -943,6 +1075,12 @@
       "restaurant_id": "copper-tandoor",
       "name": "Turmeric Chicken Wrap",
       "description": "A fictional demo serving of turmeric chicken wrap with a indian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "姜黄鸡肉卷",
+          "description": "姜黄香料鸡肉与时蔬裹入柔软饼皮，温热又饱腹。"
+        }
+      },
       "price_minor": 1398,
       "currency": "USD",
       "energy_kcal": {
@@ -982,6 +1120,12 @@
       "restaurant_id": "copper-tandoor",
       "name": "Lentil Comfort Curry",
       "description": "A fictional demo serving of lentil comfort curry with a indian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "暖香扁豆咖喱",
+          "description": "扁豆与温和香料慢煮成浓郁咖喱，温暖舒心。"
+        }
+      },
       "price_minor": 1455,
       "currency": "USD",
       "energy_kcal": {
@@ -1018,6 +1162,12 @@
       "restaurant_id": "copper-tandoor",
       "name": "Miso Salmon Plate",
       "description": "A fictional demo serving of miso salmon plate with a indian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "味噌三文鱼餐盘",
+          "description": "味噌调味的三文鱼搭配时蔬，鲜香清爽，蛋白质充足。"
+        }
+      },
       "price_minor": 1512,
       "currency": "USD",
       "energy_kcal": {
@@ -1057,6 +1207,12 @@
       "restaurant_id": "copper-tandoor",
       "name": "Roasted Vegetable Soup",
       "description": "A fictional demo serving of roasted vegetable soup with a indian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "烤蔬菜浓汤",
+          "description": "烤蔬菜慢煮成温热浓汤，口感轻盈，柔和舒心。"
+        }
+      },
       "price_minor": 1569,
       "currency": "USD",
       "energy_kcal": {
@@ -1096,6 +1252,12 @@
       "restaurant_id": "copper-tandoor",
       "name": "Smoky Beef Plate",
       "description": "A fictional demo serving of smoky beef plate with a indian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "烟熏牛肉餐盘",
+          "description": "烟香牛肉搭配时蔬，风味浓厚，饱腹感十足。"
+        }
+      },
       "price_minor": 1626,
       "currency": "USD",
       "energy_kcal": {
@@ -1135,6 +1297,12 @@
       "restaurant_id": "mesa-luna",
       "name": "Charred Chicken Rice Bowl",
       "description": "A fictional demo serving of charred chicken rice bowl with a latin profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "炭烤鸡肉饭",
+          "description": "炭烤鸡肉搭配米饭和时蔬，香气浓郁，饱腹感十足。"
+        }
+      },
       "price_minor": 1215,
       "currency": "USD",
       "energy_kcal": {
@@ -1174,6 +1342,12 @@
       "restaurant_id": "mesa-luna",
       "name": "Ginger Tofu Bowl",
       "description": "A fictional demo serving of ginger tofu bowl with a latin profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "姜香豆腐饭",
+          "description": "嫩豆腐裹上姜香酱汁，搭配米饭和时蔬，清新又温暖。"
+        }
+      },
       "price_minor": 1272,
       "currency": "USD",
       "energy_kcal": {
@@ -1213,6 +1387,12 @@
       "restaurant_id": "mesa-luna",
       "name": "Crisp Herb Salad",
       "description": "A fictional demo serving of crisp herb salad with a latin profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "脆爽香草沙拉",
+          "description": "新鲜叶菜与香草拌成的轻盈沙拉，口感脆爽。"
+        }
+      },
       "price_minor": 1329,
       "currency": "USD",
       "energy_kcal": {
@@ -1252,6 +1432,12 @@
       "restaurant_id": "mesa-luna",
       "name": "Fire Noodle Cup",
       "description": "A fictional demo serving of fire noodle cup with a latin profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "香辣热拌面",
+          "description": "热面拌入香辣酱汁和时蔬，味道浓郁，辣度醒目。"
+        }
+      },
       "price_minor": 1386,
       "currency": "USD",
       "energy_kcal": {
@@ -1292,6 +1478,12 @@
       "restaurant_id": "mesa-luna",
       "name": "Turmeric Chicken Wrap",
       "description": "A fictional demo serving of turmeric chicken wrap with a latin profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "姜黄鸡肉卷",
+          "description": "姜黄香料鸡肉与时蔬裹入柔软饼皮，温热又饱腹。"
+        }
+      },
       "price_minor": 1443,
       "currency": "USD",
       "energy_kcal": {
@@ -1331,6 +1523,12 @@
       "restaurant_id": "mesa-luna",
       "name": "Lentil Comfort Curry",
       "description": "A fictional demo serving of lentil comfort curry with a latin profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "暖香扁豆咖喱",
+          "description": "扁豆与温和香料慢煮成浓郁咖喱，温暖舒心。"
+        }
+      },
       "price_minor": 1500,
       "currency": "USD",
       "energy_kcal": {
@@ -1367,6 +1565,12 @@
       "restaurant_id": "mesa-luna",
       "name": "Miso Salmon Plate",
       "description": "A fictional demo serving of miso salmon plate with a latin profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "味噌三文鱼餐盘",
+          "description": "味噌调味的三文鱼搭配时蔬，鲜香清爽，蛋白质充足。"
+        }
+      },
       "price_minor": 1557,
       "currency": "USD",
       "energy_kcal": {
@@ -1406,6 +1610,12 @@
       "restaurant_id": "mesa-luna",
       "name": "Roasted Vegetable Soup",
       "description": "A fictional demo serving of roasted vegetable soup with a latin profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "烤蔬菜浓汤",
+          "description": "烤蔬菜慢煮成温热浓汤，口感轻盈，柔和舒心。"
+        }
+      },
       "price_minor": 1614,
       "currency": "USD",
       "energy_kcal": {
@@ -1445,6 +1655,12 @@
       "restaurant_id": "mesa-luna",
       "name": "Smoky Beef Plate",
       "description": "A fictional demo serving of smoky beef plate with a latin profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "烟熏牛肉餐盘",
+          "description": "烟香牛肉搭配时蔬，风味浓厚，饱腹感十足。"
+        }
+      },
       "price_minor": 1671,
       "currency": "USD",
       "energy_kcal": {
@@ -1484,6 +1700,12 @@
       "restaurant_id": "olive-line",
       "name": "Charred Chicken Rice Bowl",
       "description": "A fictional demo serving of charred chicken rice bowl with a mediterranean profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "炭烤鸡肉饭",
+          "description": "炭烤鸡肉搭配米饭和时蔬，香气浓郁，饱腹感十足。"
+        }
+      },
       "price_minor": 1260,
       "currency": "USD",
       "energy_kcal": {
@@ -1523,6 +1745,12 @@
       "restaurant_id": "olive-line",
       "name": "Ginger Tofu Bowl",
       "description": "A fictional demo serving of ginger tofu bowl with a mediterranean profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "姜香豆腐饭",
+          "description": "嫩豆腐裹上姜香酱汁，搭配米饭和时蔬，清新又温暖。"
+        }
+      },
       "price_minor": 1317,
       "currency": "USD",
       "energy_kcal": {
@@ -1562,6 +1790,12 @@
       "restaurant_id": "olive-line",
       "name": "Crisp Herb Salad",
       "description": "A fictional demo serving of crisp herb salad with a mediterranean profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "脆爽香草沙拉",
+          "description": "新鲜叶菜与香草拌成的轻盈沙拉，口感脆爽。"
+        }
+      },
       "price_minor": 1374,
       "currency": "USD",
       "energy_kcal": {
@@ -1601,6 +1835,12 @@
       "restaurant_id": "olive-line",
       "name": "Fire Noodle Cup",
       "description": "A fictional demo serving of fire noodle cup with a mediterranean profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "香辣热拌面",
+          "description": "热面拌入香辣酱汁和时蔬，味道浓郁，辣度醒目。"
+        }
+      },
       "price_minor": 1431,
       "currency": "USD",
       "energy_kcal": {
@@ -1641,6 +1881,12 @@
       "restaurant_id": "olive-line",
       "name": "Turmeric Chicken Wrap",
       "description": "A fictional demo serving of turmeric chicken wrap with a mediterranean profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "姜黄鸡肉卷",
+          "description": "姜黄香料鸡肉与时蔬裹入柔软饼皮，温热又饱腹。"
+        }
+      },
       "price_minor": 1488,
       "currency": "USD",
       "energy_kcal": {
@@ -1680,6 +1926,12 @@
       "restaurant_id": "olive-line",
       "name": "Lentil Comfort Curry",
       "description": "A fictional demo serving of lentil comfort curry with a mediterranean profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "暖香扁豆咖喱",
+          "description": "扁豆与温和香料慢煮成浓郁咖喱，温暖舒心。"
+        }
+      },
       "price_minor": 1545,
       "currency": "USD",
       "energy_kcal": {
@@ -1716,6 +1968,12 @@
       "restaurant_id": "olive-line",
       "name": "Miso Salmon Plate",
       "description": "A fictional demo serving of miso salmon plate with a mediterranean profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "味噌三文鱼餐盘",
+          "description": "味噌调味的三文鱼搭配时蔬，鲜香清爽，蛋白质充足。"
+        }
+      },
       "price_minor": 1602,
       "currency": "USD",
       "energy_kcal": {
@@ -1755,6 +2013,12 @@
       "restaurant_id": "olive-line",
       "name": "Roasted Vegetable Soup",
       "description": "A fictional demo serving of roasted vegetable soup with a mediterranean profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "烤蔬菜浓汤",
+          "description": "烤蔬菜慢煮成温热浓汤，口感轻盈，柔和舒心。"
+        }
+      },
       "price_minor": 1659,
       "currency": "USD",
       "energy_kcal": {
@@ -1794,6 +2058,12 @@
       "restaurant_id": "olive-line",
       "name": "Smoky Beef Plate",
       "description": "A fictional demo serving of smoky beef plate with a mediterranean profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "烟熏牛肉餐盘",
+          "description": "烟香牛肉搭配时蔬，风味浓厚，饱腹感十足。"
+        }
+      },
       "price_minor": 1716,
       "currency": "USD",
       "energy_kcal": {
@@ -1833,6 +2103,12 @@
       "restaurant_id": "night-market",
       "name": "Charred Chicken Rice Bowl",
       "description": "A fictional demo serving of charred chicken rice bowl with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "炭烤鸡肉饭",
+          "description": "炭烤鸡肉搭配米饭和时蔬，香气浓郁，饱腹感十足。"
+        }
+      },
       "price_minor": 1305,
       "currency": "USD",
       "energy_kcal": {
@@ -1872,6 +2148,12 @@
       "restaurant_id": "night-market",
       "name": "Ginger Tofu Bowl",
       "description": "A fictional demo serving of ginger tofu bowl with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "姜香豆腐饭",
+          "description": "嫩豆腐裹上姜香酱汁，搭配米饭和时蔬，清新又温暖。"
+        }
+      },
       "price_minor": 1362,
       "currency": "USD",
       "energy_kcal": {
@@ -1911,6 +2193,12 @@
       "restaurant_id": "night-market",
       "name": "Crisp Herb Salad",
       "description": "A fictional demo serving of crisp herb salad with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "脆爽香草沙拉",
+          "description": "新鲜叶菜与香草拌成的轻盈沙拉，口感脆爽。"
+        }
+      },
       "price_minor": 1419,
       "currency": "USD",
       "energy_kcal": {
@@ -1950,6 +2238,12 @@
       "restaurant_id": "night-market",
       "name": "Fire Noodle Cup",
       "description": "A fictional demo serving of fire noodle cup with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "香辣热拌面",
+          "description": "热面拌入香辣酱汁和时蔬，味道浓郁，辣度醒目。"
+        }
+      },
       "price_minor": 1476,
       "currency": "USD",
       "energy_kcal": {
@@ -1990,6 +2284,12 @@
       "restaurant_id": "night-market",
       "name": "Turmeric Chicken Wrap",
       "description": "A fictional demo serving of turmeric chicken wrap with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "姜黄鸡肉卷",
+          "description": "姜黄香料鸡肉与时蔬裹入柔软饼皮，温热又饱腹。"
+        }
+      },
       "price_minor": 1533,
       "currency": "USD",
       "energy_kcal": {
@@ -2029,6 +2329,12 @@
       "restaurant_id": "night-market",
       "name": "Lentil Comfort Curry",
       "description": "A fictional demo serving of lentil comfort curry with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "暖香扁豆咖喱",
+          "description": "扁豆与温和香料慢煮成浓郁咖喱，温暖舒心。"
+        }
+      },
       "price_minor": 1590,
       "currency": "USD",
       "energy_kcal": {
@@ -2065,6 +2371,12 @@
       "restaurant_id": "night-market",
       "name": "Miso Salmon Plate",
       "description": "A fictional demo serving of miso salmon plate with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "味噌三文鱼餐盘",
+          "description": "味噌调味的三文鱼搭配时蔬，鲜香清爽，蛋白质充足。"
+        }
+      },
       "price_minor": 1647,
       "currency": "USD",
       "energy_kcal": {
@@ -2104,6 +2416,12 @@
       "restaurant_id": "night-market",
       "name": "Roasted Vegetable Soup",
       "description": "A fictional demo serving of roasted vegetable soup with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "烤蔬菜浓汤",
+          "description": "烤蔬菜慢煮成温热浓汤，口感轻盈，柔和舒心。"
+        }
+      },
       "price_minor": 1704,
       "currency": "USD",
       "energy_kcal": {
@@ -2143,6 +2461,12 @@
       "restaurant_id": "night-market",
       "name": "Smoky Beef Plate",
       "description": "A fictional demo serving of smoky beef plate with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "烟熏牛肉餐盘",
+          "description": "烟香牛肉搭配时蔬，风味浓厚，饱腹感十足。"
+        }
+      },
       "price_minor": 1761,
       "currency": "USD",
       "energy_kcal": {
@@ -2182,6 +2506,12 @@
       "restaurant_id": "grain-signal",
       "name": "Charred Chicken Rice Bowl",
       "description": "A fictional demo serving of charred chicken rice bowl with a mixed profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "炭烤鸡肉饭",
+          "description": "炭烤鸡肉搭配米饭和时蔬，香气浓郁，饱腹感十足。"
+        }
+      },
       "price_minor": 1350,
       "currency": "USD",
       "energy_kcal": {
@@ -2221,6 +2551,12 @@
       "restaurant_id": "grain-signal",
       "name": "Ginger Tofu Bowl",
       "description": "A fictional demo serving of ginger tofu bowl with a mixed profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "姜香豆腐饭",
+          "description": "嫩豆腐裹上姜香酱汁，搭配米饭和时蔬，清新又温暖。"
+        }
+      },
       "price_minor": 1407,
       "currency": "USD",
       "energy_kcal": {
@@ -2260,6 +2596,12 @@
       "restaurant_id": "grain-signal",
       "name": "Crisp Herb Salad",
       "description": "A fictional demo serving of crisp herb salad with a mixed profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "脆爽香草沙拉",
+          "description": "新鲜叶菜与香草拌成的轻盈沙拉，口感脆爽。"
+        }
+      },
       "price_minor": 1464,
       "currency": "USD",
       "energy_kcal": {
@@ -2299,6 +2641,12 @@
       "restaurant_id": "grain-signal",
       "name": "Fire Noodle Cup",
       "description": "A fictional demo serving of fire noodle cup with a mixed profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "香辣热拌面",
+          "description": "热面拌入香辣酱汁和时蔬，味道浓郁，辣度醒目。"
+        }
+      },
       "price_minor": 1521,
       "currency": "USD",
       "energy_kcal": {
@@ -2339,6 +2687,12 @@
       "restaurant_id": "grain-signal",
       "name": "Turmeric Chicken Wrap",
       "description": "A fictional demo serving of turmeric chicken wrap with a mixed profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "姜黄鸡肉卷",
+          "description": "姜黄香料鸡肉与时蔬裹入柔软饼皮，温热又饱腹。"
+        }
+      },
       "price_minor": 1578,
       "currency": "USD",
       "energy_kcal": {
@@ -2378,6 +2732,12 @@
       "restaurant_id": "grain-signal",
       "name": "Lentil Comfort Curry",
       "description": "A fictional demo serving of lentil comfort curry with a mixed profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "暖香扁豆咖喱",
+          "description": "扁豆与温和香料慢煮成浓郁咖喱，温暖舒心。"
+        }
+      },
       "price_minor": 1635,
       "currency": "USD",
       "energy_kcal": {
@@ -2414,6 +2774,12 @@
       "restaurant_id": "grain-signal",
       "name": "Miso Salmon Plate",
       "description": "A fictional demo serving of miso salmon plate with a mixed profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "味噌三文鱼餐盘",
+          "description": "味噌调味的三文鱼搭配时蔬，鲜香清爽，蛋白质充足。"
+        }
+      },
       "price_minor": 1692,
       "currency": "USD",
       "energy_kcal": {
@@ -2453,6 +2819,12 @@
       "restaurant_id": "grain-signal",
       "name": "Roasted Vegetable Soup",
       "description": "A fictional demo serving of roasted vegetable soup with a mixed profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "烤蔬菜浓汤",
+          "description": "烤蔬菜慢煮成温热浓汤，口感轻盈，柔和舒心。"
+        }
+      },
       "price_minor": 1749,
       "currency": "USD",
       "energy_kcal": {
@@ -2492,6 +2864,12 @@
       "restaurant_id": "grain-signal",
       "name": "Smoky Beef Plate",
       "description": "A fictional demo serving of smoky beef plate with a mixed profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "烟熏牛肉餐盘",
+          "description": "烟香牛肉搭配时蔬，风味浓厚，饱腹感十足。"
+        }
+      },
       "price_minor": 1806,
       "currency": "USD",
       "energy_kcal": {
@@ -2531,6 +2909,12 @@
       "restaurant_id": "broth-house",
       "name": "Charred Chicken Rice Bowl",
       "description": "A fictional demo serving of charred chicken rice bowl with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "炭烤鸡肉饭",
+          "description": "炭烤鸡肉搭配米饭和时蔬，香气浓郁，饱腹感十足。"
+        }
+      },
       "price_minor": 1395,
       "currency": "USD",
       "energy_kcal": {
@@ -2570,6 +2954,12 @@
       "restaurant_id": "broth-house",
       "name": "Ginger Tofu Bowl",
       "description": "A fictional demo serving of ginger tofu bowl with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "姜香豆腐饭",
+          "description": "嫩豆腐裹上姜香酱汁，搭配米饭和时蔬，清新又温暖。"
+        }
+      },
       "price_minor": 1452,
       "currency": "USD",
       "energy_kcal": {
@@ -2609,6 +2999,12 @@
       "restaurant_id": "broth-house",
       "name": "Crisp Herb Salad",
       "description": "A fictional demo serving of crisp herb salad with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "脆爽香草沙拉",
+          "description": "新鲜叶菜与香草拌成的轻盈沙拉，口感脆爽。"
+        }
+      },
       "price_minor": 1509,
       "currency": "USD",
       "energy_kcal": {
@@ -2648,6 +3044,12 @@
       "restaurant_id": "broth-house",
       "name": "Fire Noodle Cup",
       "description": "A fictional demo serving of fire noodle cup with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "香辣热拌面",
+          "description": "热面拌入香辣酱汁和时蔬，味道浓郁，辣度醒目。"
+        }
+      },
       "price_minor": 1566,
       "currency": "USD",
       "energy_kcal": {
@@ -2688,6 +3090,12 @@
       "restaurant_id": "broth-house",
       "name": "Turmeric Chicken Wrap",
       "description": "A fictional demo serving of turmeric chicken wrap with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "姜黄鸡肉卷",
+          "description": "姜黄香料鸡肉与时蔬裹入柔软饼皮，温热又饱腹。"
+        }
+      },
       "price_minor": 1623,
       "currency": "USD",
       "energy_kcal": {
@@ -2727,6 +3135,12 @@
       "restaurant_id": "broth-house",
       "name": "Lentil Comfort Curry",
       "description": "A fictional demo serving of lentil comfort curry with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "暖香扁豆咖喱",
+          "description": "扁豆与温和香料慢煮成浓郁咖喱，温暖舒心。"
+        }
+      },
       "price_minor": 1680,
       "currency": "USD",
       "energy_kcal": {
@@ -2763,6 +3177,12 @@
       "restaurant_id": "broth-house",
       "name": "Miso Salmon Plate",
       "description": "A fictional demo serving of miso salmon plate with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "味噌三文鱼餐盘",
+          "description": "味噌调味的三文鱼搭配时蔬，鲜香清爽，蛋白质充足。"
+        }
+      },
       "price_minor": 1737,
       "currency": "USD",
       "energy_kcal": {
@@ -2802,6 +3222,12 @@
       "restaurant_id": "broth-house",
       "name": "Roasted Vegetable Soup",
       "description": "A fictional demo serving of roasted vegetable soup with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "烤蔬菜浓汤",
+          "description": "烤蔬菜慢煮成温热浓汤，口感轻盈，柔和舒心。"
+        }
+      },
       "price_minor": 1794,
       "currency": "USD",
       "energy_kcal": {
@@ -2841,6 +3267,12 @@
       "restaurant_id": "broth-house",
       "name": "Smoky Beef Plate",
       "description": "A fictional demo serving of smoky beef plate with a asian profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "烟熏牛肉餐盘",
+          "description": "烟香牛肉搭配时蔬，风味浓厚，饱腹感十足。"
+        }
+      },
       "price_minor": 1851,
       "currency": "USD",
       "energy_kcal": {
@@ -2880,6 +3312,12 @@
       "restaurant_id": "field-fire",
       "name": "Charred Chicken Rice Bowl",
       "description": "A fictional demo serving of charred chicken rice bowl with a american profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "炭烤鸡肉饭",
+          "description": "炭烤鸡肉搭配米饭和时蔬，香气浓郁，饱腹感十足。"
+        }
+      },
       "price_minor": 1440,
       "currency": "USD",
       "energy_kcal": {
@@ -2919,6 +3357,12 @@
       "restaurant_id": "field-fire",
       "name": "Ginger Tofu Bowl",
       "description": "A fictional demo serving of ginger tofu bowl with a american profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "姜香豆腐饭",
+          "description": "嫩豆腐裹上姜香酱汁，搭配米饭和时蔬，清新又温暖。"
+        }
+      },
       "price_minor": 1497,
       "currency": "USD",
       "energy_kcal": {
@@ -2958,6 +3402,12 @@
       "restaurant_id": "field-fire",
       "name": "Crisp Herb Salad",
       "description": "A fictional demo serving of crisp herb salad with a american profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "脆爽香草沙拉",
+          "description": "新鲜叶菜与香草拌成的轻盈沙拉，口感脆爽。"
+        }
+      },
       "price_minor": 1554,
       "currency": "USD",
       "energy_kcal": {
@@ -2997,6 +3447,12 @@
       "restaurant_id": "field-fire",
       "name": "Fire Noodle Cup",
       "description": "A fictional demo serving of fire noodle cup with a american profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "香辣热拌面",
+          "description": "热面拌入香辣酱汁和时蔬，味道浓郁，辣度醒目。"
+        }
+      },
       "price_minor": 1611,
       "currency": "USD",
       "energy_kcal": {
@@ -3037,6 +3493,12 @@
       "restaurant_id": "field-fire",
       "name": "Turmeric Chicken Wrap",
       "description": "A fictional demo serving of turmeric chicken wrap with a american profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "姜黄鸡肉卷",
+          "description": "姜黄香料鸡肉与时蔬裹入柔软饼皮，温热又饱腹。"
+        }
+      },
       "price_minor": 1668,
       "currency": "USD",
       "energy_kcal": {
@@ -3076,6 +3538,12 @@
       "restaurant_id": "field-fire",
       "name": "Lentil Comfort Curry",
       "description": "A fictional demo serving of lentil comfort curry with a american profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "暖香扁豆咖喱",
+          "description": "扁豆与温和香料慢煮成浓郁咖喱，温暖舒心。"
+        }
+      },
       "price_minor": 1725,
       "currency": "USD",
       "energy_kcal": {
@@ -3112,6 +3580,12 @@
       "restaurant_id": "field-fire",
       "name": "Miso Salmon Plate",
       "description": "A fictional demo serving of miso salmon plate with a american profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "味噌三文鱼餐盘",
+          "description": "味噌调味的三文鱼搭配时蔬，鲜香清爽，蛋白质充足。"
+        }
+      },
       "price_minor": 1782,
       "currency": "USD",
       "energy_kcal": {
@@ -3151,6 +3625,12 @@
       "restaurant_id": "field-fire",
       "name": "Roasted Vegetable Soup",
       "description": "A fictional demo serving of roasted vegetable soup with a american profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "烤蔬菜浓汤",
+          "description": "烤蔬菜慢煮成温热浓汤，口感轻盈，柔和舒心。"
+        }
+      },
       "price_minor": 1839,
       "currency": "USD",
       "energy_kcal": {
@@ -3190,6 +3670,12 @@
       "restaurant_id": "field-fire",
       "name": "Smoky Beef Plate",
       "description": "A fictional demo serving of smoky beef plate with a american profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "烟熏牛肉餐盘",
+          "description": "烟香牛肉搭配时蔬，风味浓厚，饱腹感十足。"
+        }
+      },
       "price_minor": 1896,
       "currency": "USD",
       "energy_kcal": {
@@ -3229,6 +3715,12 @@
       "restaurant_id": "sumac-kitchen",
       "name": "Charred Chicken Rice Bowl",
       "description": "A fictional demo serving of charred chicken rice bowl with a middle-eastern profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "炭烤鸡肉饭",
+          "description": "炭烤鸡肉搭配米饭和时蔬，香气浓郁，饱腹感十足。"
+        }
+      },
       "price_minor": 1485,
       "currency": "USD",
       "energy_kcal": {
@@ -3268,6 +3760,12 @@
       "restaurant_id": "sumac-kitchen",
       "name": "Ginger Tofu Bowl",
       "description": "A fictional demo serving of ginger tofu bowl with a middle-eastern profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "姜香豆腐饭",
+          "description": "嫩豆腐裹上姜香酱汁，搭配米饭和时蔬，清新又温暖。"
+        }
+      },
       "price_minor": 1542,
       "currency": "USD",
       "energy_kcal": {
@@ -3307,6 +3805,12 @@
       "restaurant_id": "sumac-kitchen",
       "name": "Crisp Herb Salad",
       "description": "A fictional demo serving of crisp herb salad with a middle-eastern profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "脆爽香草沙拉",
+          "description": "新鲜叶菜与香草拌成的轻盈沙拉，口感脆爽。"
+        }
+      },
       "price_minor": 1599,
       "currency": "USD",
       "energy_kcal": {
@@ -3346,6 +3850,12 @@
       "restaurant_id": "sumac-kitchen",
       "name": "Fire Noodle Cup",
       "description": "A fictional demo serving of fire noodle cup with a middle-eastern profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "香辣热拌面",
+          "description": "热面拌入香辣酱汁和时蔬，味道浓郁，辣度醒目。"
+        }
+      },
       "price_minor": 1656,
       "currency": "USD",
       "energy_kcal": {
@@ -3386,6 +3896,12 @@
       "restaurant_id": "sumac-kitchen",
       "name": "Turmeric Chicken Wrap",
       "description": "A fictional demo serving of turmeric chicken wrap with a middle-eastern profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "姜黄鸡肉卷",
+          "description": "姜黄香料鸡肉与时蔬裹入柔软饼皮，温热又饱腹。"
+        }
+      },
       "price_minor": 1713,
       "currency": "USD",
       "energy_kcal": {
@@ -3425,6 +3941,12 @@
       "restaurant_id": "sumac-kitchen",
       "name": "Lentil Comfort Curry",
       "description": "A fictional demo serving of lentil comfort curry with a middle-eastern profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "暖香扁豆咖喱",
+          "description": "扁豆与温和香料慢煮成浓郁咖喱，温暖舒心。"
+        }
+      },
       "price_minor": 1770,
       "currency": "USD",
       "energy_kcal": {
@@ -3461,6 +3983,12 @@
       "restaurant_id": "sumac-kitchen",
       "name": "Miso Salmon Plate",
       "description": "A fictional demo serving of miso salmon plate with a middle-eastern profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "味噌三文鱼餐盘",
+          "description": "味噌调味的三文鱼搭配时蔬，鲜香清爽，蛋白质充足。"
+        }
+      },
       "price_minor": 1827,
       "currency": "USD",
       "energy_kcal": {
@@ -3500,6 +4028,12 @@
       "restaurant_id": "sumac-kitchen",
       "name": "Roasted Vegetable Soup",
       "description": "A fictional demo serving of roasted vegetable soup with a middle-eastern profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "烤蔬菜浓汤",
+          "description": "烤蔬菜慢煮成温热浓汤，口感轻盈，柔和舒心。"
+        }
+      },
       "price_minor": 1884,
       "currency": "USD",
       "energy_kcal": {
@@ -3539,6 +4073,12 @@
       "restaurant_id": "sumac-kitchen",
       "name": "Smoky Beef Plate",
       "description": "A fictional demo serving of smoky beef plate with a middle-eastern profile.",
+      "translations": {
+        "zh-CN": {
+          "name": "烟熏牛肉餐盘",
+          "description": "烟香牛肉搭配时蔬，风味浓厚，饱腹感十足。"
+        }
+      },
       "price_minor": 1941,
       "currency": "USD",
       "energy_kcal": {

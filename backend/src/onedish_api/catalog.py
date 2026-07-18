@@ -31,6 +31,9 @@ def load_catalog(path: Path, *, asset_root: Path) -> Catalog:
     unknown = sorted({dish.restaurant_id for dish in catalog.dishes} - restaurant_ids)
     if unknown:
         raise CatalogError(f"unknown restaurant ids: {', '.join(unknown)}")
+    missing_zh = sorted(dish.id for dish in catalog.dishes if "zh-CN" not in dish.translations)
+    if missing_zh:
+        raise CatalogError(f"missing zh-CN dish translations: {', '.join(missing_zh)}")
 
     for dish in catalog.dishes:
         relative = dish.image.removeprefix("/")

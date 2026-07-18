@@ -54,13 +54,21 @@ the ignored `docs/demo/.build/` directory, build the final master with:
 backend/.venv/bin/python scripts/build_demo_video.py --reuse-capture --reuse-audio --output docs/demo/onedish-demo.mp4
 ```
 
-The build atomically publishes `docs/demo/onedish-demo.manifest.json` after the
-master succeeds. That tracked manifest binds the delivered MP4 to the exact
-captions, capture timeline, narration source, byte sizes, SHA-256 digests, and
-media invariants used for this package.
+The build transactionally publishes the MP4, `onedish-demo.captions.srt`, and
+`onedish-demo.capture-timeline.json`, then installs
+`onedish-demo.manifest.json` last. A failed probe, stage, install, or manifest
+publication restores the previous bundle byte for byte. The tracked manifest
+binds those delivery files and `narration.json` by filename, byte size, SHA-256,
+and media invariants. The final delivered duration remains **2:08.968**.
 
 Validate the delivery contract with:
 
 ```bash
 backend/.venv/bin/python scripts/validate_demo_video.py docs/demo/onedish-demo.mp4
 ```
+
+The validator reads only tracked delivery files beside the supplied master; it
+does not depend on ignored `.build` state. To verify that contract from repository
+contents alone, extract `git archive HEAD` into a temporary directory and run the
+same command from the archived `onedish/` directory with a Python environment that
+provides the project dependencies.

@@ -1,0 +1,40 @@
+{
+  "language": "en",
+  "scenes": [
+    {
+      "id": "home",
+      "start": 0.773,
+      "end": 14.922
+    },
+    {
+      "id": "context",
+      "start": 14.922,
+      "end": 31.681
+    },
+    {
+      "id": "elimination",
+      "start": 31.681,
+      "end": 53.536
+    },
+    {
+      "id": "winner",
+      "start": 53.536,
+      "end": 73.833
+    },
+    {
+      "id": "orbit",
+      "start": 74.389,
+      "end": 93.068
+    },
+    {
+      "id": "privacy",
+      "start": 93.606,
+      "end": 117.431
+    },
+    {
+      "id": "close",
+      "start": 117.993,
+      "end": 137.024
+    }
+  ]
+}

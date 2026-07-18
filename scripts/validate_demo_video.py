@@ -5,8 +5,10 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import subprocess
 import tempfile
+import uuid
 from pathlib import Path
 from typing import Any
 
@@ -20,7 +22,6 @@ except ImportError:
 
 ROOT = Path(__file__).resolve().parents[1]
 DEMO = ROOT / "docs" / "demo"
-BUILD = DEMO / ".build"
 EXPECTED_SCENES = [
     "home",
     "context",
@@ -46,9 +47,9 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def _artifact_record(path: Path) -> dict[str, object]:
+def _artifact_record(path: Path, filename: str | None = None) -> dict[str, object]:
     return {
-        "filename": path.name,
+        "filename": filename or path.name,
         "sha256": _sha256(path),
         "size_bytes": path.stat().st_size,
     }
@@ -60,15 +61,19 @@ def build_delivery_manifest(
     timeline: Path,
     narration: Path,
     expected_media: dict[str, object],
+    filenames: dict[str, str] | None = None,
 ) -> dict[str, object]:
+    filenames = filenames or {}
     return {
         "schema_version": 1,
         "expected_media": expected_media,
         "artifacts": {
-            "master": _artifact_record(master),
-            "captions": _artifact_record(captions),
-            "capture_timeline": _artifact_record(timeline),
-            "narration": _artifact_record(narration),
+            "master": _artifact_record(master, filenames.get("master")),
+            "captions": _artifact_record(captions, filenames.get("captions")),
+            "capture_timeline": _artifact_record(
+                timeline, filenames.get("capture_timeline")
+            ),
+            "narration": _artifact_record(narration, filenames.get("narration")),
         },
     }
 
@@ -92,6 +97,95 @@ def write_delivery_manifest(path: Path, manifest: dict[str, object]) -> None:
 
 def manifest_path_for(master: Path) -> Path:
     return master.with_name(f"{master.stem}.manifest.json")
+
+
+def delivery_sidecar_paths(master: Path) -> tuple[Path, Path]:
+    return (
+        master.with_name(f"{master.stem}.captions.srt"),
+        master.with_name(f"{master.stem}.capture-timeline.json"),
+    )
+
+
+def publish_delivery_bundle(
+    staged_master: Path,
+    staged_captions: Path,
+    source_timeline: Path,
+    narration: Path,
+    output_master: Path,
+    *,
+    probe: Any = None,
+    manifest_writer: Any = None,
+    replace: Any = None,
+) -> None:
+    """Install the complete delivery bundle or restore the prior bytes."""
+    probe = probe or probe_media
+    manifest_writer = manifest_writer or write_delivery_manifest
+    replace = replace or os.replace
+    output_master = output_master.resolve()
+    output_master.parent.mkdir(parents=True, exist_ok=True)
+    output_captions, output_timeline = delivery_sidecar_paths(output_master)
+    output_manifest = manifest_path_for(output_master)
+    destinations = {
+        "master": output_master,
+        "captions": output_captions,
+        "capture_timeline": output_timeline,
+        "manifest": output_manifest,
+    }
+    token = uuid.uuid4().hex
+    stages = {
+        label: output_master.parent
+        / f".{output_master.stem}.bundle-{token}.stage-{label}{destination.suffix}"
+        for label, destination in destinations.items()
+    }
+    backups = {
+        label: output_master.parent
+        / f".{output_master.stem}.bundle-{token}.backup-{label}{destination.suffix}"
+        for label, destination in destinations.items()
+    }
+    backed_up: list[str] = []
+    installed: list[str] = []
+    try:
+        shutil.copyfile(staged_master, stages["master"])
+        shutil.copyfile(staged_captions, stages["captions"])
+        shutil.copyfile(source_timeline, stages["capture_timeline"])
+        media_probe = probe(stages["master"])
+        probe_errors = validate_probe(media_probe)
+        if probe_errors:
+            raise ValueError("staged master probe failed: " + "; ".join(probe_errors))
+        manifest = build_delivery_manifest(
+            stages["master"],
+            stages["captions"],
+            stages["capture_timeline"],
+            narration,
+            probe_invariants(media_probe),
+            filenames={
+                "master": output_master.name,
+                "captions": output_captions.name,
+                "capture_timeline": output_timeline.name,
+                "narration": narration.name,
+            },
+        )
+        manifest_writer(stages["manifest"], manifest)
+        staged_manifest = json.loads(stages["manifest"].read_text(encoding="utf-8"))
+        if staged_manifest != manifest:
+            raise ValueError("staged manifest verification failed")
+
+        for label, destination in destinations.items():
+            if destination.exists():
+                replace(destination, backups[label])
+                backed_up.append(label)
+        for label in ("master", "captions", "capture_timeline", "manifest"):
+            replace(stages[label], destinations[label])
+            installed.append(label)
+    except BaseException:
+        for label in reversed(installed):
+            destinations[label].unlink(missing_ok=True)
+        for label in reversed(backed_up):
+            replace(backups[label], destinations[label])
+        raise
+    finally:
+        for path in (*stages.values(), *backups.values()):
+            path.unlink(missing_ok=True)
 
 
 def validate_delivery_manifest(
@@ -300,12 +394,13 @@ def main() -> int:
         errors.append(f"unable to probe video: {exc}")
     errors.extend(validate_probe(probe))
     manifest_path = manifest_path_for(args.video)
+    captions_path, timeline_path = delivery_sidecar_paths(args.video)
     errors.extend(
         validate_delivery_manifest(
             manifest_path,
             args.video,
-            BUILD / "captions.srt",
-            BUILD / "capture" / "capture-timeline.json",
+            captions_path,
+            timeline_path,
             DEMO / "narration.json",
         )
     )
@@ -314,8 +409,8 @@ def main() -> int:
         errors.append("probed media invariants do not match delivery manifest")
     errors.extend(
         validate_delivery_artifacts(
-            BUILD / "captions.srt",
-            BUILD / "capture" / "capture-timeline.json",
+            captions_path,
+            timeline_path,
             DEMO / "narration.json",
         )
     )

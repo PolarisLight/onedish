@@ -194,6 +194,178 @@ def test_delivery_manifest_binds_validator_to_the_supplied_master(
     assert "master SHA-256 does not match delivery manifest" in errors
 
 
+def test_delivery_sidecars_live_beside_the_master_not_in_ignored_build_state() -> None:
+    master = ROOT / "docs" / "demo" / "onedish-demo.mp4"
+
+    captions, timeline = validator.delivery_sidecar_paths(master)
+
+    assert captions == master.with_name("onedish-demo.captions.srt")
+    assert timeline == master.with_name("onedish-demo.capture-timeline.json")
+    assert captions.is_file()
+    assert timeline.is_file()
+    assert validator.validate_delivery_manifest(
+        validator.manifest_path_for(master),
+        master,
+        captions,
+        timeline,
+        NARRATION_PATH,
+    ) == []
+
+
+def bundle_fixture(tmp_path: Path, *, with_prior: bool = True) -> dict[str, Path]:
+    delivery = tmp_path / "delivery"
+    staging = tmp_path / "inputs"
+    delivery.mkdir()
+    staging.mkdir()
+    master = delivery / "onedish-demo.mp4"
+    captions, timeline = validator.delivery_sidecar_paths(master)
+    manifest = validator.manifest_path_for(master)
+    staged_master = staging / "master.mp4"
+    staged_captions = staging / "captions.srt"
+    source_timeline = staging / "timeline.json"
+    narration_path = staging / "narration.json"
+    staged_master.write_bytes(b"new master bytes")
+    staged_captions.write_bytes(b"new caption bytes")
+    source_timeline.write_bytes(b"new timeline bytes")
+    narration_path.write_bytes(b"narration bytes")
+    if with_prior:
+        master.write_bytes(b"old master")
+        captions.write_bytes(b"old captions")
+        timeline.write_bytes(b"old timeline")
+        manifest.write_bytes(b"old manifest")
+    return {
+        "master": master,
+        "captions": captions,
+        "timeline": timeline,
+        "manifest": manifest,
+        "staged_master": staged_master,
+        "staged_captions": staged_captions,
+        "source_timeline": source_timeline,
+        "narration": narration_path,
+    }
+
+
+def publish_fixture(
+    paths: dict[str, Path],
+    **kwargs: object,
+) -> None:
+    probe = kwargs.pop(
+        "probe",
+        lambda _: {
+            "format": {"duration": "128.968"},
+            "streams": [
+                {
+                    "codec_type": "video",
+                    "codec_name": "h264",
+                    "width": 1920,
+                    "height": 1080,
+                },
+                {
+                    "codec_type": "audio",
+                    "codec_name": "aac",
+                    "sample_rate": "48000",
+                },
+            ],
+        },
+    )
+    validator.publish_delivery_bundle(
+        paths["staged_master"],
+        paths["staged_captions"],
+        paths["source_timeline"],
+        paths["narration"],
+        paths["master"],
+        probe=probe,
+        **kwargs,
+    )
+
+
+def test_bundle_publish_installs_all_sidecars_and_manifest_last(tmp_path: Path) -> None:
+    paths = bundle_fixture(tmp_path)
+    installs: list[Path] = []
+
+    def record_replace(source: Path, destination: Path) -> None:
+        if ".stage-" in Path(source).name:
+            installs.append(Path(destination))
+        os.replace(source, destination)
+
+    publish_fixture(paths, replace=record_replace)
+
+    assert paths["master"].read_bytes() == b"new master bytes"
+    assert paths["captions"].read_bytes() == b"new caption bytes"
+    assert paths["timeline"].read_bytes() == b"new timeline bytes"
+    assert installs[-1] == paths["manifest"]
+    assert validator.validate_delivery_manifest(
+        paths["manifest"],
+        paths["master"],
+        paths["captions"],
+        paths["timeline"],
+        paths["narration"],
+    ) == []
+    assert not list(paths["master"].parent.glob(".*bundle-*"))
+
+
+@pytest.mark.parametrize(
+    "failure",
+    ["probe", "manifest-write", "second-sidecar", "manifest-install"],
+)
+def test_bundle_failure_rolls_back_every_prior_file_byte_for_byte(
+    tmp_path: Path, failure: str
+) -> None:
+    paths = bundle_fixture(tmp_path)
+    before = {
+        key: paths[key].read_bytes()
+        for key in ("master", "captions", "timeline", "manifest")
+    }
+    options: dict[str, object] = {}
+    if failure == "probe":
+        options["probe"] = lambda _: (_ for _ in ()).throw(ValueError("probe failed"))
+    elif failure == "manifest-write":
+        options["manifest_writer"] = lambda *_: (_ for _ in ()).throw(
+            OSError("manifest write failed")
+        )
+    else:
+        failed = False
+
+        def fail_install(source: Path, destination: Path) -> None:
+            nonlocal failed
+            target = paths["timeline"] if failure == "second-sidecar" else paths["manifest"]
+            if not failed and ".stage-" in Path(source).name and Path(destination) == target:
+                failed = True
+                raise OSError(f"{failure} failed")
+            os.replace(source, destination)
+
+        options["replace"] = fail_install
+
+    with pytest.raises((OSError, ValueError), match="failed"):
+        publish_fixture(paths, **options)
+
+    assert {
+        key: paths[key].read_bytes()
+        for key in ("master", "captions", "timeline", "manifest")
+    } == before
+    assert not list(paths["master"].parent.glob(".*bundle-*"))
+
+
+def test_first_bundle_failure_leaves_no_partial_delivery(tmp_path: Path) -> None:
+    paths = bundle_fixture(tmp_path, with_prior=False)
+    failed = False
+
+    def fail_second_sidecar(source: Path, destination: Path) -> None:
+        nonlocal failed
+        if not failed and ".stage-" in Path(source).name and destination == paths["timeline"]:
+            failed = True
+            raise OSError("second-sidecar failed")
+        os.replace(source, destination)
+
+    with pytest.raises(OSError, match="second-sidecar failed"):
+        publish_fixture(paths, replace=fail_second_sidecar)
+
+    assert not any(
+        paths[key].exists() for key in ("master", "captions", "timeline", "manifest")
+    )
+    assert not list(paths["master"].parent.glob(".*bundle-*"))
+
+
 def test_delivery_manifest_publication_is_reproducible_and_atomic(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

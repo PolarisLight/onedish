@@ -1,12 +1,12 @@
 {
   "artifacts": {
     "captions": {
-      "filename": "captions.srt",
+      "filename": "onedish-demo.captions.srt",
       "sha256": "96128a6e34a3027cb1f0fda6d6b18165b270076cbacd568d0faa30786119c270",
       "size_bytes": 3002
     },
     "capture_timeline": {
-      "filename": "capture-timeline.json",
+      "filename": "onedish-demo.capture-timeline.json",
       "sha256": "e49cd2da315d345623a47dbf4158a78369e02cce37735382a26656dee4b7df09",
       "size_bytes": 592
     },

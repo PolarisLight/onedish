@@ -7,9 +7,7 @@ import argparse
 from contextlib import contextmanager
 import json
 import math
-import os
 import re
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -21,23 +19,11 @@ from typing import Iterator
 try:
     from .burn_captions import burn_captions, stable_h264_options
     from .demo_video_model import load_capture_timeline, load_scenes
-    from .validate_demo_video import (
-        build_delivery_manifest,
-        manifest_path_for,
-        probe_invariants,
-        probe_media,
-        write_delivery_manifest,
-    )
+    from .validate_demo_video import publish_delivery_bundle
 except ImportError:  # Direct invocation: python scripts/build_demo_video.py
     from burn_captions import burn_captions, stable_h264_options
     from demo_video_model import load_capture_timeline, load_scenes
-    from validate_demo_video import (
-        build_delivery_manifest,
-        manifest_path_for,
-        probe_invariants,
-        probe_media,
-        write_delivery_manifest,
-    )
+    from validate_demo_video import publish_delivery_bundle
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -339,16 +325,6 @@ def _mix_soundtrack(
     )
 
 
-def _publish_copy(source: Path, destination: Path) -> None:
-    destination.parent.mkdir(parents=True, exist_ok=True)
-    temporary = destination.with_name(f".{destination.name}.{uuid.uuid4().hex}.tmp")
-    try:
-        shutil.copyfile(source, temporary)
-        os.replace(temporary, destination)
-    finally:
-        temporary.unlink(missing_ok=True)
-
-
 @contextmanager
 def staged_master_for(output: Path) -> Iterator[Path]:
     """Yield one invocation-owned stage and remove exactly that path on exit."""
@@ -503,17 +479,13 @@ def build(output: Path) -> float:
         final_duration = media_duration(staged_master)
         if not 120 <= final_duration < 180:
             raise RuntimeError(f"Unexpected demo duration: {final_duration:.2f}s")
-        _publish_copy(merged_srt, WORK / "captions.srt")
-        os.replace(staged_master, output)
-        probe = probe_media(output)
-        manifest = build_delivery_manifest(
-            output,
-            WORK / "captions.srt",
+        publish_delivery_bundle(
+            staged_master,
+            merged_srt,
             CAPTURE_TIMELINE_PATH,
             NARRATION_PATH,
-            probe_invariants(probe),
+            output,
         )
-        write_delivery_manifest(manifest_path_for(output), manifest)
         return final_duration
 
 

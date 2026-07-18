@@ -8,12 +8,94 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-from scripts.demo_video_model import Scene, load_scenes
+from scripts.demo_video_model import (
+    CaptureScene,
+    CaptureTimeline,
+    Scene,
+    load_capture_timeline,
+    load_scenes,
+)
 import scripts.synthesize_narration as narration
 from scripts.synthesize_narration import edge_tts_command, scene_stem
 
 
 NARRATION_PATH = ROOT / "docs" / "demo" / "narration.json"
+
+
+VALID_CAPTURE_SCENES = [
+    {"id": scene_id, "start": float(index), "end": float(index) + 0.75}
+    for index, scene_id in enumerate(
+        ["home", "context", "elimination", "winner", "orbit", "privacy", "close"]
+    )
+]
+
+
+def write_capture_timeline(
+    tmp_path: Path,
+    *,
+    language: str = "en",
+    scenes: list[dict[str, object]] | None = None,
+) -> Path:
+    path = tmp_path / "capture-timeline.json"
+    path.write_text(
+        json.dumps({"language": language, "scenes": scenes or VALID_CAPTURE_SCENES}),
+        encoding="utf-8",
+    )
+    return path
+
+
+def test_load_capture_timeline_accepts_ordered_english_scenes(tmp_path: Path) -> None:
+    path = write_capture_timeline(tmp_path)
+
+    timeline = load_capture_timeline(path)
+
+    assert timeline == CaptureTimeline(
+        language="en",
+        scenes=[CaptureScene(**scene) for scene in VALID_CAPTURE_SCENES],
+    )
+
+
+@pytest.mark.parametrize(
+    ("language", "scenes", "message"),
+    [
+        ("zh", VALID_CAPTURE_SCENES, "language must be en"),
+        (
+            "en",
+            [VALID_CAPTURE_SCENES[1], VALID_CAPTURE_SCENES[0], *VALID_CAPTURE_SCENES[2:]],
+            "scene order",
+        ),
+    ],
+)
+def test_load_capture_timeline_rejects_wrong_language_or_order(
+    tmp_path: Path,
+    language: str,
+    scenes: list[dict[str, object]],
+    message: str,
+) -> None:
+    path = write_capture_timeline(tmp_path, language=language, scenes=scenes)
+
+    with pytest.raises(ValueError, match=message):
+        load_capture_timeline(path)
+
+
+@pytest.mark.parametrize("end", [0.0, -0.25])
+def test_load_capture_timeline_rejects_non_positive_duration(
+    tmp_path: Path, end: float
+) -> None:
+    scenes = [{**VALID_CAPTURE_SCENES[0], "end": end}, *VALID_CAPTURE_SCENES[1:]]
+    path = write_capture_timeline(tmp_path, scenes=scenes)
+
+    with pytest.raises(ValueError, match="positive duration"):
+        load_capture_timeline(path)
+
+
+def test_load_capture_timeline_rejects_overlapping_scenes(tmp_path: Path) -> None:
+    scenes = [dict(scene) for scene in VALID_CAPTURE_SCENES]
+    scenes[1]["start"] = scenes[0]["end"] - 0.1
+    path = write_capture_timeline(tmp_path, scenes=scenes)
+
+    with pytest.raises(ValueError, match="overlap"):
+        load_capture_timeline(path)
 
 
 def test_founder_narration_contract() -> None:

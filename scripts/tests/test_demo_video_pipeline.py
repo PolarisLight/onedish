@@ -147,6 +147,10 @@ def write_scenes(demo: Path, scenes: list[dict[str, object]]) -> None:
     (demo / "narration.json").write_text(json.dumps(scenes), encoding="utf-8")
 
 
+def public_audio_snapshot(audio: Path) -> dict[str, bytes]:
+    return {path.name: path.read_bytes() for path in sorted(audio.glob("*"))}
+
+
 def test_synthesize_reuses_valid_fingerprinted_cache(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -346,6 +350,131 @@ def test_failed_run_keeps_manifest_atomic_and_mixed_outputs_are_not_cached(
 
     assert len(calls) == 2
     assert len(successful_calls) == 2
+
+
+@pytest.mark.parametrize(
+    "failed_destination",
+    ["00-home.srt", "01-close.mp3", "timing.json"],
+    ids=["subtitle-install", "later-scene-install", "manifest-install"],
+)
+def test_commit_failure_restores_all_public_files_byte_for_byte(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    failed_destination: str,
+) -> None:
+    scenes = [VALID_SCENE, {**VALID_SCENE, "id": "close"}]
+    _, audio, _ = configure_synthesis(tmp_path, monkeypatch, scenes)
+    narration.synthesize(force=False)
+    before = public_audio_snapshot(audio)
+    original_replace = getattr(
+        narration,
+        "atomic_replace",
+        lambda source, destination: Path(source).replace(destination),
+    )
+
+    def fail_selected_replace(source: Path, destination: Path) -> None:
+        if destination.name == failed_destination:
+            raise OSError(f"injected failure for {failed_destination}")
+        original_replace(source, destination)
+
+    monkeypatch.setattr(
+        narration,
+        "atomic_replace",
+        fail_selected_replace,
+        raising=False,
+    )
+
+    with pytest.raises(OSError, match="injected failure"):
+        narration.synthesize(force=True)
+
+    assert public_audio_snapshot(audio) == before
+    assert not list(audio.glob(".*"))
+
+
+def test_staging_hash_failure_preserves_all_public_files_byte_for_byte(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    scenes = [VALID_SCENE, {**VALID_SCENE, "id": "close"}]
+    _, audio, _ = configure_synthesis(tmp_path, monkeypatch, scenes)
+    narration.synthesize(force=False)
+    before = public_audio_snapshot(audio)
+    original_hash = narration.file_sha256
+
+    def fail_later_scene_hash(path: Path) -> str:
+        if "01-close" in path.name and path.suffix == ".mp3":
+            raise OSError("injected hash failure")
+        return original_hash(path)
+
+    monkeypatch.setattr(narration, "file_sha256", fail_later_scene_hash)
+
+    with pytest.raises(OSError, match="injected hash failure"):
+        narration.synthesize(force=True)
+
+    assert public_audio_snapshot(audio) == before
+    assert not list(audio.glob(".*"))
+
+
+def test_manifest_install_failure_without_prior_run_leaves_no_public_outputs(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _, audio, _ = configure_synthesis(tmp_path, monkeypatch)
+    original_replace = getattr(
+        narration,
+        "atomic_replace",
+        lambda source, destination: Path(source).replace(destination),
+    )
+
+    def fail_manifest_replace(source: Path, destination: Path) -> None:
+        if destination.name == "timing.json":
+            raise OSError("injected manifest failure")
+        original_replace(source, destination)
+
+    monkeypatch.setattr(
+        narration,
+        "atomic_replace",
+        fail_manifest_replace,
+        raising=False,
+    )
+
+    with pytest.raises(OSError, match="injected manifest failure"):
+        narration.synthesize(force=True)
+
+    assert not list(audio.iterdir())
+
+
+@pytest.mark.parametrize(
+    "contents",
+    [
+        VALID_SRT + "\n2\nmalformed timestamp\nTrailing caption\n",
+        "1\n00:00:00,000 --> 00:00:01,000\n",
+        "00:00:00,000 --> 00:00:01,000\nMissing index\n",
+        "1\n00:00:01,000 --> 00:00:01,000\nZero-length cue\n",
+        (
+            "1\n00:00:00,000 --> 00:00:02,000\nFirst\n\n"
+            "2\n00:00:01,000 --> 00:00:03,000\nOverlapping\n"
+        ),
+        (
+            "1\n00:00:02,000 --> 00:00:03,000\nFirst\n\n"
+            "2\n00:00:00,000 --> 00:00:01,000\nOut of order\n"
+        ),
+    ],
+    ids=[
+        "malformed-trailing-cue",
+        "missing-text",
+        "missing-index",
+        "non-positive-range",
+        "overlap",
+        "out-of-order",
+    ],
+)
+def test_validate_subtitles_rejects_every_malformed_cue(
+    tmp_path: Path, contents: str
+) -> None:
+    subtitles = tmp_path / "invalid.srt"
+    subtitles.write_text(contents, encoding="utf-8")
+
+    with pytest.raises(ValueError, match="SRT"):
+        narration.validate_subtitles(subtitles)
 
 
 @pytest.mark.parametrize("scene_id", ["../winner", "bad/name", "bad\\name"])

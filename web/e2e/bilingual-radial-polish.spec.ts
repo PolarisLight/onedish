@@ -70,9 +70,20 @@ test("radial nodes and privacy receiver use the shared geometry contract", async
 
 test("a stored decision switches to reviewed Chinese dish copy", async ({ page }) => {
   await createHistory(page);
+  const englishName = await page.locator("main h1").innerText();
+  const expected = await page.evaluate(async (name) => {
+    const response = await fetch("/data/catalog.v1.json");
+    const catalog = await response.json() as {
+      dishes: Array<{
+        name: string;
+        translations: { "zh-CN": { name: string; description: string } };
+      }>;
+    };
+    return catalog.dishes.find((dish) => dish.name === name)!.translations["zh-CN"];
+  }, englishName);
   await page.getByRole("button", { name: "中文" }).click();
-  await expect(page.getByRole("heading", { name: "炭烤鸡肉饭" })).toBeVisible();
-  await expect(page.getByText("炭烤鸡肉搭配米饭和时蔬，香气浓郁，饱腹感十足。")).toBeVisible();
+  await expect(page.getByRole("heading", { name: expected.name })).toBeVisible();
+  await expect(page.getByText(expected.description)).toBeVisible();
 });
 
 test("privacy geometry fits a 320px viewport without collisions", async ({ page }) => {

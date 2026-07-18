@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from scripts.demo_video_model import Scene, load_scenes
+from scripts.synthesize_narration import edge_tts_command, scene_stem
 
 
 NARRATION_PATH = ROOT / "docs" / "demo" / "narration.json"
@@ -79,6 +80,23 @@ def test_founder_narration_contract() -> None:
     assert 280 <= sum(len(scene.text.split()) for scene in scenes) <= 360
     assert scenes[0].text.startswith("Food apps don't solve indecision.")
     assert scenes[-1].text.endswith("stop browsing, and eat this.")
+
+
+def test_edge_tts_command_uses_natural_voice_and_writes_subtitles() -> None:
+    scene = load_scenes(NARRATION_PATH)[0]
+    command = edge_tts_command(scene, Path("voice.mp3"), Path("voice.srt"))
+
+    assert command[:3] == ["python", "-m", "edge_tts"]
+    assert command[command.index("--voice") + 1] == "en-US-AndrewMultilingualNeural"
+    assert "--rate=+1%" in command
+    assert "--pitch=-2Hz" in command
+    assert "--write-media" in command
+    assert "--write-subtitles" in command
+    assert "Samantha" not in command
+
+
+def test_scene_stem_is_stable() -> None:
+    assert scene_stem(3, "winner") == "03-winner"
 
 
 VALID_SCENE = {

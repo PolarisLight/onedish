@@ -4,6 +4,9 @@ import {
   focusRotation,
   polarPoint,
   radialDistance,
+  boxesOverlap,
+  privacyReceiver,
+  privacySlots,
 } from "../src/shared/radial-geometry";
 
 test.each(RADIAL_TRACKS)("places a node exactly on track %p", (radius) => {
@@ -25,4 +28,22 @@ test("connects exact normalized endpoints", () => {
     x2: end.x,
     y2: end.y,
   });
+});
+
+test("reserves distinct privacy slots and an external receiver", () => {
+  const slots = privacySlots();
+  expect(new Set(slots.map((slot) => `${slot.point.x}:${slot.point.y}`)).size).toBe(5);
+  expect(radialDistance(privacyReceiver())).toBeGreaterThan(RADIAL_TRACKS[2]);
+});
+
+test("privacy node boxes do not overlap at 320px", () => {
+  const boxes = privacySlots().map((slot) => ({
+    x: slot.point.x * 320 - 64,
+    y: slot.point.y * 320 - 22,
+    width: 128,
+    height: 44,
+  }));
+  expect(boxes.some((box, index) => (
+    boxes.slice(index + 1).some((other) => boxesOverlap(box, other))
+  ))).toBe(false);
 });

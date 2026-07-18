@@ -191,18 +191,19 @@ details.advanced summary { cursor: pointer; font-weight: 750; }
 .privacy-promise { max-width: 62ch; }
 .privacy-explorer { display: grid; grid-template-columns: minmax(0, 1.28fr) minmax(300px, .72fr); gap: 18px; margin-top: 40px; }
 .privacy-map, .privacy-detail, .privacy-controls, .privacy-log { border: 1px solid var(--line); border-radius: var(--radius-card); background: var(--surface); }
-.privacy-map { position: relative; min-height: 520px; overflow: hidden; isolation: isolate; background: radial-gradient(circle at 50% 48%, color-mix(in srgb, var(--accent) 30%, var(--surface)) 0 15%, transparent 15.5%), var(--surface); }
-.privacy-map::before, .privacy-map::after { content: ""; position: absolute; left: 50%; top: 48%; border: 1px dashed var(--line); border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; }
-.privacy-map::before { width: 330px; height: 330px; }.privacy-map::after { width: 470px; height: 470px; }
-.privacy-device { position: absolute; z-index: 3; left: 50%; top: 48%; width: 116px; height: 116px; display: grid; place-items: center; padding: 16px; border-radius: 50%; transform: translate(-50%, -50%); color: var(--accent-ink); background: var(--accent); box-shadow: 0 0 0 16px color-mix(in srgb, var(--accent) 16%, transparent); font: 900 .72rem/1.15 var(--font-mono); text-align: center; }
+.privacy-map { position: relative; width: 100%; min-height: 0; aspect-ratio: 1; overflow: hidden; isolation: isolate; background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--accent) 30%, var(--surface)) 0 15%, transparent 15.5%), var(--surface); }
+.privacy-map .radial-tracks { z-index: 1; }
+.privacy-connectors { position: absolute; z-index: 2; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.privacy-connectors line { stroke: var(--signal); stroke-width: .7; stroke-linecap: round; vector-effect: non-scaling-stroke; transition: x2 .65s cubic-bezier(.16,1,.3,1), y2 .65s cubic-bezier(.16,1,.3,1); }
+.privacy-connectors line.is-outbound { stroke-dasharray: 2 2; }
+.privacy-device { position: absolute; z-index: 3; left: 50%; top: 50%; width: 116px; height: 116px; display: grid; place-items: center; padding: 16px; border-radius: 50%; transform: translate(-50%, -50%); color: var(--accent-ink); background: var(--accent); box-shadow: 0 0 0 16px color-mix(in srgb, var(--accent) 16%, transparent); font: 900 .72rem/1.15 var(--font-mono); text-align: center; }
 .privacy-category-list { position: absolute; z-index: 4; inset: 0; }
-.privacy-category-list button { position: absolute; min-height: 42px; padding: 0 14px; border: 1px solid var(--line); border-radius: var(--radius-pill); color: var(--ink-soft); background: var(--canvas); box-shadow: 0 8px 24px color-mix(in srgb, var(--ink) 8%, transparent); font-size: .72rem; font-weight: 850; transition: color .25s ease, background .25s ease, border-color .25s ease, transform .25s ease; }
-.privacy-category-list button:nth-child(1) { left: 7%; top: 13%; }.privacy-category-list button:nth-child(2) { right: 8%; top: 15%; }.privacy-category-list button:nth-child(3) { right: 5%; bottom: 18%; }.privacy-category-list button:nth-child(4) { left: 36%; bottom: 7%; }.privacy-category-list button:nth-child(5) { left: 4%; bottom: 25%; max-width: 170px; }
-.privacy-category-list button:hover { transform: translateY(-3px); }.privacy-category-list button.is-selected { border-color: var(--signal); color: white; background: var(--signal); transform: translateY(-3px); }
-.privacy-flow { position: absolute; z-index: 2; left: calc(50% + 65px); top: calc(48% - 80px); width: 38%; height: 2px; transform: rotate(-17deg); transform-origin: left center; background: linear-gradient(90deg, var(--signal), transparent); }
-.privacy-flow::before { content: ""; position: absolute; inset: -4px auto auto 0; width: 10px; height: 10px; border-radius: 50%; background: var(--signal); animation: privacy-pulse 2.4s ease-in-out infinite; }
-.privacy-flow span { position: absolute; right: 0; bottom: 12px; padding: 7px 10px; border: 1px solid var(--line); border-radius: var(--radius-pill); transform: rotate(17deg); color: var(--signal); background: var(--surface); font: 800 .67rem/1 var(--font-mono); }
-.privacy-detail { padding: clamp(24px, 4vw, 38px); animation: privacy-detail-in .42s cubic-bezier(.16,1,.3,1) both; }
+.privacy-node-position { position: absolute; transform: translate(-50%, -50%); }
+.privacy-category-list button { min-height: 42px; max-width: 170px; padding: 0 14px; border: 1px solid var(--line); border-radius: var(--radius-pill); color: var(--ink-soft); background: var(--canvas); box-shadow: 0 8px 24px color-mix(in srgb, var(--ink) 8%, transparent); font-size: .72rem; font-weight: 850; transition: color .65s cubic-bezier(.16,1,.3,1), background .65s cubic-bezier(.16,1,.3,1), border-color .65s cubic-bezier(.16,1,.3,1), transform .65s cubic-bezier(.16,1,.3,1), opacity .45s ease; }
+.privacy-category-list button:hover { transform: scale(1.04); }.privacy-category-list button.is-selected { border-color: var(--signal); color: white; background: var(--signal); transform: scale(1.08); }
+.privacy-category-list:has(button.is-selected) button:not(.is-selected) { opacity: .58; }
+.privacy-receiver { position: absolute; z-index: 5; max-width: 112px; padding: 7px 10px; border: 1px solid var(--line); border-radius: var(--radius-pill); transform: translate(-100%, -50%); color: var(--signal); background: var(--surface); font: 800 .62rem/1 var(--font-mono); white-space: nowrap; }
+.privacy-detail { padding: clamp(24px, 4vw, 38px); animation: privacy-detail-in .65s cubic-bezier(.16,1,.3,1) both; }
 .privacy-detail h2, .privacy-log h2 { margin: 0; font: 950 clamp(2rem, 4vw, 3.6rem)/.88 var(--font-display); letter-spacing: -.055em; }
 .privacy-detail dl { display: grid; gap: 0; margin: 30px 0 0; }.privacy-detail dl div { padding: 17px 0; border-top: 1px solid var(--line); }
 .privacy-detail dt { color: var(--ink-soft); font: 750 .67rem/1 var(--font-mono); text-transform: uppercase; letter-spacing: .07em; }.privacy-detail dd { margin: 9px 0 0; line-height: 1.45; }
@@ -215,7 +216,6 @@ details.advanced summary { cursor: pointer; font-weight: 750; }
 .privacy-dialog-backdrop { position: fixed; z-index: 120; inset: 0; display: grid; place-items: center; padding: 20px; background: color-mix(in srgb, var(--ink) 45%, transparent); backdrop-filter: blur(10px); }
 .privacy-dialog { width: min(100%, 520px); padding: 30px; border-radius: var(--radius-card); background: var(--surface); box-shadow: var(--shadow); animation: privacy-detail-in .28s cubic-bezier(.16,1,.3,1) both; }.privacy-dialog h2 { margin: 0; font: 950 2.4rem/.9 var(--font-display); letter-spacing: -.05em; }.privacy-dialog p { color: var(--ink-soft); line-height: 1.5; }.privacy-dialog > div { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
 .location-consent { position: relative; overflow: hidden; }.location-consent::before { content: ""; position: absolute; width: 220px; height: 220px; right: -90px; top: -100px; border: 1px dashed var(--signal); border-radius: 50%; }.location-consent .hero-kicker { color: var(--signal); }.location-consent dl { margin: 24px 0 0; }.location-consent dl div { display: grid; grid-template-columns: 90px 1fr; gap: 12px; padding: 13px 0; border-top: 1px solid var(--line); }.location-consent dt { color: var(--ink-soft); font: 750 .68rem/1.2 var(--font-mono); text-transform: uppercase; }.location-consent dd { margin: 0; font-size: .85rem; line-height: 1.35; }.location-consent .location-consent-actions { display: flex; }
-@keyframes privacy-pulse { 0%,100% { transform: translateX(0) scale(.7); opacity: .25; } 50% { transform: translateX(170px) scale(1); opacity: 1; } }
 @keyframes privacy-detail-in { from { transform: translateY(12px); opacity: 0; } }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
@@ -292,15 +292,15 @@ details.advanced summary { cursor: pointer; font-weight: 750; }
   .orbit-detail { min-height: 70px; margin-top: -4px; }
   .privacy-page .page-title { font-size: clamp(3.2rem, 16vw, 5rem); }
   .privacy-explorer { grid-template-columns: 1fr; margin-top: 26px; }
-  .privacy-map { min-height: 430px; }.privacy-map::before { width: 260px; height: 260px; }.privacy-map::after { width: 380px; height: 380px; }
+  .privacy-map { min-height: 0; }
   .privacy-device { width: 92px; height: 92px; }.privacy-category-list button { max-width: 132px; min-height: 36px; padding: 5px 10px; font-size: .63rem; }
-  .privacy-category-list button:nth-child(1) { left: 3%; top: 10%; }.privacy-category-list button:nth-child(2) { right: 3%; top: 12%; }.privacy-category-list button:nth-child(3) { right: 2%; bottom: 18%; }.privacy-category-list button:nth-child(4) { left: 36%; bottom: 5%; }.privacy-category-list button:nth-child(5) { left: 2%; bottom: 22%; }
-  .privacy-flow { width: 34%; }.privacy-controls { grid-template-columns: 1fr; align-items: stretch; }.privacy-sync { border-left: 0; border-top: 1px solid var(--line); }.privacy-log li { grid-template-columns: 1fr; gap: 6px; }
+  .privacy-receiver { max-width: 92px; padding: 6px 8px; font-size: .54rem; }.privacy-controls { grid-template-columns: 1fr; align-items: stretch; }.privacy-sync { border-left: 0; border-top: 1px solid var(--line); }.privacy-log li { grid-template-columns: 1fr; gap: 6px; }
   .sheet-backdrop { align-items: end; }
   .profile-sheet { width: 100%; height: min(88dvh, 760px); border-radius: 26px 26px 0 0; padding: 26px 18px calc(24px + env(safe-area-inset-bottom)); animation-name: sheet-up; }
   @keyframes sheet-up { from { transform: translateY(28px); opacity: 0; } }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .profile-sheet, .privacy-detail, .privacy-dialog, .privacy-flow::before { animation: none; }
+  .profile-sheet, .privacy-detail, .privacy-dialog { animation: none; }
+  .privacy-connectors line, .privacy-category-list button { transition: none; }
 }

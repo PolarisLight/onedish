@@ -33,3 +33,27 @@ export function focusRotation(currentRotation: number, nodeAngle: number): numbe
 export function connector(start: NormalizedPoint, end: NormalizedPoint) {
   return { x1: start.x, y1: start.y, x2: end.x, y2: end.y };
 }
+
+const PRIVACY_ANGLES = [-40, 32, 104, 176, 248] as const;
+
+export function privacySlots() {
+  return PRIVACY_ANGLES.map((angleDeg, index) => ({
+    index,
+    angleDeg,
+    point: polarPoint(angleDeg, RADIAL_TRACKS[2]),
+  }));
+}
+
+export function privacyReceiver(): NormalizedPoint {
+  return polarPoint(PRIVACY_ANGLES[0], .56);
+}
+
+export function boxesOverlap(
+  left: { readonly x: number; readonly y: number; readonly width: number; readonly height: number },
+  right: { readonly x: number; readonly y: number; readonly width: number; readonly height: number },
+) {
+  return left.x < right.x + right.width &&
+    left.x + left.width > right.x &&
+    left.y < right.y + right.height &&
+    left.y + left.height > right.y;
+}

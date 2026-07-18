@@ -29,3 +29,17 @@ test("requires confirmation before deleting local profile data", async () => {
   fireEvent.click(screen.getByRole("button", { name: "Delete" }));
   await waitFor(async () => expect(await db.settings.get("profile.v2")).toBeUndefined());
 });
+
+test("connects only the selected category and reserves the external receiver for location", async () => {
+  await renderPrivacy();
+  fireEvent.click(await screen.findByRole("button", { name: "Health signals" }));
+  expect(screen.getByTestId("privacy-selected-connector")).toHaveAttribute(
+    "data-target",
+    "health_signals",
+  );
+  expect(screen.queryByTestId("privacy-outbound-connector")).not.toBeInTheDocument();
+  expect(screen.queryByText("OpenStreetMap")).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: "Precise location" }));
+  expect(screen.getByTestId("privacy-outbound-connector")).toBeVisible();
+  expect(screen.getByTestId("privacy-receiver")).toHaveTextContent("OpenStreetMap");
+});

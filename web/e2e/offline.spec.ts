@@ -6,7 +6,7 @@ test("installed demo remains usable after the network disappears", async ({ cont
   await page.reload();
   await context.setOffline(true);
   await page.reload();
-  await expect(page.getByText("Synthetic demo context")).toBeVisible();
+  await expect(page.getByText("Preview mode")).toBeVisible();
   await page.getByRole("button", { name: "Pick my meal" }).click();
   await expect(page.getByRole("heading", { name: "From ninety to one." })).toBeVisible();
   await page.getByRole("button", { name: "Skip" }).click();

@@ -10,10 +10,10 @@ test("one tap creates a live decision and can pick another", async ({ page }) =>
   await page.getByRole("button", { name: "Skip" }).click();
   await page.getByRole("button", { name: "Meet your dish" }).click();
   await expect(page).toHaveURL(/\/winner\/decision-/);
-  const firstDish = await page.getByRole("heading", { level: 1 }).textContent();
+  const firstDecisionUrl = page.url();
   await expect(page.getByRole("heading", { name: "Why this one" })).toBeVisible();
   await page.getByRole("button", { name: "Pick another" }).click();
-  await expect(page.getByRole("heading", { level: 1 })).not.toHaveText(firstDish ?? "");
+  await expect(page).not.toHaveURL(firstDecisionUrl);
   await page.getByRole("button", { name: "Edit preferences" }).click();
   await expect(page.getByRole("dialog", { name: "Meal preferences" })).toBeVisible();
 });

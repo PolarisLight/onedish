@@ -34,13 +34,13 @@ export function connector(start: NormalizedPoint, end: NormalizedPoint) {
   return { x1: start.x, y1: start.y, x2: end.x, y2: end.y };
 }
 
-const PRIVACY_ANGLES = [-40, 32, 104, 176, 248] as const;
+const PRIVACY_ANGLES = [-25, 32, 104, 165, 248] as const;
 
 export function privacySlots() {
   return PRIVACY_ANGLES.map((angleDeg, index) => ({
     index,
     angleDeg,
-    point: polarPoint(angleDeg, RADIAL_TRACKS[2]),
+    point: polarPoint(angleDeg, RADIAL_TRACKS[1]),
   }));
 }
 

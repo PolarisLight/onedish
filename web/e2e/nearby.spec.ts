@@ -15,5 +15,5 @@ test("nearby asks for location only after intent and keeps fixtures labeled", as
   await expect(page.getByTitle("OpenStreetMap nearby area")).not.toBeAttached();
   await page.getByRole("button", { name: "Allow once" }).click();
   await expect(page.getByTitle("OpenStreetMap nearby area")).toBeVisible();
-  await expect(page.getByText(/clearly labeled fixtures/i)).toBeVisible();
+  await expect(page.getByText("Nearby results are a preview. Check availability with the restaurant.")).toBeVisible();
 });

@@ -42,7 +42,7 @@ test("privacy explorer is interactive and fits a narrow mobile viewport", async 
   await page.goto("/privacy");
   await page.getByRole("button", { name: "Health signals" }).click();
   await expect(page.getByRole("heading", { name: "Health signals" })).toBeVisible();
-  await expect(page.getByText(/web demo does not read health data/i)).toBeVisible();
+  await expect(page.getByText("Health data is not connected. If enabled later, it stays on this device by default.")).toBeVisible();
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await page.getByRole("button", { name: "Delete local profile" }).click();
   await expect(page.getByRole("dialog", { name: "Delete local profile and meal-derived data?" })).toBeVisible();

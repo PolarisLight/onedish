@@ -36,13 +36,19 @@ test("reserves distinct privacy slots and an external receiver", () => {
   expect(radialDistance(privacyReceiver())).toBeGreaterThan(RADIAL_TRACKS[2]);
 });
 
-test("privacy node boxes do not overlap at 320px", () => {
-  const boxes = privacySlots().map((slot) => ({
-    x: slot.point.x * 320 - 64,
-    y: slot.point.y * 320 - 22,
-    width: 128,
+test("privacy node boxes fit the 320px content stage without overlap", () => {
+  const stageSize = 284;
+  const nodeWidths = [100, 80, 80, 92, 132];
+  const boxes = privacySlots().map((slot, index) => ({
+    x: slot.point.x * stageSize - nodeWidths[index]! / 2,
+    y: slot.point.y * stageSize - 22,
+    width: nodeWidths[index]!,
     height: 44,
   }));
+  expect(boxes.every((box) => (
+    box.x >= 0 && box.y >= 0 &&
+    box.x + box.width <= stageSize && box.y + box.height <= stageSize
+  ))).toBe(true);
   expect(boxes.some((box, index) => (
     boxes.slice(index + 1).some((other) => boxesOverlap(box, other))
   ))).toBe(false);

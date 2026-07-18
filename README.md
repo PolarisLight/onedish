@@ -1,32 +1,62 @@
 # OneDish
 
-**Stop browsing. Eat this.** OneDish turns nearby meal options into one auditable answer, using your
-budget, safety constraints, optional daily context, and recent meal history.
+![OneDish: The right meal, right now](docs/assets/onedish-devpost-thumbnail.png)
 
-![OneDish — The right meal, right now](docs/assets/onedish-devpost-thumbnail.png)
+**Stop browsing. Eat this.** OneDish turns nearby meal options into one auditable answer, using your budget, dietary rules, current context, and recent meals.
 
-The default browser experience needs no API key and works offline after its first load. It makes a
-fresh deterministic choice from ten fictional restaurants and ninety versioned demo dishes, using
-settings and meal history stored only on the device. The FastAPI service is optional.
+[Try the live demo](https://polarislight.github.io/onedish/) · [Watch the 2:08 demo](docs/demo/onedish-demo.mp4)
 
-**Live demo:** [polarislight.github.io/onedish](https://polarislight.github.io/onedish/)
+## The problem
 
-**Demo video:** [watch the 2:55 narrated walkthrough](docs/demo/onedish-demo.mp4)
+Dinner should be a small decision. Instead, most food apps hand you an endless feed and ask you to compare everything yourself. The problem gets worse when price, allergies, energy, cravings, and yesterday's meal all matter at once.
 
-## Why it is different
+OneDish makes the decision. It returns one dish and shows exactly how it got there.
 
-- One winner at a time, never another recommendation feed.
-- A visible, auditable elimination record generated for the current request.
-- Allergen exclusions are hard constraints and are never relaxed.
-- An optional OpenAI Responses integration can interpret food language into strict fields; it
-  cannot select or rank the winner.
-- Foursquare can discover nearby places, but it does not prove delivery coverage or provide the
-  fictional demo menus.
-- Search links open a platform search. OneDish does not claim stock, delivery, or cart access.
+## What OneDish does
 
-## Run the demo
+- Gives you one winner instead of another recommendation list.
+- Treats allergen exclusions as hard rules that can never be relaxed.
+- Explains every elimination stage with the stored evidence from that decision.
+- Learns from meals you accept, reject, or mark as eaten on the device.
+- Turns that history into an interactive Taste Orbit you can inspect and reset.
+- Shows where location, health context, and preference data would go before you grant access.
 
-Requirements: Python 3.12+, Node 22+, and pnpm.
+The default demo needs no API key. It works from ten fictional restaurants and 90 versioned demo dishes, then remains available offline after its first load.
+
+## How a decision is made
+
+1. OneDish reads the context you choose to provide. Missing information stays unknown.
+2. Hard constraints remove unsafe or impossible dishes.
+3. The deterministic engine scores the remaining dishes against budget, distance, nutrition estimates, variety, and taste signals.
+4. OneDish stores the complete decision record before the animation begins.
+5. The winner page shows the dish, the reasons it survived, and a bounded alternative when you choose **Pick another**.
+
+The elimination animation explains a decision that already exists. It does not simulate model thinking or manufacture survivor counts.
+
+## Where AI fits
+
+OpenAI's Responses API is optional and deliberately narrow. It can turn natural food language such as "warm, spicy, but not too heavy" into validated fields. It cannot select the winner, change a score, or override an allergy rule.
+
+Deterministic code owns the final decision. If the model or network is unavailable, the local browser engine still works.
+
+## Architecture
+
+```text
+React PWA + IndexedDB
+  ├─ local settings, daily context, and meal history
+  ├─ deterministic recommendation engine
+  ├─ versioned catalog, place fixtures, and decision rules
+  └─ optional FastAPI service
+       ├─ Foursquare or fixture place discovery
+       ├─ OpenAI Responses semantic interpretation
+       └─ deterministic server-side engine
+```
+
+The browser stores the complete immutable decision session in IndexedDB. Demo assets, food imagery, and the application shell are precached; `/api` requests remain network-only.
+
+## Run it locally
+
+Requirements: Python 3.12+, Node.js 22+, and pnpm.
 
 ```bash
 make install
@@ -34,18 +64,17 @@ make runtime-data
 pnpm --dir web dev
 ```
 
-Open `http://127.0.0.1:5173` and choose **Pick my meal**. To run the optional API separately:
+Open <http://127.0.0.1:5173> and choose **Pick my meal**.
+
+The browser demo runs without the API. To start the optional service:
 
 ```bash
 backend/.venv/bin/uvicorn onedish_api.app:app --host 127.0.0.1 --port 8000
 ```
 
-The PWA can be installed from a supporting desktop or mobile browser. Demo assets, food imagery,
-decision records, and the app shell are precached; `/api` requests remain network-only.
-
 ## Optional live providers
 
-Copy `.env.example` to `.env` and set only the providers you want:
+Copy `.env.example` to `.env` and configure only the providers you want:
 
 ```text
 ONEDISH_MODE=live
@@ -53,25 +82,15 @@ ONEDISH_FOURSQUARE_API_KEY=...
 ONEDISH_OPENAI_API_KEY=...
 ```
 
-No key is bundled into the browser. Without keys, the local browser engine remains fully judgeable. The MVP has no
-Apple Health integration, accounts, analytics, payments, marketplace inventory, or automated order.
+Foursquare can discover nearby places in live mode. It does not prove delivery coverage or provide the fictional demo menus. No provider key is bundled into the browser.
 
-## Architecture
+## Privacy and honest limits
 
-```text
-React PWA + IndexedDB
-  ├─ local context and history
-  ├─ deterministic engine.v2 (default)
-  ├─ versioned catalog, place fixtures, and decision rules
-  └─ FastAPI /api (optional live mode)
-       ├─ Foursquare or fixture places
-       ├─ GPT-5.6 strict semantic interpretation
-       └─ deterministic engine.v1
-```
+Preferences, daily context, history, and decision records stay in local IndexedDB. There is no account, advertising identifier, third-party analytics, or background synchronization. Demo reset deletes all four local tables.
 
-Fixture restaurants are not live merchants. Chinese display prices use the fixed conversion in
-`decision.v2.json` for a deterministic demo; they are not live exchange quotes. The browser stores the complete decision before animation. The animation explains an existing
-record; it is not fake loading and never manufactures survivor counts.
+OneDish does not claim live menu inventory, delivery availability, cart access, payment, or completed ordering. Search links open a platform search. Food photos, prices, calories, protein, and distance are labeled demo data or estimates where appropriate.
+
+Precise location reaches a map or place provider only after permission. Raw health samples are outside the API contract. Read the full [privacy boundary](docs/privacy.md) and [data provenance](docs/data-provenance.md).
 
 ## Verification
 
@@ -84,16 +103,12 @@ backend/.venv/bin/python scripts/validate_catalog.py
 backend/.venv/bin/python scripts/verify_public_artifacts.py
 ```
 
-See [privacy](docs/privacy.md), [data provenance](docs/data-provenance.md), and the
-[demo script](docs/demo-script.md).
+The repository also includes the [demo script](docs/demo-script.md), captions, narration source, and a validator for the final video bundle.
 
 ## Built with
 
-OpenAI Responses API (optional), Codex, FastAPI, Pydantic, React, TypeScript, Dexie, Vite, Vitest,
-Playwright, and vite-plugin-pwa.
+OpenAI Responses API, Codex, React, TypeScript, Dexie, Vite, FastAPI, Pydantic, Vitest, Playwright, and vite-plugin-pwa.
 
-Codex helped brainstorm, specify, implement, test, visually inspect, and document the product.
-The model is deliberately bounded to structured food-language interpretation; deterministic code owns
-hard constraints and final selection.
+## License
 
-MIT licensed.
+[MIT](LICENSE)

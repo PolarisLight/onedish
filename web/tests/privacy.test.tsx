@@ -11,6 +11,7 @@ async function renderPrivacy() {
 
 test("explains all protected categories and marks sync as future capability", async () => {
   await renderPrivacy();
+  expect(screen.getByRole("heading", { name: "Your body is not the product." })).toBeVisible();
   for (const name of ["Precise location", "Health signals", "Meal history", "Taste profile", "Identity and device identifiers"]) {
     expect(await screen.findByRole("button", { name })).toBeVisible();
   }

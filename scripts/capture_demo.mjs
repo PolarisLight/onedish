@@ -212,7 +212,7 @@ try {
 
   await mark("orbit", async ({ waitTo }) => {
     await page.goto(new URL("history", baseUrl).href, { waitUntil: "networkidle" });
-    await page.getByRole("heading", { name: "Your taste has an orbit.", exact: true }).waitFor();
+    await page.getByRole("heading", { name: "Your taste is taking shape.", exact: true }).waitFor();
     const firstSignal = page.locator(".orbit-signal").first();
     await firstSignal.waitFor();
     await waitTo(0.36);

@@ -14,6 +14,7 @@ test("uses real history and switches between seven and thirty days", async () =>
   await saveHistoryEvent({ id: "warm", occurred_at: new Date(now - 86_400_000).toISOString(), kind: "accepted", taste_tags: ["warm"] });
   await saveHistoryEvent({ id: "fresh", occurred_at: new Date(now - 10 * 86_400_000).toISOString(), kind: "eaten", taste_tags: ["fresh"] });
   await renderOrbit();
+  expect(screen.getByRole("heading", { name: "Your taste is taking shape." })).toBeVisible();
   expect(await screen.findByRole("button", { name: /warm, 1 signal/i })).toBeVisible();
   expect(screen.queryByRole("button", { name: /fresh, 1 signal/i })).not.toBeInTheDocument();
   fireEvent.click(screen.getByRole("button", { name: "30 DAYS" }));

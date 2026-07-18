@@ -20,6 +20,15 @@ function LocaleProbe() {
   </>;
 }
 
+test("restores English document semantics when the lang attribute is missing", async () => {
+  document.documentElement.removeAttribute("lang");
+
+  render(<LocaleProvider><LocaleProbe /></LocaleProvider>);
+
+  await waitFor(() => expect(document.documentElement.lang).toBe("en"));
+  expect(screen.getByText("Privacy")).toBeVisible();
+});
+
 test("switches catalog copy, persists locale, and updates document language", async () => {
   render(<LocaleProvider><LocaleProbe /></LocaleProvider>);
   fireEvent.click(screen.getByRole("button", { name: "change" }));

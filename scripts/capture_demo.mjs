@@ -75,18 +75,6 @@ try {
     locale: "en-US",
     recordVideo: { dir: captureDir, size: { width: 780, height: 1688 } },
   });
-  await context.addInitScript(() => {
-    const hideChineseSwitch = () => {
-      for (const button of document.querySelectorAll("button")) {
-        if (button.textContent?.trim() === "中文") button.style.display = "none";
-      }
-    };
-    new MutationObserver(hideChineseSwitch).observe(document.documentElement, {
-      childList: true,
-      subtree: true,
-    });
-    document.addEventListener("DOMContentLoaded", hideChineseSwitch);
-  });
   const page = await context.newPage();
   const video = page.video();
   if (!video) throw new Error("Playwright did not create a video recorder");
@@ -95,7 +83,7 @@ try {
   const captureStartedAt = performance.now();
 
   async function forceEnglish() {
-    await page.waitForFunction(() => ["en", "zh-CN"].includes(document.documentElement.lang));
+    await page.locator("#root .app-shell").waitFor({ state: "attached" });
     const state = await page.evaluate(() => {
       const english = [...document.querySelectorAll("button")].find(
         (button) => button.textContent?.trim() === "EN",
@@ -107,7 +95,15 @@ try {
     if (!state.found && state.language !== "en") {
       throw new Error(`Could not find the EN control while language was ${state.language}`);
     }
-    await page.waitForFunction(() => document.documentElement.lang === "en");
+    await page.waitForFunction(
+      () => document.querySelector(".pick-meal-button")?.textContent?.trim() === "Pick my meal",
+    );
+    await page.evaluate(() => {
+      document.documentElement.lang = "en";
+      for (const button of document.querySelectorAll("button")) {
+        if (button.textContent?.trim() === "中文") button.style.display = "none";
+      }
+    });
   }
 
   async function requireEnglishBoundary(id) {

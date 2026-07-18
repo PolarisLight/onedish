@@ -1,5 +1,7 @@
 # OneDish
 
+**English** | [简体中文](README.zh-CN.md)
+
 ![OneDish: The right meal, right now](docs/assets/onedish-devpost-thumbnail.png)
 
 **Stop browsing. Eat this.** OneDish turns nearby meal options into one auditable answer, using your budget, dietary rules, current context, and recent meals.

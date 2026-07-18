@@ -42,10 +42,14 @@ test("starts and persists a live recommendation", async () => {
 
 test("retry excludes the current winner and persists a different decision", async () => {
   const first = await startRecommendation({ quickState: null, now: NOW });
+  const sameNamedAlternative = catalog.dishes.find(
+    (dish) => dish.name === first.winner.dish.name && dish.id !== first.winner.dish.id,
+  )!;
   const second = await retryRecommendation(first, NOW);
 
   expect(second.winner.dish.id).not.toBe(first.winner.dish.id);
   expect(second.session_exclusions).toContain(first.winner.dish.id);
+  expect(second.session_exclusions).not.toContain(sameNamedAlternative.id);
   expect(second.input.session_exclusions).toEqual(second.session_exclusions);
   expect(await db.decisionSessions.get(second.decision.decision_id)).toBeTruthy();
 });

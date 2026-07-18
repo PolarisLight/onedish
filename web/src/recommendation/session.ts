@@ -113,7 +113,7 @@ export async function retryRecommendation(
 ): Promise<RecommendationRecord> {
   const data = await getRuntimeData();
   const sameDishIds = data.catalog.dishes
-    .filter((dish) => dish.name === current.winner.dish.name)
+    .filter((dish) => dish.id === current.winner.dish.id)
     .map((dish) => dish.id);
   const exclusions = [...new Set([
     ...current.session_exclusions,

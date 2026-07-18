@@ -71,13 +71,13 @@ test("live winner can pick another or edit preferences", async () => {
   expect(screen.getByRole("button", { name: "Find nearby" })).toBeVisible();
   expect(screen.queryByText("Fictional demo menu")).not.toBeInTheDocument();
   await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Pick another" })); });
-  await waitFor(() => expect(screen.getByRole("heading", { level: 1 })).not.toHaveTextContent(first.winner.dish.name));
+  await waitFor(() => expect(screen.getByLabelText("location")).not.toHaveTextContent(first.decision.decision_id));
   fireEvent.click(screen.getByRole("button", { name: "Edit preferences" }));
   expect(screen.getByLabelText("location")).toHaveTextContent("/?adjust=1");
   fetchMock.mockRestore();
 });
 
-test("winner localizes interface copy but preserves source dish and restaurant names", async () => {
+test("winner localizes dish copy while preserving the restaurant brand", async () => {
   await resetLocalData();
   await db.settings.put({ key: "locale.v2", value: "zh-CN" });
   await saveDecision({ id: record.decision.decision_id, stateId: "day1", payload: record });
@@ -86,7 +86,9 @@ test("winner localizes interface copy but preserves source dish and restaurant n
     { initialEntries: [`/winner/${record.decision.decision_id}`] },
   );
   await act(async () => { render(<LocaleProvider><RouterProvider router={router} /></LocaleProvider>); });
-  expect(await screen.findByRole("heading", { name: record.winner.dish.name })).toBeVisible();
+  expect(await screen.findByRole("heading", { name: "炭烤鸡肉饭" })).toBeVisible();
+  expect(screen.getByText("炭烤鸡肉搭配米饭和时蔬，香气浓郁，饱腹感十足。")).toBeVisible();
+  expect(screen.queryByRole("heading", { name: record.winner.dish.name })).not.toBeInTheDocument();
   expect(screen.getByText(record.winner.place.name)).toBeVisible();
   expect(await screen.findByRole("button", { name: "今天不想吃" })).toBeVisible();
 });

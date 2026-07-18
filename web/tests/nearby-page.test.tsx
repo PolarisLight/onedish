@@ -17,10 +17,11 @@ async function renderNearby(locale: "en" | "zh-CN" = "en") {
   await act(async () => { render(<LocaleProvider><RouterProvider router={router} /></LocaleProvider>); });
 }
 
-test("nearby localizes interface copy and preserves the source dish name", async () => {
+test("nearby uses the localized dish name in Chinese", async () => {
   await renderNearby("zh-CN");
   expect(await screen.findByRole("heading", { name: "去附近找到它。" })).toBeVisible();
-  expect(screen.getByText(record.winner.dish.name, { exact: false })).toBeVisible();
+  expect(screen.getByText("炭烤鸡肉饭", { exact: false })).toBeVisible();
+  expect(screen.queryByText(record.winner.dish.name, { exact: false })).not.toBeInTheDocument();
   expect(screen.getByRole("button", { name: "使用当前位置" })).toBeVisible();
 });
 

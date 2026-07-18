@@ -14,6 +14,7 @@ import { RejectionSheet } from "./RejectionSheet";
 import { WinnerActions } from "./WinnerActions";
 import { WinnerEvidence } from "./WinnerEvidence";
 import { useLocale } from "../i18n/locale";
+import { localizeDish } from "../i18n/dish-localization";
 
 export function WinnerPage() {
   const { decisionId = "" } = useParams();
@@ -124,17 +125,18 @@ export function WinnerPage() {
 function WinnerView({ candidate, reserve, canReject, live, retrying, exhausted, error, locale, reasonCodes, rejectionOpen, setRejectionOpen, onReject, onRetry, onEdit, onNearby }: { candidate: Candidate; reserve: boolean; canReject: boolean; live: boolean; retrying: boolean; exhausted: boolean; error: string; locale: "en" | "zh-CN"; reasonCodes: readonly string[]; rejectionOpen: boolean; setRejectionOpen: (value: boolean) => void; onReject: (reason: RejectionReason) => void; onRetry: () => void; onEdit: () => void; onNearby: () => void }) {
   const { t } = useLocale();
   const { dish, place } = candidate;
+  const localizedDish = localizeDish(dish, locale);
   const safeLink = place.order_destination?.startsWith("https://") ? place.order_destination : null;
   const displayPrice = locale === "en" ? dish.price_minor : Math.round(dish.price_minor * 7.2);
   return (
     <main className="winner">
       <div className="winner-grid">
-        <div className="winner-media"><img src={`${import.meta.env.BASE_URL}${dish.image.replace(/^\//, "")}`} alt={dish.name} /></div>
+        <div className="winner-media"><img src={`${import.meta.env.BASE_URL}${dish.image.replace(/^\//, "")}`} alt={localizedDish.name} /></div>
         <section className="winner-copy">
           <p className="hero-kicker">{reserve ? t("winner.reserve") : t("winner.dish")}</p>
           <p className="restaurant-name">{place.name}</p>
-          <h1>{dish.name}</h1>
-          <p className="dish-description">{dish.description}</p>
+          <h1>{localizedDish.name}</h1>
+          <p className="dish-description">{localizedDish.description}</p>
           <div className="nutrition">
             <div className="metric"><strong>{formatMoney(displayPrice, locale)}</strong><span>{t("winner.menuEstimate")}</span></div>
             <div className="metric"><strong>{dish.energy_kcal.min}-{dish.energy_kcal.max}</strong><span>{t("winner.kcal")}</span></div>

@@ -1,5 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { createMemoryRouter, RouterProvider } from "react-router";
+import catalog from "../public/data/catalog.v1.json";
+import places from "../public/data/places.v1.json";
 import record from "../public/demo/day1.json";
 import { db, saveDecision, resetLocalData } from "../src/db/db";
 import { EliminationPage } from "../src/elimination/EliminationPage";
@@ -42,4 +44,34 @@ test("elimination follows the active Chinese interface locale", async () => {
   expect(await screen.findByRole("heading", { name: "从九十到唯一。" })).toBeVisible();
   fireEvent.click(screen.getByRole("button", { name: "跳过" }));
   expect(screen.getByRole("button", { name: "看看你的餐食" })).toBeVisible();
+});
+
+test("elimination localizes available candidate dish names", async () => {
+  await resetLocalData();
+  await db.settings.put({ key: "locale.v2", value: "zh-CN" });
+  const removedId = record.decision.stages.at(-1)!.representative_removed_ids[0];
+  const removedDish = catalog.dishes.find((dish) => dish.id === removedId)!;
+  const removedPlace = places.places.find(
+    (place) => place.id === `fixture-${removedDish.restaurant_id}`,
+  )!;
+  const liveRecord = {
+    ...record,
+    schema_version: "recommendation.v2",
+    locale: "zh-CN",
+    input: { session_exclusions: [] },
+    ranked_candidates: [record.winner, { dish: removedDish, place: removedPlace }],
+    winner_reason_codes: [],
+    session_exclusions: [],
+  };
+  await saveDecision({ id: record.decision.decision_id, stateId: "recommendation.v2", payload: liveRecord });
+  const router = createMemoryRouter(
+    [{ path: "/choose/:decisionId", element: <EliminationPage /> }],
+    { initialEntries: [`/choose/${record.decision.decision_id}`] },
+  );
+  await act(async () => {
+    render(<LocaleProvider><RouterProvider router={router} /></LocaleProvider>);
+  });
+  fireEvent.click(await screen.findByRole("button", { name: "跳过" }));
+  expect(await screen.findByText(removedDish.translations["zh-CN"].name)).toBeVisible();
+  expect(screen.queryByText(removedDish.name)).not.toBeInTheDocument();
 });

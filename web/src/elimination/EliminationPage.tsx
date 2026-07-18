@@ -7,6 +7,7 @@ import { AnimatedCount } from "./AnimatedCount";
 import { EliminationStack } from "./EliminationStack";
 import { projectTraceStage } from "./trace-view-model";
 import { useLocale } from "../i18n/locale";
+import { localizeDish } from "../i18n/dish-localization";
 
 export function EliminationPage() {
   const { decisionId = "" } = useParams();
@@ -36,8 +37,11 @@ export function EliminationPage() {
 
   const candidateNames = useMemo(() => {
     if (!record || record.schema_version === "demo.v1") return {};
-    return Object.fromEntries(record.ranked_candidates.map((candidate) => [candidate.dish.id, candidate.dish.name]));
-  }, [record]);
+    return Object.fromEntries(record.ranked_candidates.map((candidate) => [
+      candidate.dish.id,
+      localizeDish(candidate.dish, locale).name,
+    ]));
+  }, [locale, record]);
 
   if (error) return <main className="error-state"><h1>{t("decision.unavailable")}</h1><p>{error}</p><button className="secondary-button" onClick={() => navigate("/")}>{t("decision.startAgain")}</button></main>;
   if (!record) return <main className="page"><p>{t("decision.loading")}</p></main>;

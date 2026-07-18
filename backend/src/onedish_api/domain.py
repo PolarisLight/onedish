@@ -95,6 +95,11 @@ class Place(StrictFrozenModel):
     attribution: str = Field(min_length=1, max_length=100)
 
 
+class LocalizedDishText(StrictFrozenModel):
+    name: str = Field(min_length=1, max_length=120)
+    description: str = Field(min_length=1, max_length=500)
+
+
 class Dish(StrictFrozenModel):
     id: Identifier
     restaurant_id: Identifier
@@ -115,6 +120,7 @@ class Dish(StrictFrozenModel):
     nutrition_provenance: Literal["authoritative_demo", "estimated_demo"]
     source_kind: Literal["demo_menu"]
     estimated_minutes: int = Field(ge=5, le=180)
+    translations: dict[Literal["zh-CN"], LocalizedDishText] = Field(default_factory=dict)
 
 
 class Candidate(StrictFrozenModel):

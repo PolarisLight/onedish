@@ -20,6 +20,31 @@ def test_nutrition_range_is_closed_and_nonnegative() -> None:
         NutritionRange(min=-1, max=12)
 
 
+def test_dish_accepts_old_records_without_translations() -> None:
+    dish = Dish.model_validate(
+        {
+            "id": "test-rice",
+            "restaurant_id": "test-place",
+            "name": "Test Rice",
+            "description": "Canonical English description.",
+            "price_minor": 1200,
+            "currency": "USD",
+            "energy_kcal": {"min": 400, "max": 500},
+            "protein_g": {"min": 20, "max": 30},
+            "confidence": "high",
+            "ingredients": ["rice"],
+            "cuisine_tags": ["asian"],
+            "taste_tags": ["warm"],
+            "base_ingredient": "rice",
+            "image": "/food/test.svg",
+            "nutrition_provenance": "estimated_demo",
+            "source_kind": "demo_menu",
+            "estimated_minutes": 20,
+        }
+    )
+    assert dish.translations == {}
+
+
 def test_dish_rejects_unknown_allergen_and_extra_fields() -> None:
     payload = {
         "id": "dish-1",

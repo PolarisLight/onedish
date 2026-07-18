@@ -27,10 +27,21 @@ test("rejects invalid score divisors", () => {
 
 
 test("loads all three generated runtime files", async () => {
+  const bilingualCatalog = structuredClone(catalog) as typeof catalog & {
+    dishes: Array<(typeof catalog.dishes)[number] & {
+      translations: { "zh-CN": { name: string; description: string } };
+    }>;
+  };
+  bilingualCatalog.dishes = bilingualCatalog.dishes.map((dish) => ({
+    ...dish,
+    translations: {
+      "zh-CN": { name: `中文 ${dish.name}`, description: `中文 ${dish.description}` },
+    },
+  }));
   const fetchMock = vi.fn(async (input: string | URL | Request) => {
     const url = String(input);
     if (url.endsWith("decision.v2.json")) return new Response(JSON.stringify(rules));
-    if (url.endsWith("catalog.v1.json")) return new Response(JSON.stringify(catalog));
+    if (url.endsWith("catalog.v1.json")) return new Response(JSON.stringify(bilingualCatalog));
     if (url.endsWith("places.v1.json")) return new Response(JSON.stringify(places));
     return new Response("not found", { status: 404 });
   });
@@ -42,4 +53,18 @@ test("loads all three generated runtime files", async () => {
   expect(data.catalog.dishes).toHaveLength(90);
   expect(data.places).toHaveLength(10);
   expect(fetchMock).toHaveBeenCalledTimes(3);
+});
+
+
+test("rejects a runtime catalog without complete Chinese dish text", async () => {
+  const fetchMock = vi.fn(async (input: string | URL | Request) => {
+    const url = String(input);
+    if (url.endsWith("decision.v2.json")) return new Response(JSON.stringify(rules));
+    if (url.endsWith("catalog.v1.json")) return new Response(JSON.stringify(catalog));
+    if (url.endsWith("places.v1.json")) return new Response(JSON.stringify(places));
+    return new Response("not found", { status: 404 });
+  });
+  vi.stubGlobal("fetch", fetchMock);
+
+  await expect(loadRecommendationData("/data/")).rejects.toThrow(/zh-CN translation/i);
 });

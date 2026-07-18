@@ -27,6 +27,11 @@ export interface NutritionRange {
   readonly max: number;
 }
 
+export interface LocalizedDishText {
+  readonly name: string;
+  readonly description: string;
+}
+
 export interface EliminationStage {
   readonly id: StageId;
   readonly input_count: number;
@@ -55,6 +60,7 @@ export interface Dish {
   readonly nutrition_provenance: string;
   readonly source_kind: "demo_menu";
   readonly estimated_minutes: number;
+  readonly translations?: Readonly<Partial<Record<"zh-CN", LocalizedDishText>>>;
 }
 
 export interface Place {

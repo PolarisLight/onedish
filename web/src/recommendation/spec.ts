@@ -122,6 +122,31 @@ function parseCatalog(value: unknown): RuntimeCatalog {
   if (!Array.isArray(root.restaurants) || !Array.isArray(root.dishes)) {
     throw new Error("Catalog restaurants and dishes are required");
   }
+  for (const [index, value] of root.dishes.entries()) {
+    const dish = object(value, `catalog.dishes.${index}`);
+    if (typeof dish.translations !== "object" || dish.translations === null) {
+      throw new Error(`catalog.dishes.${index} requires a zh-CN translation`);
+    }
+    const translations = object(
+      dish.translations,
+      `catalog.dishes.${index}.translations`,
+    );
+    if (typeof translations["zh-CN"] !== "object" || translations["zh-CN"] === null) {
+      throw new Error(`catalog.dishes.${index} requires a zh-CN translation`);
+    }
+    const zh = object(
+      translations["zh-CN"],
+      `catalog.dishes.${index}.translations.zh-CN`,
+    );
+    if (
+      typeof zh.name !== "string" ||
+      !zh.name.trim() ||
+      typeof zh.description !== "string" ||
+      !zh.description.trim()
+    ) {
+      throw new Error(`catalog.dishes.${index} has invalid zh-CN translation`);
+    }
+  }
   object(root.image_attribution, "catalog.image_attribution");
   return value as RuntimeCatalog;
 }

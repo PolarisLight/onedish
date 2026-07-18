@@ -15,6 +15,8 @@ def test_versioned_catalog_has_reviewed_demo_shape() -> None:
     assert 8 <= len(catalog.restaurants) <= 12
     assert len({dish.restaurant_id for dish in catalog.dishes}) == len(catalog.restaurants)
     assert all(dish.source_kind == "demo_menu" for dish in catalog.dishes)
+    assert all(dish.translations["zh-CN"].name.strip() for dish in catalog.dishes)
+    assert all(dish.translations["zh-CN"].description.strip() for dish in catalog.dishes)
     assert len(catalog_sha256(catalog)) == 64
 
 

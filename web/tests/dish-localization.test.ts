@@ -17,7 +17,10 @@ test("selects natural Chinese dish text", () => {
 });
 
 test("falls back to canonical English for an old stored dish", () => {
-  const oldDish = { ...dish, translations: undefined } as Dish;
+  const oldDish = {
+    name: dish.name,
+    description: dish.description,
+  } as Dish;
   expect(localizeDish(oldDish, "zh-CN").name).toBe("Charred Chicken Rice Bowl");
 });
 

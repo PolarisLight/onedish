@@ -1,11 +1,6 @@
 import type { HistoryEventRow } from "../src/db/db";
-import {
-  angleFromPoint,
-  makeOrbitNodes,
-  normalizeAngle,
-  pointOnOrbit,
-  shortestRotation,
-} from "../src/history/orbit-model";
+import { makeOrbitNodes } from "../src/history/orbit-model";
+import { RADIAL_TRACKS, polarPoint, radialDistance } from "../src/shared/radial-geometry";
 
 const now = new Date("2026-07-18T12:00:00Z");
 
@@ -23,11 +18,10 @@ test("filters by range and keeps outcome evidence separate", () => {
   expect(nodes[0]).toMatchObject({ id: "warm", count: 2, acceptedCount: 1, rejectedCount: 1 });
 });
 
-test("uses one angle for placement and top focus", () => {
+test("assigns every node to one exact shared track", () => {
   const node = makeOrbitNodes([event("a", 1, "accepted", "warm")], 7, now)[0]!;
-  const point = pointOnOrbit(node.angleDeg, node.distance, 300, 300);
-  expect(angleFromPoint(point.x, point.y, 300, 300)).toBeCloseTo(node.angleDeg);
-  expect(normalizeAngle(node.angleDeg + shortestRotation(node.angleDeg, -90))).toBeCloseTo(270);
+  const radius = RADIAL_TRACKS[node.trackIndex]!;
+  expect(radialDistance(polarPoint(node.angleDeg, radius))).toBeCloseTo(radius, 8);
 });
 
 test("does not invent nodes for empty history", () => {

@@ -28,8 +28,10 @@ test("focus persists until YOU returns to natural rotation", async () => {
   fireEvent.click(warm);
   expect(warm).toHaveAttribute("aria-pressed", "true");
   expect(warm).toHaveAttribute("data-focus-target", "top");
+  expect(screen.getByText("Choose YOU to see the full orbit")).toBeVisible();
   fireEvent.click(screen.getByRole("button", { name: "YOU" }));
   expect(warm).toHaveAttribute("aria-pressed", "false");
+  expect(screen.getByText("Choose a taste to bring it forward")).toBeVisible();
 });
 
 test("renders every signal on its assigned shared track", async () => {

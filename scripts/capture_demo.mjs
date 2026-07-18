@@ -216,9 +216,16 @@ try {
     const firstSignal = page.locator(".orbit-signal").first();
     await firstSignal.waitFor();
     await waitTo(0.36);
-    await firstSignal.click();
+    await firstSignal.evaluate((button) => button.click());
+    await page.waitForFunction(
+      () => document.querySelector(".orbit-signal")?.getAttribute("aria-pressed") === "true",
+    );
+    await page.locator(".orbit-detail small").getByText("Choose YOU to see the full orbit", { exact: true }).waitFor();
     await waitTo(0.66);
     await page.getByRole("button", { name: "YOU", exact: true }).click();
+    await page.waitForFunction(
+      () => document.querySelector(".orbit-signal")?.getAttribute("aria-pressed") === "false",
+    );
     await waitTo(0.82);
     await page.mouse.wheel(0, 100);
   });

@@ -20,6 +20,8 @@ import scripts.synthesize_narration as narration
 import scripts.generate_demo_bed as bed
 from scripts.synthesize_narration import edge_tts_command, scene_stem
 from scripts.generate_demo_bed import music_filter, validate_duration
+from scripts.build_demo_video import fit_caption_cues, scene_output_duration, stamp
+from scripts.burn_captions import master_output_duration, wrap_caption
 
 
 NARRATION_PATH = ROOT / "docs" / "demo" / "narration.json"
@@ -31,6 +33,50 @@ VALID_CAPTURE_SCENES = [
         ["home", "context", "elimination", "winner", "orbit", "privacy", "close"]
     )
 ]
+
+
+def test_scene_duration_includes_pause_and_visual_guard() -> None:
+    assert scene_output_duration(audio=18.0, pause_ms=700, visual=25.0) == pytest.approx(
+        18.7
+    )
+    with pytest.raises(ValueError, match="too short"):
+        scene_output_duration(audio=25.0, pause_ms=700, visual=20.0)
+
+
+def test_caption_stamp_and_two_line_wrap() -> None:
+    assert stamp(62.345) == "00:01:02,345"
+    lines = wrap_caption(
+        "OneDish gives you one inspectable answer instead of another feed."
+    )
+    assert 1 <= len(lines) <= 2
+    assert all(len(line) <= 44 for line in lines)
+
+
+def test_long_tts_cue_splits_without_losing_its_real_time_range() -> None:
+    cues = fit_caption_cues(
+        2.0,
+        8.0,
+        "Optional context can sharpen the choice: budget, time, allergies, "
+        "cravings, and eventually wellness signals.",
+    )
+
+    assert len(cues) == 2
+    assert cues[0][0] == 2.0
+    assert cues[-1][1] == 8.0
+    assert cues[0][1] == cues[1][0]
+    assert " ".join(cue[2] for cue in cues).replace("  ", " ") == (
+        "Optional context can sharpen the choice: budget, time, allergies, "
+        "cravings, and eventually wellness signals."
+    )
+    assert all(len(line) <= 52 for cue in cues for line in wrap_caption(cue[2]))
+
+
+def test_master_stops_with_the_soundtrack_instead_of_hanging_on_video_tail() -> None:
+    assert master_output_duration(visuals=131.1, soundtrack=128.981) == pytest.approx(
+        128.981
+    )
+    with pytest.raises(ValueError, match="shorter"):
+        master_output_duration(visuals=128.0, soundtrack=129.0)
 
 
 def write_capture_timeline(

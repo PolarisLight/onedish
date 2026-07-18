@@ -96,7 +96,9 @@ try {
       throw new Error(`Could not find the EN control while language was ${state.language}`);
     }
     await page.waitForFunction(
-      () => document.querySelector(".pick-meal-button")?.textContent?.trim() === "Pick my meal",
+      () => [...document.querySelectorAll("button")].some(
+        (button) => button.textContent?.trim() === "EN" && button.getAttribute("aria-pressed") === "true",
+      ),
     );
     await page.evaluate(() => {
       document.documentElement.lang = "en";
@@ -212,6 +214,7 @@ try {
 
   await mark("orbit", async ({ waitTo }) => {
     await page.goto(new URL("history", baseUrl).href, { waitUntil: "networkidle" });
+    await forceEnglish();
     await page.getByRole("heading", { name: "Your taste is taking shape.", exact: true }).waitFor();
     const firstSignal = page.locator(".orbit-signal").first();
     await firstSignal.waitFor();
@@ -232,6 +235,7 @@ try {
 
   await mark("privacy", async ({ waitTo }) => {
     await page.goto(new URL("privacy", baseUrl).href, { waitUntil: "networkidle" });
+    await forceEnglish();
     await page.getByRole("heading", { name: "Your body is not the product.", exact: true }).waitFor();
     const map = page.locator(".privacy-map");
     await waitTo(0.30);
@@ -245,6 +249,7 @@ try {
 
   await mark("close", async ({ waitTo }) => {
     await page.goto(baseUrl.href, { waitUntil: "networkidle" });
+    await forceEnglish();
     await page.getByRole("button", { name: "Pick my meal", exact: true }).waitFor();
     await waitTo(0.32);
     await page.mouse.wheel(0, 180);

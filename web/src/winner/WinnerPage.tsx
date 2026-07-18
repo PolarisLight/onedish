@@ -27,13 +27,12 @@ export function WinnerPage() {
   const [exhausted, setExhausted] = useState(false);
 
   useEffect(() => {
-    void db.decisionSessions.get(decisionId).then((row) => {
+    void db.decisionSessions.get(decisionId).then(async (row) => {
       if (!row) return;
       try {
         const parsed = parseStoredDecision(row.payload);
-        setRecord(parsed);
         if (parsed.schema_version === "recommendation.v2") {
-          void saveHistoryEvent({
+          await saveHistoryEvent({
             id: `accepted-${decisionId}`,
             occurred_at: parsed.decision.created_at,
             kind: "accepted",
@@ -45,6 +44,7 @@ export function WinnerPage() {
             protein_g: parsed.winner.dish.protein_g.min,
           });
         }
+        setRecord(parsed);
       } catch { setError(t("winner.invalid")); }
     });
   }, [decisionId, t]);

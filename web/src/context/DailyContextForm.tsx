@@ -82,10 +82,7 @@ export function DailyContextForm({
         <div className="field">
           <label htmlFor="profile-duration">{t("profile.duration")}</label>
           <select id="profile-duration" value={profile.duration_minutes} onChange={(event) => setProfile({ ...profile, duration_minutes: Number(event.target.value) })}>
-            <option value="15">15 min</option>
-            <option value="20">20 min</option>
-            <option value="30">30 min</option>
-            <option value="45">45 min</option>
+            {[15, 20, 30, 45].map((minutes) => <option key={minutes} value={minutes}>{t("profile.minutes", { count: minutes })}</option>)}
           </select>
         </div>
         <div className="field span-two">

@@ -66,7 +66,7 @@ export function HomePage() {
 
   const mealPeriod = inferMealPeriod(new Date());
   const periodLabel = t(`meal.${mealPeriod}`);
-  const summary = `${periodLabel} · ${formatMoney(profile.budget_minor, locale)} · ${profile.duration_minutes} min`;
+  const summary = `${periodLabel} · ${formatMoney(profile.budget_minor, locale)} · ${t("profile.minutes", { count: profile.duration_minutes })}`;
 
   return (
     <main className="home one-tap-home">

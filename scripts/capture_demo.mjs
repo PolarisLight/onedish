@@ -73,7 +73,7 @@ try {
     viewport: { width: 390, height: 844 },
     deviceScaleFactor: 2,
     locale: "en-US",
-    recordVideo: { dir: captureDir, size: { width: 780, height: 1688 } },
+    recordVideo: { dir: captureDir, size: { width: 390, height: 844 } },
   });
   const page = await context.newPage();
   const video = page.video();

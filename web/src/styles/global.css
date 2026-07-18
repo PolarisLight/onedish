@@ -166,6 +166,25 @@ details.advanced summary { cursor: pointer; font-weight: 750; }
 .orbit-stat { min-height: 138px; padding: 20px; border-radius: var(--radius-card); background: var(--surface); }
 .orbit-stat strong { display: block; font: 950 2.7rem/.9 var(--font-display); letter-spacing: -.06em; }
 .orbit-stat span { display: block; margin-top: 12px; color: var(--ink-soft); font-size: .82rem; }
+.orbit-heading-row { display: flex; align-items: end; justify-content: space-between; gap: 24px; }
+.orbit-heading-row .page-title { max-width: 700px; }
+.orbit-range { display: inline-flex; flex: 0 0 auto; padding: 4px; border: 1px solid var(--line); border-radius: var(--radius-pill); background: var(--surface); }
+.orbit-range button { min-height: 38px; padding: 0 14px; border: 0; border-radius: var(--radius-pill); color: var(--ink-soft); background: transparent; font: 800 .72rem/1 var(--font-mono); }
+.orbit-range button[aria-pressed="true"] { color: var(--accent-ink); background: var(--accent); }
+.taste-orbit { max-width: 780px; margin: 20px auto 0; }
+.orbit-stage { --orbit-angle: 0deg; position: relative; width: min(100%, 590px); aspect-ratio: 1; margin: 0 auto; contain: layout paint; }
+.orbit-wheel, .orbit-nodes { position: absolute; inset: 8%; transform: rotate(var(--orbit-angle)); will-change: transform; }
+.orbit-wheel { border: 1px dashed var(--line); border-radius: 50%; }
+.orbit-wheel span { position: absolute; border: 1px dashed var(--line); border-radius: 50%; }
+.orbit-wheel span:first-child { inset: 18%; }.orbit-wheel span:last-child { inset: 34%; }
+.orbit-signal { position: absolute; display: grid; place-items: center; transform: translate(-50%, -50%) scale(1); border: 3px solid var(--canvas); border-radius: 50%; color: white; background: var(--signal); box-shadow: 0 12px 30px color-mix(in srgb, var(--ink) 24%, transparent); transition: transform .65s cubic-bezier(.16,1,.3,1), opacity .5s ease; }
+.orbit-signal span { transform: rotate(calc(-1 * var(--orbit-angle))); font: 850 .72rem/1 var(--font-mono); text-transform: uppercase; will-change: transform; }
+.orbit-stage.has-focus .orbit-signal:not(.is-selected) { transform: translate(-50%, -50%) scale(.88); opacity: .42 !important; }
+.orbit-signal.is-selected { transform: translate(-50%, -50%) scale(1.16); }
+.orbit-you { position: absolute; z-index: 3; left: 50%; top: 50%; width: 78px; height: 78px; transform: translate(-50%, -50%); border: 0; border-radius: 50%; color: var(--accent-ink); background: var(--accent); box-shadow: 0 0 0 14px color-mix(in srgb, var(--accent) 12%, transparent); font: 900 .75rem/1 var(--font-mono); }
+.orbit-detail { min-height: 82px; display: grid; gap: 6px; margin-top: -12px; padding: 16px 18px; border: 1px solid var(--line); border-radius: var(--radius-control); background: var(--surface); }
+.orbit-detail strong { color: var(--signal); text-transform: uppercase; }.orbit-detail span,.orbit-detail small { color: var(--ink-soft); }
+.orbit-empty { max-width: 620px; margin: 70px auto; padding: 30px; border: 1px solid var(--line); border-radius: var(--radius-card); background: var(--surface); text-align: center; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
 @media (max-width: 767px) {
@@ -231,6 +250,14 @@ details.advanced summary { cursor: pointer; font-weight: 750; }
   .nutrition { gap: 7px; }
   .metric strong { font-size: .98rem; }
   .orbit-grid { margin-top: 12px; }
+  .orbit-page { padding-top: 18px; }
+  .orbit-heading-row { align-items: flex-start; }
+  .orbit-heading-row .page-title { margin-top: 8px; font-size: clamp(2.7rem, 13vw, 4rem); }
+  .orbit-range { margin-top: 4px; }
+  .orbit-range button { min-width: 52px; padding: 0 8px; }
+  .taste-orbit { margin-top: 8px; }
+  .orbit-stage { width: min(100%, 390px); }
+  .orbit-detail { min-height: 70px; margin-top: -4px; }
   .sheet-backdrop { align-items: end; }
   .profile-sheet { width: 100%; height: min(88dvh, 760px); border-radius: 26px 26px 0 0; padding: 26px 18px calc(24px + env(safe-area-inset-bottom)); animation-name: sheet-up; }
   @keyframes sheet-up { from { transform: translateY(28px); opacity: 0; } }

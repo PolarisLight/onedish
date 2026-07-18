@@ -1,11 +1,13 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import record from "../public/demo/day1.json";
-import { saveDecision, resetLocalData } from "../src/db/db";
+import { db, saveDecision, resetLocalData } from "../src/db/db";
 import { EliminationPage } from "../src/elimination/EliminationPage";
+import { LocaleProvider } from "../src/i18n/locale";
 
-async function renderDecision() {
+async function renderDecision(locale: "en" | "zh-CN" = "en") {
   await resetLocalData();
+  await db.settings.put({ key: "locale.v2", value: locale });
   await saveDecision({ id: record.decision.decision_id, stateId: "day1", payload: record });
   const router = createMemoryRouter(
     [
@@ -15,7 +17,7 @@ async function renderDecision() {
     ],
     { initialEntries: [`/choose/${record.decision.decision_id}`] },
   );
-  await act(async () => { render(<RouterProvider router={router} />); });
+  await act(async () => { render(<LocaleProvider><RouterProvider router={router} /></LocaleProvider>); });
 }
 
 test("elimination can finish inside one viewport", async () => {
@@ -30,7 +32,14 @@ test("elimination can finish inside one viewport", async () => {
 test("missing stored decision has a start-over recovery", async () => {
   await resetLocalData();
   const router = createMemoryRouter([{ path: "/choose/:decisionId", element: <EliminationPage /> }, { path: "/", element: <p>Home</p> }], { initialEntries: ["/choose/missing"] });
-  await act(async () => { render(<RouterProvider router={router} />); });
+  await act(async () => { render(<LocaleProvider><RouterProvider router={router} /></LocaleProvider>); });
   expect(await screen.findByRole("heading", { name: "Decision unavailable" })).toBeVisible();
   expect(screen.getByRole("button", { name: "Start again" })).toBeVisible();
+});
+
+test("elimination follows the active Chinese interface locale", async () => {
+  await renderDecision("zh-CN");
+  expect(await screen.findByRole("heading", { name: "从九十到唯一。" })).toBeVisible();
+  fireEvent.click(screen.getByRole("button", { name: "跳过" }));
+  expect(screen.getByRole("button", { name: "看看你的餐食" })).toBeVisible();
 });

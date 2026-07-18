@@ -13,10 +13,12 @@ import { ProvenanceChip } from "../shared/ProvenanceChip";
 import { RejectionSheet } from "./RejectionSheet";
 import { WinnerActions } from "./WinnerActions";
 import { WinnerEvidence } from "./WinnerEvidence";
+import { useLocale } from "../i18n/locale";
 
 export function WinnerPage() {
   const { decisionId = "" } = useParams();
   const navigate = useNavigate();
+  const { locale, t } = useLocale();
   const [record, setRecord] = useState<StoredDecision | null>(null);
   const [rejectionOpen, setRejectionOpen] = useState(false);
   const [showReserve, setShowReserve] = useState(false);
@@ -43,10 +45,10 @@ export function WinnerPage() {
             protein_g: parsed.winner.dish.protein_g.min,
           });
         }
-      } catch { setError("This decision record is invalid."); }
+      } catch { setError(t("winner.invalid")); }
     });
-  }, [decisionId]);
-  if (!record) return <main className="page"><p>Loading the winner...</p></main>;
+  }, [decisionId, t]);
+  if (!record) return <main className="page"><p>{t("winner.loading")}</p></main>;
   const currentRecord = record;
   const candidate = showReserve && currentRecord.reserve ? currentRecord.reserve : currentRecord.winner;
   const live = currentRecord.schema_version === "recommendation.v2";
@@ -76,8 +78,8 @@ export function WinnerPage() {
       setError(caught instanceof RecommendationExhausted
         ? ""
         : caught instanceof Error
-          ? `We could not pick another dish: ${caught.message}`
-          : "We could not pick another dish. Try again.");
+          ? t("winner.retryErrorDetail", { message: caught.message })
+          : t("winner.retryError"));
     } finally {
       setRetrying(false);
     }
@@ -108,7 +110,7 @@ export function WinnerPage() {
     retrying={retrying}
     error={error}
     exhausted={exhausted}
-    locale={live && currentRecord.schema_version === "recommendation.v2" ? currentRecord.locale : "en"}
+    locale={locale}
     reasonCodes={live && currentRecord.schema_version === "recommendation.v2" ? currentRecord.winner_reason_codes : []}
     rejectionOpen={rejectionOpen}
     setRejectionOpen={setRejectionOpen}
@@ -120,6 +122,7 @@ export function WinnerPage() {
 }
 
 function WinnerView({ candidate, reserve, canReject, live, retrying, exhausted, error, locale, reasonCodes, rejectionOpen, setRejectionOpen, onReject, onRetry, onEdit, onNearby }: { candidate: Candidate; reserve: boolean; canReject: boolean; live: boolean; retrying: boolean; exhausted: boolean; error: string; locale: "en" | "zh-CN"; reasonCodes: readonly string[]; rejectionOpen: boolean; setRejectionOpen: (value: boolean) => void; onReject: (reason: RejectionReason) => void; onRetry: () => void; onEdit: () => void; onNearby: () => void }) {
+  const { t } = useLocale();
   const { dish, place } = candidate;
   const safeLink = place.order_destination?.startsWith("https://") ? place.order_destination : null;
   const displayPrice = locale === "en" ? dish.price_minor : Math.round(dish.price_minor * 7.2);
@@ -128,22 +131,22 @@ function WinnerView({ candidate, reserve, canReject, live, retrying, exhausted, 
       <div className="winner-grid">
         <div className="winner-media"><img src={`${import.meta.env.BASE_URL}${dish.image.replace(/^\//, "")}`} alt={dish.name} /></div>
         <section className="winner-copy">
-          <p className="hero-kicker">{reserve ? "Your one reserve" : "Your one dish"}</p>
+          <p className="hero-kicker">{reserve ? t("winner.reserve") : t("winner.dish")}</p>
           <p className="restaurant-name">{place.name}</p>
           <h1>{dish.name}</h1>
           <p className="dish-description">{dish.description}</p>
           <div className="nutrition">
-            <div className="metric"><strong>{formatMoney(displayPrice, locale)}</strong><span>menu estimate</span></div>
-            <div className="metric"><strong>{dish.energy_kcal.min}-{dish.energy_kcal.max}</strong><span>estimated kcal</span></div>
-            <div className="metric"><strong>{dish.protein_g.min}-{dish.protein_g.max}g</strong><span>estimated protein</span></div>
+            <div className="metric"><strong>{formatMoney(displayPrice, locale)}</strong><span>{t("winner.menuEstimate")}</span></div>
+            <div className="metric"><strong>{dish.energy_kcal.min}-{dish.energy_kcal.max}</strong><span>{t("winner.kcal")}</span></div>
+            <div className="metric"><strong>{dish.protein_g.min}-{dish.protein_g.max}g</strong><span>{t("winner.protein")}</span></div>
           </div>
           {!live ? <div className="chips">
-            <ProvenanceChip>{place.source_kind === "fixture_place" ? "Fixture place" : "Foursquare place"}</ProvenanceChip>
-            <ProvenanceChip>Fictional demo menu</ProvenanceChip>
-            <ProvenanceChip>Nutrition estimate</ProvenanceChip>
-            <ProvenanceChip>Search link only</ProvenanceChip>
+            <ProvenanceChip>{place.source_kind === "fixture_place" ? t("winner.fixturePlace") : t("winner.foursquarePlace")}</ProvenanceChip>
+            <ProvenanceChip>{t("winner.demoMenu")}</ProvenanceChip>
+            <ProvenanceChip>{t("winner.nutritionEstimate")}</ProvenanceChip>
+            <ProvenanceChip>{t("winner.searchOnly")}</ProvenanceChip>
           </div> : null}
-          {live ? <><WinnerEvidence candidate={candidate} reasonCodes={reasonCodes} locale={locale} /><WinnerActions onRetry={onRetry} onEdit={onEdit} onNearby={onNearby} retrying={retrying} exhausted={exhausted} error={error} /><details className="winner-details"><summary>How this was chosen</summary><p>Deterministic rules compared safety, time, budget, taste, distance, and recent history. Nutrition values are estimates.</p>{safeLink ? <a href={safeLink} target="_blank" rel="noopener noreferrer">Source search link</a> : null}</details></> : <div className="winner-actions">{safeLink ? <a className="primary-button" href={safeLink} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", textDecoration: "none" }}>Search on web</a> : null}{canReject ? <button className="secondary-button" onClick={() => setRejectionOpen(!rejectionOpen)}>Not today</button> : <span className="page-lede">That is the reserve. The session ends here.</span>}</div>}
+          {live ? <><WinnerEvidence candidate={candidate} reasonCodes={reasonCodes} locale={locale} /><WinnerActions onRetry={onRetry} onEdit={onEdit} onNearby={onNearby} retrying={retrying} exhausted={exhausted} error={error} /><details className="winner-details"><summary>{t("winner.how")}</summary><p>{t("winner.howBody")}</p>{safeLink ? <a href={safeLink} target="_blank" rel="noopener noreferrer">{t("winner.source")}</a> : null}</details></> : <div className="winner-actions">{safeLink ? <a className="primary-button" href={safeLink} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", textDecoration: "none" }}>{t("winner.web")}</a> : null}{canReject ? <button className="secondary-button" onClick={() => setRejectionOpen(!rejectionOpen)}>{t("winner.notToday")}</button> : <span className="page-lede">{t("winner.reserveEnd")}</span>}</div>}
           {rejectionOpen ? <RejectionSheet onChoose={onReject} /> : null}
         </section>
       </div>

@@ -1,10 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import { DemoBadge } from "../src/demo/DemoBadge";
 import { parseDemoRecord } from "../src/domain/contracts";
+import { LocaleProvider } from "../src/i18n/locale";
 
 describe("demo boundary", () => {
   it("shows a persistent synthetic data label", () => {
-    render(<DemoBadge />);
+    render(<LocaleProvider><DemoBadge /></LocaleProvider>);
     expect(screen.getByText("Synthetic demo context")).toBeVisible();
   });
 

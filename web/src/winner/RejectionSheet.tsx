@@ -1,19 +1,14 @@
 import { rejectionReasons, type RejectionReason } from "../domain/contracts";
-
-const labels: Record<RejectionReason, string> = {
-  too_heavy: "Too heavy",
-  not_craving: "Not craving it",
-  too_expensive: "Too expensive",
-  had_recently: "Had it recently",
-};
+import { useLocale } from "../i18n/locale";
 
 export function RejectionSheet({ onChoose }: { onChoose: (reason: RejectionReason) => void }) {
+  const { t } = useLocale();
   return (
     <section className="rejection-sheet" aria-labelledby="rejection-title">
-      <h2 id="rejection-title">What missed?</h2>
-      <p className="page-lede">One answer improves future choices. You will see only the reserve.</p>
+      <h2 id="rejection-title">{t("winner.rejectTitle")}</h2>
+      <p className="page-lede">{t("winner.rejectBody")}</p>
       <div className="reason-grid">
-        {rejectionReasons.map((reason) => <button key={reason} onClick={() => onChoose(reason)}>{labels[reason]}</button>)}
+        {rejectionReasons.map((reason) => <button key={reason} onClick={() => onChoose(reason)}>{t(`winner.reject.${reason}`)}</button>)}
       </div>
     </section>
   );

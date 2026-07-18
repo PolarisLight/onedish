@@ -91,7 +91,9 @@ def test_edge_tts_command_uses_natural_voice_and_writes_subtitles() -> None:
     assert "--rate=+1%" in command
     assert "--pitch=-2Hz" in command
     assert "--write-media" in command
+    assert command[command.index("--write-media") + 1] == "voice.mp3"
     assert "--write-subtitles" in command
+    assert command[command.index("--write-subtitles") + 1] == "voice.srt"
     assert "Samantha" not in command
 
 

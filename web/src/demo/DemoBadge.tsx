@@ -1,3 +1,6 @@
+import { useLocale } from "../i18n/locale";
+
 export function DemoBadge() {
-  return <span className="demo-badge">Synthetic demo context</span>;
+  const { t } = useLocale();
+  return <span className="demo-badge">{t("demo.badge")}</span>;
 }

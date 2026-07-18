@@ -17,6 +17,9 @@ button { cursor: pointer; }
 .nav { display: flex; align-items: center; gap: 20px; }
 .nav a { color: var(--ink-soft); text-decoration: none; font-size: .84rem; font-weight: 650; }
 .nav a:hover { color: var(--ink); }
+.locale-switch { display: inline-flex; padding: 3px; border: 1px solid var(--line); border-radius: var(--radius-pill); background: var(--surface); }
+.locale-switch button { min-width: 38px; min-height: 30px; padding: 0 8px; border: 0; border-radius: var(--radius-pill); color: var(--ink-soft); background: transparent; font: 800 .68rem/1 var(--font-mono); }
+.locale-switch button[aria-pressed="true"] { color: var(--accent-ink); background: var(--accent); }
 .mobile-dock { display: none; }
 .demo-badge { display: inline-flex; align-items: center; min-height: 28px; padding: 4px 10px; border: 1px solid color-mix(in srgb, var(--accent) 70%, var(--ink)); border-radius: var(--radius-pill); color: var(--ink); background: color-mix(in srgb, var(--accent) 22%, var(--surface)); font: 700 .68rem/1 var(--font-mono); text-transform: uppercase; letter-spacing: .055em; }
 

@@ -22,7 +22,7 @@ function newProfile(locale: SupportedLocale): UserProfile {
 export function HomePage() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { locale, setLocale } = useLocale();
+  const { locale, setLocale, t } = useLocale();
   const [profile, setProfile] = useState<UserProfile>(() => newProfile(locale));
   const [quickState, setQuickState] = useState<QuickState>(null);
   const [adjusting, setAdjusting] = useState(searchParams.get("adjust") === "1");
@@ -58,44 +58,42 @@ export function HomePage() {
       const record = await startRecommendation({ quickState });
       navigate(`/choose/${record.decision.decision_id}`);
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Could not pick a meal. Try again.");
+      setError(caught instanceof Error ? caught.message : t("home.pickError"));
     } finally {
       setBusy(false);
     }
   }
 
   const mealPeriod = inferMealPeriod(new Date());
-  const periodLabel = locale === "en"
-    ? { breakfast: "Breakfast", lunch: "Lunch", dinner: "Dinner" }[mealPeriod]
-    : { breakfast: "早餐", lunch: "午餐", dinner: "晚餐" }[mealPeriod];
+  const periodLabel = t(`meal.${mealPeriod}`);
   const summary = `${periodLabel} · ${formatMoney(profile.budget_minor, locale)} · ${profile.duration_minutes} min`;
 
   return (
     <main className="home one-tap-home">
       <section className="hero one-tap-hero">
         <div className="hero-copy">
-          <p className="hero-kicker">One decision. No feed.</p>
-          <h1>What should<span>I eat?</span></h1>
+          <p className="hero-kicker">{t("home.kicker")}</p>
+          <h1>{t("home.title.before")}<span>{t("home.title.accent")}</span></h1>
           <p className="context-summary">{summary}</p>
-          <p className="hero-lede">One nearby meal picked from your time, budget, preferences, and recent choices.</p>
-          <div className="quick-states" aria-label="How do you feel?">
+          <p className="hero-lede">{t("home.lede")}</p>
+          <div className="quick-states" aria-label={t("home.feeling")}>
             {([
-              ["light", "Light"],
-              ["hungry", "Hungry"],
-              ["surprise", "Surprise me"],
+              ["light", t("home.light")],
+              ["hungry", t("home.hungry")],
+              ["surprise", t("home.surprise")],
             ] as const).map(([value, label]) => (
               <button key={value} className={quickState === value ? "quick-state selected" : "quick-state"} aria-pressed={quickState === value} onClick={() => setQuickState(quickState === value ? null : value)}>{label}</button>
             ))}
           </div>
           <div className="hero-actions one-tap-actions">
-            <button className="primary-button pick-meal-button" onClick={choose} disabled={busy}>{busy ? "Picking..." : "Pick my meal"}</button>
-            <button ref={adjustButton} className="secondary-button" onClick={() => setAdjusting(true)}>Adjust</button>
+            <button className="primary-button pick-meal-button" onClick={choose} disabled={busy}>{busy ? t("home.picking") : t("home.pick")}</button>
+            <button ref={adjustButton} className="secondary-button" onClick={() => setAdjusting(true)}>{t("home.adjust")}</button>
           </div>
           <p className="home-error" aria-live="polite">{error}</p>
         </div>
-        <div className="hero-visual one-tap-visual" aria-label="OneDish meal preview">
-          <img className="hero-photo" src={`${assetBase}food/ember-bowl-charred-chicken-rice.webp`} alt="A warm rice bowl" fetchPriority="high" />
-          <div className="decision-stamp"><div><strong>1 TAP</strong><small>local, auditable choice</small></div></div>
+        <div className="hero-visual one-tap-visual" aria-label={t("home.preview")}>
+          <img className="hero-photo" src={`${assetBase}food/ember-bowl-charred-chicken-rice.webp`} alt={t("home.previewAlt")} fetchPriority="high" />
+          <div className="decision-stamp"><div><strong>{t("home.tap")}</strong><small>{t("home.tapNote")}</small></div></div>
         </div>
       </section>
       {adjusting ? <ProfileSheet profile={profile} onSave={saveAdjustments} onClose={closeAdjust} /> : null}

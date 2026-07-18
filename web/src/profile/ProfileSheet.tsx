@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { DailyContextForm } from "../context/DailyContextForm";
 import type { UserProfile } from "../recommendation/types";
+import { useLocale } from "../i18n/locale";
 
 export function ProfileSheet({
   profile,
@@ -11,6 +12,7 @@ export function ProfileSheet({
   readonly onSave: (profile: UserProfile) => Promise<void>;
   readonly onClose: () => void;
 }) {
+  const { t } = useLocale();
   useEffect(() => {
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
@@ -24,12 +26,12 @@ export function ProfileSheet({
       <section className="profile-sheet" role="dialog" aria-modal="true" aria-labelledby="profile-sheet-title">
         <header className="sheet-header">
           <div>
-            <p className="hero-kicker">Optional settings</p>
-            <h2 id="profile-sheet-title">Meal preferences</h2>
+            <p className="hero-kicker">{t("profile.kicker")}</p>
+            <h2 id="profile-sheet-title">{t("profile.title")}</h2>
           </div>
-          <button className="sheet-close" aria-label="Close preferences" onClick={onClose}>×</button>
+          <button className="sheet-close" aria-label={t("profile.close")} onClick={onClose}>×</button>
         </header>
-        <p className="sheet-lede">Set these once. OneDish remembers them on this device.</p>
+        <p className="sheet-lede">{t("profile.lede")}</p>
         <DailyContextForm initialProfile={profile} onSubmit={onSave} onCancel={onClose} />
       </section>
     </div>

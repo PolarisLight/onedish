@@ -10,10 +10,12 @@ import {
 import { db } from "../db/db";
 import type { SupportedLocale } from "../recommendation/types";
 import { normalizeLocale } from "./locale-utils";
+import { translate, type MessageKey, type MessageParams } from "./messages";
 
 interface LocaleContextValue {
   readonly locale: SupportedLocale;
   readonly setLocale: (locale: SupportedLocale) => Promise<void>;
+  readonly t: (key: MessageKey, params?: MessageParams) => string;
 }
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
@@ -29,12 +31,17 @@ export function LocaleProvider({ children }: { readonly children: ReactNode }) {
     });
   }, []);
 
+  useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
+
   const setLocale = useCallback(async (nextLocale: SupportedLocale) => {
     setLocaleState(nextLocale);
     await db.settings.put({ key: "locale.v2", value: nextLocale });
   }, []);
 
-  const value = useMemo(() => ({ locale, setLocale }), [locale, setLocale]);
+  const t = useCallback((key: MessageKey, params?: MessageParams) => translate(locale, key, params), [locale]);
+  const value = useMemo(() => ({ locale, setLocale, t }), [locale, setLocale, t]);
   return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>;
 }
 

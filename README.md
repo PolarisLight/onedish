@@ -3,7 +3,7 @@
 **Stop browsing. Eat this.** OneDish turns nearby meal options into one auditable answer, using your
 budget, safety constraints, optional daily context, and recent meal history.
 
-![OneDish winner card](docs/assets/onedish-hero.png)
+![OneDish — The right meal, right now](docs/assets/onedish-devpost-thumbnail.png)
 
 The default browser experience needs no API key and works offline after its first load. It makes a
 fresh deterministic choice from ten fictional restaurants and ninety versioned demo dishes, using

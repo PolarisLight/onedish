@@ -1,7 +1,7 @@
 # OneDish Bilingual Data, Radial Motion, and Product Copy Design
 
-**Date:** 2026-07-18  
-**Status:** Approved in conversation; pending written-spec review  
+**Date:** 2026-07-18
+**Status:** Approved in conversation; pending written-spec review
 **Scope:** Dish localization, Taste Orbit and Privacy geometry/motion, and customer-facing copy
 
 ## Problem

@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { tagMessageKey } from "../i18n/dish-localization";
 import { useLocale } from "../i18n/locale";
-import { pointOnOrbit, shortestRotation, type OrbitNode } from "./orbit-model";
+import {
+  RADIAL_TRACKS,
+  focusRotation,
+  polarPoint,
+} from "../shared/radial-geometry";
+import type { OrbitNode } from "./orbit-model";
 
 interface FocusAnimation { readonly from: number; readonly to: number; readonly startedAt: number }
 
@@ -19,6 +25,7 @@ export function TasteOrbit({ nodes }: { readonly nodes: readonly OrbitNode[] }) 
   }, []);
 
   useEffect(() => {
+    if (reducedMotion) return;
     let frameId = 0;
     let last = performance.now();
     const frame = (now: number) => {
@@ -26,11 +33,11 @@ export function TasteOrbit({ nodes }: { readonly nodes: readonly OrbitNode[] }) 
       last = now;
       const focus = focusRef.current;
       if (focus) {
-        const progress = Math.min(1, (now - focus.startedAt) / 1250);
-        const eased = 1 - Math.pow(1 - progress, 4);
+        const progress = Math.min(1, (now - focus.startedAt) / 650);
+        const eased = 1 - Math.pow(1 - progress, 3);
         writeAngle(focus.from + (focus.to - focus.from) * eased);
         if (progress === 1) focusRef.current = null;
-      } else if (!selectedRef.current && !reducedMotion && document.visibilityState !== "hidden") {
+      } else if (!selectedRef.current && document.visibilityState !== "hidden") {
         writeAngle(angleRef.current + delta * (360 / 90_000));
       }
       frameId = requestAnimationFrame(frame);
@@ -42,7 +49,7 @@ export function TasteOrbit({ nodes }: { readonly nodes: readonly OrbitNode[] }) 
   function focus(node: OrbitNode) {
     selectedRef.current = node.id;
     setSelectedId(node.id);
-    const target = angleRef.current + shortestRotation(angleRef.current, -90 - node.angleDeg);
+    const target = focusRotation(angleRef.current, node.angleDeg);
     if (reducedMotion) writeAngle(target);
     else focusRef.current = { from: angleRef.current, to: target, startedAt: performance.now() };
   }
@@ -57,27 +64,51 @@ export function TasteOrbit({ nodes }: { readonly nodes: readonly OrbitNode[] }) 
   return (
     <section className="taste-orbit" aria-label={t("nav.orbit")}>
       <div ref={stageRef} className={selected ? "orbit-stage has-focus" : "orbit-stage"}>
-        <div className="orbit-wheel" aria-hidden="true"><span /><span /></div>
-        <div className="orbit-nodes">
+        <svg className="radial-tracks" viewBox="0 0 100 100" aria-hidden="true">
+          {RADIAL_TRACKS.map((radius) => (
+            <circle key={radius} cx="50" cy="50" r={radius * 100} />
+          ))}
+        </svg>
+        <div className="orbit-node-layer">
           {nodes.map((node) => {
-            const point = pointOnOrbit(node.angleDeg, node.distance, 300, 300);
+            const trackRadius = RADIAL_TRACKS[node.trackIndex]!;
+            const point = polarPoint(node.angleDeg, trackRadius);
             const active = node.id === selectedId;
-            return <button
-              key={node.id}
-              type="button"
-              className={active ? "orbit-signal is-selected" : "orbit-signal"}
-              style={{ left: `${point.x / 6}%`, top: `${point.y / 6}%`, width: node.radius * 2, height: node.radius * 2, opacity: .55 + node.intensity * .45 }}
-              aria-label={t(node.count === 1 ? "orbit.nodeOne" : "orbit.nodeMany", { label: node.label, count: node.count })}
-              aria-pressed={active}
-              data-focus-target={active ? "top" : undefined}
-              onClick={() => focus(node)}
-            ><span>{node.label}</span></button>;
+            const labelKey = tagMessageKey(node.label);
+            const label = labelKey ? t(labelKey) : node.label;
+            return (
+              <div
+                key={node.id}
+                className="radial-node-position"
+                data-radial-position
+                data-track-radius={trackRadius}
+                data-node-angle={node.angleDeg}
+                style={{ left: `${point.x * 100}%`, top: `${point.y * 100}%` }}
+              >
+                <button
+                  type="button"
+                  className={active ? "orbit-signal is-selected" : "orbit-signal"}
+                  style={{
+                    width: node.radius * 2,
+                    height: node.radius * 2,
+                    opacity: .55 + node.intensity * .45,
+                  }}
+                  aria-label={t(
+                    node.count === 1 ? "orbit.nodeOne" : "orbit.nodeMany",
+                    { label, count: node.count },
+                  )}
+                  aria-pressed={active}
+                  data-focus-target={active ? "top" : undefined}
+                  onClick={() => focus(node)}
+                ><span>{label}</span></button>
+              </div>
+            );
           })}
         </div>
         <button type="button" className="orbit-you" onClick={returnToCruise}>{t("orbit.you")}</button>
       </div>
       <div className="orbit-detail" aria-live="polite">
-        {selected ? <><strong>{selected.label}</strong><span>{t("orbit.accepted", { count: selected.acceptedCount })} · {t("orbit.rejected", { count: selected.rejectedCount })}</span><small>{t("orbit.returnHint")}</small></> : <><strong>{t("orbit.you")}</strong><span>{t("orbit.focusHint")}</span></>}
+        {selected ? <><strong>{tagMessageKey(selected.label) ? t(tagMessageKey(selected.label)!) : selected.label}</strong><span>{t("orbit.accepted", { count: selected.acceptedCount })} · {t("orbit.rejected", { count: selected.rejectedCount })}</span><small>{t("orbit.returnHint")}</small></> : <><strong>{t("orbit.you")}</strong><span>{t("orbit.focusHint")}</span></>}
       </div>
     </section>
   );

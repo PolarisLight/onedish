@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { db, type HistoryEventRow } from "../db/db";
 import { useLocale } from "../i18n/locale";
+import { tagMessageKey } from "../i18n/dish-localization";
 import { TasteOrbit } from "./TasteOrbit";
 import { makeOrbitNodes } from "./orbit-model";
 
@@ -27,7 +28,7 @@ export function TasteOrbitPage() {
       </div>
       <p className="page-lede">{t("orbit.lede")}</p>
       {loaded && nodes.length === 0 ? <section className="orbit-empty"><h2>{t("orbit.emptyTitle")}</h2><p>{t("orbit.emptyBody")}</p></section> : null}
-      {nodes.length ? <><TasteOrbit nodes={nodes} /><details className="advanced"><summary>{t("orbit.summary")}</summary><ul>{nodes.map((node) => <li key={node.id}>{t(node.count === 1 ? "orbit.nodeOne" : "orbit.nodeMany", { label: node.label, count: node.count })}</li>)}</ul></details></> : null}
+      {nodes.length ? <><TasteOrbit nodes={nodes} /><details className="advanced"><summary>{t("orbit.summary")}</summary><ul>{nodes.map((node) => { const key = tagMessageKey(node.label); return <li key={node.id}>{t(node.count === 1 ? "orbit.nodeOne" : "orbit.nodeMany", { label: key ? t(key) : node.label, count: node.count })}</li>; })}</ul></details></> : null}
     </main>
   );
 }

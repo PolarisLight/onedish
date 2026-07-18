@@ -10,7 +10,6 @@ export interface OrbitNode {
   readonly lastSeenAt: string;
   readonly angleDeg: number;
   readonly trackIndex: number;
-  readonly distance: number;
   readonly radius: number;
   readonly intensity: number;
 }
@@ -72,7 +71,6 @@ export function makeOrbitNodes(events: readonly HistoryEventRow[], days: 7 | 30,
         ...group,
         angleDeg: hash(id) % 360,
         trackIndex: hash(id) % RADIAL_TRACKS.length,
-        distance: clamp(218 - group.count * 20, 118, 208),
         radius: clamp(28 + group.count * 9, 36, 72),
         intensity: clamp(1 - recencyDays / days, .28, 1),
       };

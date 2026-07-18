@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
-import { resetLocalData, saveHistoryEvent } from "../src/db/db";
+import { db, resetLocalData, saveHistoryEvent } from "../src/db/db";
 import { TasteOrbitPage } from "../src/history/TasteOrbitPage";
 import { LocaleProvider } from "../src/i18n/locale";
 
@@ -29,6 +29,34 @@ test("focus persists until YOU returns to natural rotation", async () => {
   expect(warm).toHaveAttribute("data-focus-target", "top");
   fireEvent.click(screen.getByRole("button", { name: "YOU" }));
   expect(warm).toHaveAttribute("aria-pressed", "false");
+});
+
+test("renders every signal on its assigned shared track", async () => {
+  await saveHistoryEvent({
+    id: "spicy",
+    occurred_at: new Date().toISOString(),
+    kind: "accepted",
+    taste_tags: ["spicy"],
+  });
+  await renderOrbit();
+  const node = await screen.findByRole("button", { name: /spicy, 1 signal/i });
+  expect(node.closest("[data-radial-position]")).toHaveAttribute(
+    "data-track-radius",
+    expect.stringMatching(/^0\.(22|32|42)$/),
+  );
+});
+
+test("localizes canonical tags in the Chinese interface", async () => {
+  await db.settings.put({ key: "locale.v2", value: "zh-CN" });
+  await saveHistoryEvent({
+    id: "spicy",
+    occurred_at: new Date().toISOString(),
+    kind: "accepted",
+    taste_tags: ["spicy"],
+  });
+  await renderOrbit();
+  expect(await screen.findByRole("button", { name: /香辣/ })).toBeVisible();
+  expect(screen.queryByText("SPICY")).not.toBeInTheDocument();
 });
 
 test("shows a truthful empty state instead of demo history", async () => {

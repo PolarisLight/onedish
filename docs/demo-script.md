@@ -54,6 +54,11 @@ the ignored `docs/demo/.build/` directory, build the final master with:
 backend/.venv/bin/python scripts/build_demo_video.py --reuse-capture --reuse-audio --output docs/demo/onedish-demo.mp4
 ```
 
+The build atomically publishes `docs/demo/onedish-demo.manifest.json` after the
+master succeeds. That tracked manifest binds the delivered MP4 to the exact
+captions, capture timeline, narration source, byte sizes, SHA-256 digests, and
+media invariants used for this package.
+
 Validate the delivery contract with:
 
 ```bash

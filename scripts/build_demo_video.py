@@ -19,11 +19,25 @@ from pathlib import Path
 from typing import Iterator
 
 try:
-    from .burn_captions import burn_captions
+    from .burn_captions import burn_captions, stable_h264_options
     from .demo_video_model import load_capture_timeline, load_scenes
+    from .validate_demo_video import (
+        build_delivery_manifest,
+        manifest_path_for,
+        probe_invariants,
+        probe_media,
+        write_delivery_manifest,
+    )
 except ImportError:  # Direct invocation: python scripts/build_demo_video.py
-    from burn_captions import burn_captions
+    from burn_captions import burn_captions, stable_h264_options
     from demo_video_model import load_capture_timeline, load_scenes
+    from validate_demo_video import (
+        build_delivery_manifest,
+        manifest_path_for,
+        probe_invariants,
+        probe_media,
+        write_delivery_manifest,
+    )
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -39,6 +53,11 @@ MUSIC_PATH = WORK / "music-bed.wav"
 DEFAULT_OUTPUT = DEMO / "onedish-demo.mp4"
 SCENE_ORDER = ("home", "context", "elimination", "winner", "orbit", "privacy", "close")
 HOLD_FRAME_OFFSET = 0.25
+VIDEO_WIDTH = 1920
+PHONE_CONTENT_WIDTH = 370
+PHONE_CONTENT_HEIGHT = 800
+PHONE_BORDER = 14
+PHONE_TOP = 20
 CAPTION_TIMESTAMP = re.compile(
     r"^(\d{2}):(\d{2}):(\d{2}),(\d{3}) --> "
     r"(\d{2}):(\d{2}):(\d{2}),(\d{3})$"
@@ -93,6 +112,13 @@ def scene_source_filter(mode: str, length: float) -> str:
             f"trim=duration={length:.3f},split=2[bg][fg];"
         )
     raise ValueError(f"Unknown scene visual mode: {mode}")
+
+
+def phone_rect() -> tuple[int, int, int, int]:
+    width = PHONE_CONTENT_WIDTH + 2 * PHONE_BORDER
+    height = PHONE_CONTENT_HEIGHT + 2 * PHONE_BORDER
+    left = (VIDEO_WIDTH - width) // 2
+    return (left, PHONE_TOP, left + width, PHONE_TOP + height)
 
 
 def stamp(seconds: float) -> str:
@@ -189,10 +215,13 @@ def _extract_scene(
         "[bg]scale=1920:1080:force_original_aspect_ratio=increase,"
         "crop=1920:1080,boxblur=luma_radius=38:luma_power=2,"
         "eq=brightness=-0.38:saturation=0.72,vignette=PI/5[back];"
-        "[fg]scale=438:948:flags=lanczos,setsar=1,"
-        "pad=466:976:14:14:color=0x080a08,"
+        f"[fg]scale={PHONE_CONTENT_WIDTH}:{PHONE_CONTENT_HEIGHT}:flags=lanczos,setsar=1,"
+        f"pad={PHONE_CONTENT_WIDTH + 2 * PHONE_BORDER}:"
+        f"{PHONE_CONTENT_HEIGHT + 2 * PHONE_BORDER}:"
+        f"{PHONE_BORDER}:{PHONE_BORDER}:color=0x080a08,"
         "drawbox=x=0:y=0:w=iw:h=ih:color=0x596154:t=2[phone];"
-        "[back][phone]overlay=(W-w)/2:(H-h)/2:format=auto,format=yuv420p[out]"
+        f"[back][phone]overlay=(W-w)/2:{PHONE_TOP}:"
+        "format=auto,format=yuv420p[out]"
     )
     run(
         "ffmpeg",
@@ -221,6 +250,7 @@ def _extract_scene(
         "18",
         "-pix_fmt",
         "yuv420p",
+        *stable_h264_options(),
         str(output),
     )
 
@@ -475,6 +505,15 @@ def build(output: Path) -> float:
             raise RuntimeError(f"Unexpected demo duration: {final_duration:.2f}s")
         _publish_copy(merged_srt, WORK / "captions.srt")
         os.replace(staged_master, output)
+        probe = probe_media(output)
+        manifest = build_delivery_manifest(
+            output,
+            WORK / "captions.srt",
+            CAPTURE_TIMELINE_PATH,
+            NARRATION_PATH,
+            probe_invariants(probe),
+        )
+        write_delivery_manifest(manifest_path_for(output), manifest)
         return final_duration
 
 

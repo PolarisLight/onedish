@@ -1,0 +1,33 @@
+{
+  "artifacts": {
+    "captions": {
+      "filename": "captions.srt",
+      "sha256": "96128a6e34a3027cb1f0fda6d6b18165b270076cbacd568d0faa30786119c270",
+      "size_bytes": 3002
+    },
+    "capture_timeline": {
+      "filename": "capture-timeline.json",
+      "sha256": "e49cd2da315d345623a47dbf4158a78369e02cce37735382a26656dee4b7df09",
+      "size_bytes": 592
+    },
+    "master": {
+      "filename": "onedish-demo.mp4",
+      "sha256": "ff3c4ff53ddd866c9d8935a245937c43dfe5e63650dd1e8d8049a47a2a48e8f9",
+      "size_bytes": 36564150
+    },
+    "narration": {
+      "filename": "narration.json",
+      "sha256": "6185e4792a4f058550f2edfdc4223946ab08348dea9105522b31a3660c550489",
+      "size_bytes": 2893
+    }
+  },
+  "expected_media": {
+    "audio_codec": "aac",
+    "audio_sample_rate": 48000,
+    "duration_ms": 128968,
+    "height": 1080,
+    "video_codec": "h264",
+    "width": 1920
+  },
+  "schema_version": 1
+}

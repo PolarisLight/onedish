@@ -5,6 +5,7 @@ import subprocess
 import sys
 
 import pytest
+from PIL import Image, ImageChops, ImageStat
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
@@ -20,6 +21,7 @@ import scripts.synthesize_narration as narration
 import scripts.generate_demo_bed as bed
 import scripts.build_demo_video as demo_builder
 import scripts.burn_captions as caption_burner
+import scripts.validate_demo_video as validator
 from scripts.synthesize_narration import edge_tts_command, scene_stem
 from scripts.generate_demo_bed import music_filter, validate_duration
 from scripts.build_demo_video import (
@@ -41,6 +43,17 @@ VALID_CAPTURE_SCENES = [
         ["home", "context", "elimination", "winner", "orbit", "privacy", "close"]
     )
 ]
+
+
+def write_matching_captions(path: Path, narration_path: Path = NARRATION_PATH) -> None:
+    scenes = load_scenes(narration_path)
+    blocks = []
+    for index, scene in enumerate(scenes, start=1):
+        blocks.append(
+            f"{index}\n00:00:{index - 1:02},000 --> 00:00:{index:02},000\n"
+            f"{scene.text}\n"
+        )
+    path.write_text("\n".join(blocks), encoding="utf-8")
 
 
 def test_probe_requires_demo_delivery_contract() -> None:
@@ -87,12 +100,7 @@ def test_delivery_artifacts_require_english_complete_timeline_and_safe_copy(
     tmp_path: Path,
 ) -> None:
     captions = tmp_path / "captions.srt"
-    captions.write_text(
-        "1\n00:00:00,000 --> 00:00:02,000\n"
-        "Food apps don't solve indecision.\n\n"
-        "2\n00:02:00,000 --> 00:02:02,000\nstop browsing, and eat this.\n",
-        encoding="utf-8",
-    )
+    write_matching_captions(captions)
     timeline = write_capture_timeline(tmp_path)
     narration_path = tmp_path / "narration.json"
     narration_path.write_text(NARRATION_PATH.read_text(encoding="utf-8"), encoding="utf-8")
@@ -111,12 +119,106 @@ def test_delivery_artifacts_require_english_complete_timeline_and_safe_copy(
     )
 
     errors = validate_delivery_artifacts(captions, timeline, narration_path)
-    assert "captions must contain the opening phrase" in errors
-    assert "captions must contain the closing phrase" in errors
-    assert "capture timeline language must be en" in errors
-    assert "capture timeline must contain all seven scenes in order" in errors
+    assert "captions are malformed" in " ".join(errors)
+    assert "capture timeline" in " ".join(errors)
+    assert "narration must contain all seven scenes in order" in errors
     assert "narration contains forbidden phrase: future app" in errors
     assert "narration must not contain Chinese characters" in errors
+
+
+def test_delivery_artifacts_reject_caption_transcript_drift_and_cjk(
+    tmp_path: Path,
+) -> None:
+    captions = tmp_path / "captions.srt"
+    write_matching_captions(captions)
+    captions.write_text(
+        captions.read_text(encoding="utf-8").replace(
+            "They multiply it.", "They multiply it. 伪造文案"
+        ),
+        encoding="utf-8",
+    )
+    timeline = write_capture_timeline(tmp_path)
+
+    errors = validate_delivery_artifacts(captions, timeline, NARRATION_PATH)
+
+    assert "captions must not contain Chinese characters" in errors
+    assert "caption transcript must exactly match narration" in errors
+
+
+def test_delivery_artifacts_reject_malformed_srt_and_invalid_timeline(
+    tmp_path: Path,
+) -> None:
+    captions = tmp_path / "captions.srt"
+    captions.write_text(
+        "1\n00:00:00.000 --> 00:00:01,000\nMalformed timestamp\n",
+        encoding="utf-8",
+    )
+    scenes = [dict(scene) for scene in VALID_CAPTURE_SCENES]
+    scenes[0]["start"] = "zero"
+    timeline = write_capture_timeline(tmp_path, scenes=scenes)
+
+    errors = validate_delivery_artifacts(captions, timeline, NARRATION_PATH)
+
+    assert any(error.startswith("captions are malformed") for error in errors)
+    assert any("timestamps must be finite numbers" in error for error in errors)
+
+
+def test_delivery_manifest_binds_validator_to_the_supplied_master(
+    tmp_path: Path,
+) -> None:
+    master = tmp_path / "onedish-demo.mp4"
+    captions = tmp_path / "captions.srt"
+    timeline = write_capture_timeline(tmp_path)
+    narration_path = tmp_path / "narration.json"
+    master.write_bytes(b"real encoded master")
+    write_matching_captions(captions)
+    narration_path.write_text(NARRATION_PATH.read_text(encoding="utf-8"), encoding="utf-8")
+    manifest_path = tmp_path / "onedish-demo.manifest.json"
+    manifest = validator.build_delivery_manifest(
+        master,
+        captions,
+        timeline,
+        narration_path,
+        {"duration_ms": 128_968, "width": 1920, "height": 1080},
+    )
+    validator.write_delivery_manifest(manifest_path, manifest)
+
+    assert validator.validate_delivery_manifest(
+        manifest_path, master, captions, timeline, narration_path
+    ) == []
+
+    master.write_bytes(b"black replacement master")
+    errors = validator.validate_delivery_manifest(
+        manifest_path, master, captions, timeline, narration_path
+    )
+    assert "master SHA-256 does not match delivery manifest" in errors
+
+
+def test_delivery_manifest_publication_is_reproducible_and_atomic(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    path = tmp_path / "delivery.manifest.json"
+    path.write_text('{"accepted":true}\n', encoding="utf-8")
+    manifest = {"schema_version": 1, "artifacts": {"master": {"size_bytes": 7}}}
+    real_replace = os.replace
+    published: list[Path] = []
+
+    def fail_publish(source: Path, destination: Path) -> None:
+        published.append(Path(source))
+        raise OSError("injected publication failure")
+
+    monkeypatch.setattr(os, "replace", fail_publish)
+    with pytest.raises(OSError, match="injected"):
+        validator.write_delivery_manifest(path, manifest)
+
+    assert path.read_text(encoding="utf-8") == '{"accepted":true}\n'
+    assert len(published) == 1
+    assert not published[0].exists()
+    monkeypatch.setattr(os, "replace", real_replace)
+    validator.write_delivery_manifest(path, manifest)
+    first = path.read_bytes()
+    validator.write_delivery_manifest(path, manifest)
+    assert path.read_bytes() == first
 
 
 def test_scene_duration_includes_pause_and_visual_guard() -> None:
@@ -150,6 +252,59 @@ def test_master_encoding_places_a_seekable_keyframe_every_second() -> None:
     assert options[options.index("-g") + 1] == "30"
     assert options[options.index("-keyint_min") + 1] == "30"
     assert options[options.index("-sc_threshold") + 1] == "0"
+
+
+def test_close_hold_freezes_a_moving_long_gop_source_and_remains_seekable(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "moving-long-gop.mp4"
+    held = tmp_path / "held.mp4"
+    subprocess.run(
+        [
+            "ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
+            "-f", "lavfi", "-i", "testsrc2=size=438x948:rate=30:duration=4",
+            "-c:v", "libx264", "-g", "120", "-keyint_min", "120",
+            "-sc_threshold", "0", "-pix_fmt", "yuv420p", str(source),
+        ],
+        check=True,
+    )
+
+    demo_builder._extract_scene(source, 0.5, 2.0, held, mode="hold")
+
+    keyframes = subprocess.check_output(
+        [
+            "ffprobe", "-v", "error", "-skip_frame", "nokey",
+            "-select_streams", "v:0", "-show_entries", "frame=best_effort_timestamp_time",
+            "-of", "csv=p=0", str(held),
+        ],
+        text=True,
+    ).replace(",", "").splitlines()
+    assert keyframes[:2] == ["0.000000", "1.000000"]
+
+    frames: list[Image.Image] = []
+    for index, timestamp in enumerate((0.1, 1.0, 1.9)):
+        frame = tmp_path / f"seek-{index}.png"
+        subprocess.run(
+            [
+                "ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
+                "-ss", str(timestamp), "-i", str(held), "-frames:v", "1", str(frame),
+            ],
+            check=True,
+        )
+        with Image.open(frame) as image:
+            frames.append(image.convert("RGB"))
+    for frame in frames[1:]:
+        difference = ImageStat.Stat(ImageChops.difference(frames[0], frame)).mean
+        assert max(difference) < 0.5
+
+
+def test_caption_safe_area_never_intersects_the_phone_or_primary_controls() -> None:
+    phone = demo_builder.phone_rect()
+    caption = caption_burner.caption_rect()
+
+    assert phone[3] + 16 <= caption[1]
+    assert phone[2] - phone[0] >= 390
+    assert phone[3] - phone[1] >= 820
 
 
 def test_caption_stamp_and_two_line_wrap() -> None:

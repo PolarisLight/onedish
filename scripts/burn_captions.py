@@ -16,6 +16,22 @@ from PIL import Image, ImageDraw, ImageFont
 SRT_TIMESTAMP = re.compile(
     r"^(\d{2}:\d{2}:\d{2},\d{3}) --> (\d{2}:\d{2}:\d{2},\d{3})$"
 )
+CAPTION_CANVAS_WIDTH = 1540
+CAPTION_CANVAS_HEIGHT = 170
+CAPTION_BOTTOM_MARGIN = 42
+
+
+def caption_rect(
+    video_width: int = 1920, video_height: int = 1080
+) -> tuple[int, int, int, int]:
+    left = (video_width - CAPTION_CANVAS_WIDTH) // 2
+    top = video_height - CAPTION_CANVAS_HEIGHT - CAPTION_BOTTOM_MARGIN
+    return (
+        left,
+        top,
+        left + CAPTION_CANVAS_WIDTH,
+        top + CAPTION_CANVAS_HEIGHT,
+    )
 
 
 def stable_h264_options() -> list[str]:
@@ -128,7 +144,9 @@ def burn_captions(visuals: Path, soundtrack: Path, srt: Path, output: Path) -> N
         caption_paths: list[Path] = []
         for index, (_, _, text) in enumerate(entries):
             wrapped = "\n".join(wrap_caption(text))
-            image = Image.new("RGBA", (1540, 170), (0, 0, 0, 0))
+            image = Image.new(
+                "RGBA", (CAPTION_CANVAS_WIDTH, CAPTION_CANVAS_HEIGHT), (0, 0, 0, 0)
+            )
             draw = ImageDraw.Draw(image)
             box = draw.multiline_textbbox(
                 (0, 0), wrapped, font=font, spacing=9, align="center"
@@ -183,7 +201,8 @@ def burn_captions(visuals: Path, soundtrack: Path, srt: Path, output: Path) -> N
         for index, (start, end, _) in enumerate(entries):
             output_label = f"v{index}"
             chains.append(
-                f"[{previous}][{index + 2}:v]overlay=(W-w)/2:H-h-42:"
+                f"[{previous}][{index + 2}:v]overlay=(W-w)/2:"
+                f"H-h-{CAPTION_BOTTOM_MARGIN}:"
                 f"enable='between(t,{start:.3f},{end:.3f})'[{output_label}]"
             )
             previous = output_label

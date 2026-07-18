@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import argparse
 import math
+import os
 import subprocess
+import tempfile
 from pathlib import Path
 
 
@@ -42,8 +44,16 @@ def music_filter(duration: float) -> str:
 def generate_music_bed(duration: float, output: Path = DEFAULT_OUTPUT) -> Path:
     duration = validate_duration(duration)
     output = Path(output)
+    if output.suffix.lower() != ".wav":
+        raise ValueError("output must use the .wav extension")
     output.parent.mkdir(parents=True, exist_ok=True)
-    temporary = output.with_name(f".{output.name}.tmp.wav")
+    with tempfile.NamedTemporaryFile(
+        prefix=f".{output.stem}-",
+        suffix=".wav",
+        dir=output.parent,
+        delete=False,
+    ) as temporary_file:
+        temporary = Path(temporary_file.name)
     command = [
         "ffmpeg",
         "-hide_banner",
@@ -66,7 +76,7 @@ def generate_music_bed(duration: float, output: Path = DEFAULT_OUTPUT) -> Path:
     ]
     try:
         subprocess.run(command, check=True)
-        temporary.replace(output)
+        os.replace(temporary, output)
     finally:
         temporary.unlink(missing_ok=True)
     return output

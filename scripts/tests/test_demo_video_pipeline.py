@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -16,6 +17,7 @@ from scripts.demo_video_model import (
     load_scenes,
 )
 import scripts.synthesize_narration as narration
+import scripts.generate_demo_bed as bed
 from scripts.synthesize_narration import edge_tts_command, scene_stem
 from scripts.generate_demo_bed import music_filter, validate_duration
 
@@ -624,3 +626,79 @@ def test_music_bed_rejects_duration_outside_demo_window(duration: float) -> None
 @pytest.mark.parametrize("duration", [120.0, 135.04, 179.0])
 def test_music_bed_accepts_duration_inside_demo_window(duration: float) -> None:
     assert validate_duration(duration) == duration
+
+
+def test_generate_music_bed_uses_unique_atomic_wav_temps_and_pcm_contract(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    output = tmp_path / "music-bed.wav"
+    commands: list[list[str]] = []
+    replacements: list[tuple[Path, Path]] = []
+    real_replace = os.replace
+
+    def fake_run(command: list[str], check: bool) -> None:
+        assert check is True
+        commands.append(command)
+        Path(command[-1]).write_bytes(b"complete wav")
+
+    def record_replace(source: Path, destination: Path) -> None:
+        replacements.append((Path(source), Path(destination)))
+        real_replace(source, destination)
+
+    monkeypatch.setattr(bed.subprocess, "run", fake_run)
+    monkeypatch.setattr(os, "replace", record_replace)
+
+    bed.generate_music_bed(135.04, output)
+    bed.generate_music_bed(135.04, output)
+
+    temporary_paths = [Path(command[-1]) for command in commands]
+    assert temporary_paths[0] != temporary_paths[1]
+    assert commands[0][:-1] == commands[1][:-1]
+    assert all(path.parent == output.parent for path in temporary_paths)
+    assert all(path.suffix == ".wav" for path in temporary_paths)
+    assert replacements == [(path, output) for path in temporary_paths]
+    assert output.read_bytes() == b"complete wav"
+    assert not any(path.exists() for path in temporary_paths)
+
+    for command in commands:
+        assert "anoisesrc=color=pink" in command[command.index("-filter_complex") + 1]
+        assert "seed=104729" in command[command.index("-filter_complex") + 1]
+        assert command[command.index("-ar") + 1] == "48000"
+        assert command[command.index("-ac") + 1] == "2"
+        assert command[command.index("-c:a") + 1] == "pcm_s16le"
+
+
+def test_generate_music_bed_failure_preserves_output_and_cleans_own_temp(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    output = tmp_path / "music-bed.wav"
+    output.write_bytes(b"accepted bed")
+    attempted: list[Path] = []
+
+    def fail_after_partial_write(command: list[str], check: bool) -> None:
+        temporary = Path(command[-1])
+        attempted.append(temporary)
+        temporary.write_bytes(b"partial")
+        raise subprocess.CalledProcessError(1, command)
+
+    monkeypatch.setattr(bed.subprocess, "run", fail_after_partial_write)
+
+    with pytest.raises(subprocess.CalledProcessError):
+        bed.generate_music_bed(135.04, output)
+
+    assert output.read_bytes() == b"accepted bed"
+    assert len(attempted) == 1
+    assert not attempted[0].exists()
+
+
+def test_generate_music_bed_rejects_non_wav_output_before_ffmpeg(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(
+        bed.subprocess,
+        "run",
+        lambda *args, **kwargs: pytest.fail("ffmpeg must not run"),
+    )
+
+    with pytest.raises(ValueError, match=".wav"):
+        bed.generate_music_bed(135.04, tmp_path / "music-bed.mp3")

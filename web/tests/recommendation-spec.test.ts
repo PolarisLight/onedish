@@ -57,10 +57,14 @@ test("loads all three generated runtime files", async () => {
 
 
 test("rejects a runtime catalog without complete Chinese dish text", async () => {
+  const incompleteCatalog = structuredClone(catalog) as unknown as {
+    dishes: Array<{ translations?: { "zh-CN": { name: string; description: string } } }>;
+  };
+  delete incompleteCatalog.dishes[0]!.translations;
   const fetchMock = vi.fn(async (input: string | URL | Request) => {
     const url = String(input);
     if (url.endsWith("decision.v2.json")) return new Response(JSON.stringify(rules));
-    if (url.endsWith("catalog.v1.json")) return new Response(JSON.stringify(catalog));
+    if (url.endsWith("catalog.v1.json")) return new Response(JSON.stringify(incompleteCatalog));
     if (url.endsWith("places.v1.json")) return new Response(JSON.stringify(places));
     return new Response("not found", { status: 404 });
   });

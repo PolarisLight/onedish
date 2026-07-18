@@ -4,9 +4,9 @@ import { parseDemoRecord } from "../src/domain/contracts";
 import { LocaleProvider } from "../src/i18n/locale";
 
 describe("demo boundary", () => {
-  it("shows a persistent synthetic data label", () => {
+  it("shows a persistent preview-mode label", () => {
     render(<LocaleProvider><DemoBadge /></LocaleProvider>);
-    expect(screen.getByText("Synthetic demo context")).toBeVisible();
+    expect(screen.getByText("Preview mode")).toBeVisible();
   });
 
   it("rejects a non-monotonic decision record", () => {

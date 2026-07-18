@@ -18,6 +18,11 @@ SRT_TIMESTAMP = re.compile(
 )
 
 
+def stable_h264_options() -> list[str]:
+    """Make one-second random seeks independent of a long prediction chain."""
+    return ["-g", "30", "-keyint_min", "30", "-sc_threshold", "0"]
+
+
 def wrap_caption(text: str, width: int = 44) -> list[str]:
     """Wrap a caption into at most two readable safe-area lines."""
     lines = textwrap.wrap(
@@ -199,6 +204,7 @@ def burn_captions(visuals: Path, soundtrack: Path, srt: Path, output: Path) -> N
                     "18",
                     "-pix_fmt",
                     "yuv420p",
+                    *stable_h264_options(),
                     "-c:a",
                     "aac",
                     "-b:a",

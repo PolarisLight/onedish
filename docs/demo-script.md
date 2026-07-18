@@ -35,6 +35,9 @@ captions, deprecated labels, invented loading states, or fabricated terminal out
 
 Record only the real PWA with its English locale and versioned demo fixtures. Keep
 the visible labels above synchronized with the current product copy before capture.
+For the non-interactive closing beat, the assembly holds one verified frame from
+that real capture while the final narration and captions finish. This deliberate
+hold prevents browser-recording artifacts without fabricating product behavior.
 
 ## Delivery and reproduction
 

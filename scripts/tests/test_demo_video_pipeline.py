@@ -18,6 +18,8 @@ from scripts.demo_video_model import (
 )
 import scripts.synthesize_narration as narration
 import scripts.generate_demo_bed as bed
+import scripts.build_demo_video as demo_builder
+import scripts.burn_captions as caption_burner
 from scripts.synthesize_narration import edge_tts_command, scene_stem
 from scripts.generate_demo_bed import music_filter, validate_duration
 from scripts.build_demo_video import (
@@ -123,6 +125,31 @@ def test_scene_duration_includes_pause_and_visual_guard() -> None:
     )
     with pytest.raises(ValueError, match="too short"):
         scene_output_duration(audio=25.0, pause_ms=700, visual=20.0)
+
+
+def test_closing_scene_holds_one_verified_product_frame() -> None:
+    assert demo_builder.scene_visual_mode("close") == "hold"
+    assert all(
+        demo_builder.scene_visual_mode(scene_id) == "live"
+        for scene_id in ("home", "context", "elimination", "winner", "orbit", "privacy")
+    )
+
+
+def test_hold_filter_clones_its_only_source_frame_for_the_full_scene() -> None:
+    graph = demo_builder.scene_source_filter("hold", 3.0)
+
+    assert "select='eq(n,0)'" in graph
+    assert "loop=loop=-1:size=1:start=0" in graph
+    assert "setpts=N/(30*TB)" in graph
+    assert "trim=duration=3.000" in graph
+
+
+def test_master_encoding_places_a_seekable_keyframe_every_second() -> None:
+    options = caption_burner.stable_h264_options()
+
+    assert options[options.index("-g") + 1] == "30"
+    assert options[options.index("-keyint_min") + 1] == "30"
+    assert options[options.index("-sc_threshold") + 1] == "0"
 
 
 def test_caption_stamp_and_two_line_wrap() -> None:

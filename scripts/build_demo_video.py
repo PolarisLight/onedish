@@ -38,6 +38,7 @@ CAPTURE_TIMELINE_PATH = CAPTURE / "capture-timeline.json"
 MUSIC_PATH = WORK / "music-bed.wav"
 DEFAULT_OUTPUT = DEMO / "onedish-demo.mp4"
 SCENE_ORDER = ("home", "context", "elimination", "winner", "orbit", "privacy", "close")
+HOLD_FRAME_OFFSET = 0.25
 CAPTION_TIMESTAMP = re.compile(
     r"^(\d{2}):(\d{2}):(\d{2}),(\d{3}) --> "
     r"(\d{2}):(\d{2}):(\d{2}),(\d{3})$"
@@ -75,6 +76,23 @@ def scene_output_duration(audio: float, pause_ms: int, visual: float) -> float:
             f"Captured scene is too short: {visual:.2f}s for {required:.2f}s"
         )
     return required
+
+
+def scene_visual_mode(scene_id: str) -> str:
+    """Keep the non-interactive closing beat visually stable for its captions."""
+    return "hold" if scene_id == "close" else "live"
+
+
+def scene_source_filter(mode: str, length: float) -> str:
+    if mode == "live":
+        return "[0:v]setpts=PTS-STARTPTS,split=2[bg][fg];"
+    if mode == "hold":
+        return (
+            "[0:v]select='eq(n,0)',loop=loop=-1:size=1:start=0,"
+            "setpts=N/(30*TB),"
+            f"trim=duration={length:.3f},split=2[bg][fg];"
+        )
+    raise ValueError(f"Unknown scene visual mode: {mode}")
 
 
 def stamp(seconds: float) -> str:
@@ -161,9 +179,13 @@ def _write_concat(paths: list[Path], destination: Path) -> None:
     )
 
 
-def _extract_scene(source: Path, start: float, length: float, output: Path) -> None:
-    phone_filter = (
-        "[0:v]setpts=PTS-STARTPTS,split=2[bg][fg];"
+def _extract_scene(
+    source: Path, start: float, length: float, output: Path, *, mode: str = "live"
+) -> None:
+    if mode == "hold":
+        start += HOLD_FRAME_OFFSET
+    source_filter = scene_source_filter(mode, length)
+    phone_filter = source_filter + (
         "[bg]scale=1920:1080:force_original_aspect_ratio=increase,"
         "crop=1920:1080,boxblur=luma_radius=38:luma_power=2,"
         "eq=brightness=-0.38:saturation=0.72,vignette=PI/5[back];"
@@ -353,7 +375,13 @@ def build(output: Path) -> float:
 
             clip = temporary / f"{index:02}-{scene.id}.mp4"
             voice = temporary / f"{index:02}-{scene.id}.wav"
-            _extract_scene(CAPTURE_PATH, capture_scene.start, length, clip)
+            _extract_scene(
+                CAPTURE_PATH,
+                capture_scene.start,
+                length,
+                clip,
+                mode=scene_visual_mode(scene.id),
+            )
             _render_scene_audio(media, length, voice)
             clips.append(clip)
             voice_parts.append(voice)

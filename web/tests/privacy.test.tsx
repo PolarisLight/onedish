@@ -1,0 +1,31 @@
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { db, resetLocalData } from "../src/db/db";
+import { LocaleProvider } from "../src/i18n/locale";
+import { PrivacyPage } from "../src/privacy/PrivacyPage";
+
+beforeEach(() => resetLocalData());
+
+async function renderPrivacy() {
+  await act(async () => { render(<LocaleProvider><PrivacyPage /></LocaleProvider>); });
+}
+
+test("explains all protected categories and marks sync as future capability", async () => {
+  await renderPrivacy();
+  for (const name of ["Precise location", "Health signals", "Meal history", "Taste profile", "Identity and device identifiers"]) {
+    expect(await screen.findByRole("button", { name })).toBeVisible();
+  }
+  fireEvent.click(screen.getByRole("button", { name: "Precise location" }));
+  expect(screen.getAllByText("OpenStreetMap")).toHaveLength(2);
+  expect(screen.getByText(/nothing is uploaded/i)).toBeVisible();
+  expect(screen.getByRole("checkbox", { name: "Allow location requests" })).toBeChecked();
+});
+
+test("requires confirmation before deleting local profile data", async () => {
+  await db.settings.put({ key: "profile.v2", value: { local: true } });
+  await renderPrivacy();
+  fireEvent.click(await screen.findByRole("button", { name: "Delete local profile" }));
+  expect(screen.getByRole("dialog", { name: "Delete local profile and meal-derived data?" })).toBeVisible();
+  expect(await db.settings.get("profile.v2")).toBeDefined();
+  fireEvent.click(screen.getByRole("button", { name: "Delete" }));
+  await waitFor(async () => expect(await db.settings.get("profile.v2")).toBeUndefined());
+});

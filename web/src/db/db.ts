@@ -16,12 +16,21 @@ export interface HistoryEventRow {
   base_ingredient?: string;
 }
 export interface DecisionSessionRow { id: string; stateId: string; payload: unknown }
+export type ProtectedDataCategory = "precise_location" | "health_signals" | "meal_history" | "taste_profile" | "identity_device";
+export interface PrivacyAccessEventRow {
+  id: string;
+  occurred_at: string;
+  category: ProtectedDataCategory;
+  purpose: "nearby_map" | "profile_read" | "profile_delete";
+  recipient: "device" | "OpenStreetMap";
+}
 
 class OneDishDB extends Dexie {
   settings!: EntityTable<SettingRow, "key">;
   dailyContext!: EntityTable<DailyContextRow, "date">;
   historyEvents!: EntityTable<HistoryEventRow, "id">;
   decisionSessions!: EntityTable<DecisionSessionRow, "id">;
+  privacyAccessEvents!: EntityTable<PrivacyAccessEventRow, "id">;
 
   constructor() {
     super("onedish");
@@ -36,6 +45,13 @@ class OneDishDB extends Dexie {
       dailyContext: "date",
       historyEvents: "id, occurred_at, kind, dish_id",
       decisionSessions: "id, stateId",
+    });
+    this.version(3).stores({
+      settings: "key",
+      dailyContext: "date",
+      historyEvents: "id, occurred_at, kind, dish_id",
+      decisionSessions: "id, stateId",
+      privacyAccessEvents: "id, occurred_at, category, recipient",
     });
   }
 }
@@ -70,13 +86,14 @@ export async function getRecentHistory(days: number, now: Date): Promise<History
 export async function resetLocalData() {
   await db.transaction(
     "rw",
-    [db.settings, db.dailyContext, db.historyEvents, db.decisionSessions],
+    [db.settings, db.dailyContext, db.historyEvents, db.decisionSessions, db.privacyAccessEvents],
     async () => {
       await Promise.all([
         db.settings.clear(),
         db.dailyContext.clear(),
         db.historyEvents.clear(),
         db.decisionSessions.clear(),
+        db.privacyAccessEvents.clear(),
       ]);
     },
   );

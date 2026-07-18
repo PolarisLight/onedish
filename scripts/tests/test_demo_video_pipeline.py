@@ -17,6 +17,7 @@ from scripts.demo_video_model import (
 )
 import scripts.synthesize_narration as narration
 from scripts.synthesize_narration import edge_tts_command, scene_stem
+from scripts.generate_demo_bed import music_filter, validate_duration
 
 
 NARRATION_PATH = ROOT / "docs" / "demo" / "narration.json"
@@ -601,3 +602,25 @@ def test_load_scenes_rejects_invalid_contract(
 
     with pytest.raises(ValueError, match=message):
         load_scenes(fixture)
+
+
+def test_music_filter_is_restrained_and_fades() -> None:
+    graph = music_filter(150.0)
+
+    assert "aevalsrc" in graph
+    assert "mod(t\\,2)" in graph
+    assert "anoisesrc=color=pink" in graph
+    assert "afade=t=in" in graph
+    assert "afade=t=out:st=147" in graph
+    assert "loudnorm=I=-34" in graph
+
+
+@pytest.mark.parametrize("duration", [119.999, 179.001])
+def test_music_bed_rejects_duration_outside_demo_window(duration: float) -> None:
+    with pytest.raises(ValueError, match="120.*179"):
+        validate_duration(duration)
+
+
+@pytest.mark.parametrize("duration", [120.0, 135.04, 179.0])
+def test_music_bed_accepts_duration_inside_demo_window(duration: float) -> None:
+    assert validate_duration(duration) == duration

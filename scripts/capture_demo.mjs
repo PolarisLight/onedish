@@ -154,11 +154,11 @@ try {
     scenes.push({ id, start, end });
   }
 
+  await page.goto(baseUrl.href, { waitUntil: "networkidle" });
+  await forceEnglish();
+  await page.getByRole("button", { name: "Pick my meal", exact: true }).waitFor();
+  await requireEnglishBoundary("home");
   await mark("home", async ({ waitTo }) => {
-    await page.goto(baseUrl.href, { waitUntil: "networkidle" });
-    await forceEnglish();
-    await page.getByRole("button", { name: "Pick my meal", exact: true }).waitFor();
-    await requireEnglishBoundary("home");
     await waitTo(0.24);
     await page.getByRole("button", { name: "Hungry", exact: true }).click();
     await waitTo(0.46);
@@ -167,7 +167,7 @@ try {
     await page.mouse.wheel(0, -260);
     await waitTo(0.84);
     await page.getByRole("button", { name: "Surprise me", exact: true }).click();
-  }, { initialBoundary: false });
+  });
 
   await mark("context", async ({ waitTo }) => {
     await waitTo(0.08);
@@ -222,10 +222,11 @@ try {
     await heading.scrollIntoViewIfNeeded();
   });
 
+  await page.goto(new URL("history", baseUrl).href, { waitUntil: "networkidle" });
+  await forceEnglish();
+  await page.getByRole("heading", { name: "Your taste is taking shape.", exact: true }).waitFor();
+  await requireEnglishBoundary("orbit");
   await mark("orbit", async ({ waitTo }) => {
-    await page.goto(new URL("history", baseUrl).href, { waitUntil: "networkidle" });
-    await forceEnglish();
-    await page.getByRole("heading", { name: "Your taste is taking shape.", exact: true }).waitFor();
     const firstSignal = page.locator(".orbit-signal").first();
     await firstSignal.waitFor();
     await waitTo(0.36);
@@ -243,10 +244,11 @@ try {
     await page.mouse.wheel(0, 100);
   });
 
+  await page.goto(new URL("privacy", baseUrl).href, { waitUntil: "networkidle" });
+  await forceEnglish();
+  await page.getByRole("heading", { name: "Your body is not the product.", exact: true }).waitFor();
+  await requireEnglishBoundary("privacy");
   await mark("privacy", async ({ waitTo }) => {
-    await page.goto(new URL("privacy", baseUrl).href, { waitUntil: "networkidle" });
-    await forceEnglish();
-    await page.getByRole("heading", { name: "Your body is not the product.", exact: true }).waitFor();
     const map = page.locator(".privacy-map");
     await waitTo(0.30);
     await page.getByRole("button", { name: "Health signals", exact: true }).click();
@@ -257,16 +259,15 @@ try {
     await map.scrollIntoViewIfNeeded();
   });
 
+  await page.goto(baseUrl.href, { waitUntil: "networkidle" });
+  await forceEnglish();
+  await page.getByRole("button", { name: "Pick my meal", exact: true }).waitFor();
+  await requireEnglishBoundary("close");
   await mark("close", async ({ waitTo }) => {
-    await page.goto(baseUrl.href, { waitUntil: "networkidle" });
-    await forceEnglish();
-    await page.getByRole("button", { name: "Pick my meal", exact: true }).waitFor();
     await waitTo(0.32);
     await page.mouse.wheel(0, 180);
     await waitTo(0.53);
     await page.mouse.wheel(0, -180);
-    await waitTo(0.72);
-    await page.getByRole("button", { name: "Pick my meal", exact: true }).focus();
   });
 
   const timeline = { language: "en", scenes };

@@ -27,6 +27,7 @@ from scripts.build_demo_video import (
     stamp,
 )
 from scripts.burn_captions import _entries, master_output_duration, wrap_caption
+from scripts.validate_demo_video import validate_delivery_artifacts, validate_probe
 
 
 NARRATION_PATH = ROOT / "docs" / "demo" / "narration.json"
@@ -38,6 +39,82 @@ VALID_CAPTURE_SCENES = [
         ["home", "context", "elimination", "winner", "orbit", "privacy", "close"]
     )
 ]
+
+
+def test_probe_requires_demo_delivery_contract() -> None:
+    valid = {
+        "format": {"duration": "145.5"},
+        "streams": [
+            {
+                "codec_type": "video",
+                "codec_name": "h264",
+                "width": 1920,
+                "height": 1080,
+            },
+            {"codec_type": "audio", "codec_name": "aac", "sample_rate": "48000"},
+        ],
+    }
+    assert validate_probe(valid) == []
+
+    invalid = {"format": {"duration": "181"}, "streams": []}
+    errors = validate_probe(invalid)
+    assert "duration must be between 120 and 179 seconds" in errors
+    assert "video must be one 1920x1080 H.264 stream" in errors
+    assert "audio must include AAC at 48 kHz" in errors
+
+
+def test_probe_accepts_a_valid_aac_stream_after_an_unrelated_audio_stream() -> None:
+    probe = {
+        "format": {"duration": "128.9"},
+        "streams": [
+            {
+                "codec_type": "video",
+                "codec_name": "h264",
+                "width": 1920,
+                "height": 1080,
+            },
+            {"codec_type": "audio", "codec_name": "opus", "sample_rate": "48000"},
+            {"codec_type": "audio", "codec_name": "aac", "sample_rate": "48000"},
+        ],
+    }
+
+    assert validate_probe(probe) == []
+
+
+def test_delivery_artifacts_require_english_complete_timeline_and_safe_copy(
+    tmp_path: Path,
+) -> None:
+    captions = tmp_path / "captions.srt"
+    captions.write_text(
+        "1\n00:00:00,000 --> 00:00:02,000\n"
+        "Food apps don't solve indecision.\n\n"
+        "2\n00:02:00,000 --> 00:02:02,000\nstop browsing, and eat this.\n",
+        encoding="utf-8",
+    )
+    timeline = write_capture_timeline(tmp_path)
+    narration_path = tmp_path / "narration.json"
+    narration_path.write_text(NARRATION_PATH.read_text(encoding="utf-8"), encoding="utf-8")
+
+    assert validate_delivery_artifacts(captions, timeline, narration_path) == []
+
+    captions.write_text("Opening only", encoding="utf-8")
+    timeline.write_text(
+        json.dumps({"language": "zh", "scenes": VALID_CAPTURE_SCENES[:-1]}),
+        encoding="utf-8",
+    )
+    narration_path.write_text(
+        '[{"id":"home","text":"future app 今天","voice":"en-US-TestNeural",'
+        '"rate":"+0%","pitch":"+0Hz","pause_after_ms":0}]',
+        encoding="utf-8",
+    )
+
+    errors = validate_delivery_artifacts(captions, timeline, narration_path)
+    assert "captions must contain the opening phrase" in errors
+    assert "captions must contain the closing phrase" in errors
+    assert "capture timeline language must be en" in errors
+    assert "capture timeline must contain all seven scenes in order" in errors
+    assert "narration contains forbidden phrase: future app" in errors
+    assert "narration must not contain Chinese characters" in errors
 
 
 def test_scene_duration_includes_pause_and_visual_guard() -> None:

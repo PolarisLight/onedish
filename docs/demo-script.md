@@ -1,17 +1,17 @@
 # OneDish founder demo script
 
-Target duration: **2:15-2:35**. Absolute maximum: **2:59**. The interface,
-narration, and captions must be recorded in English only.
+Delivered duration: **2:08.968**. Delivery range: **2:00-2:59**. The interface,
+narration, and captions are recorded in English only.
 
 | Scene id | Exact timing | Product action and current label | Narration focus |
 | --- | ---: | --- | --- |
-| `home` | 0:00-0:10 | Open on **One decision. No feed.** and tap **Pick my meal** | Choice overload and the one-tap promise |
-| `context` | 0:10-0:30 | Briefly open **Adjust** and **Meal preferences**, then return to the default action | Optional context, unknown missing values, and hard allergy rules |
-| `elimination` | 0:30-1:02 | Show **From ninety to one.** and the real stored elimination stages | A completed deterministic decision explained as evidence, not fake AI thinking |
-| `winner` | 1:02-1:28 | Reveal **Your one dish**, **Why this one**, and one bounded **Pick another** correction | Estimates, demo provenance, input hash, reasons, and one reserve |
-| `orbit` | 1:28-1:53 | Open **Taste Orbit**, focus one signal, then tap **YOU** | Local meal history as visible, inspectable preference memory |
-| `privacy` | 1:53-2:18 | Open **Privacy**, inspect **Health signals** and **Precise location**, and show the OpenStreetMap connector | Purpose, storage, deletion, permission, and recipient boundaries |
-| `close` | 2:18-2:30 | Return to the core promise and hold the final line | Offline-ready PWA, deterministic ranking, bounded AI, and honest limits |
+| `home` | 0:00.000-0:13.346 | Open on **One decision. No feed.** and tap **Pick my meal** | Choice overload and the one-tap promise |
+| `context` | 0:13.346-0:29.302 | Briefly open **Adjust** and **Meal preferences**, then return to the default action | Optional context, unknown missing values, and hard allergy rules |
+| `elimination` | 0:29.302-0:50.354 | Show **From ninety to one.** and the real stored elimination stages | A completed deterministic decision explained as evidence, not fake AI thinking |
+| `winner` | 0:50.354-1:09.842 | Reveal **Your one dish**, **Why this one**, and one bounded **Pick another** correction | Estimates, demo provenance, input hash, reasons, and one reserve |
+| `orbit` | 1:09.842-1:27.720 | Open **Taste Orbit**, focus one signal, then tap **YOU** | Local meal history as visible, inspectable preference memory |
+| `privacy` | 1:27.720-1:50.740 | Open **Privacy**, inspect **Health signals** and **Precise location**, and show the OpenStreetMap connector | Purpose, storage, deletion, permission, and recipient boundaries |
+| `close` | 1:50.740-2:08.968 | Return to the core promise and hold the final line | Offline-ready PWA, deterministic ranking, bounded AI, and honest limits |
 
 The exact, versioned narration source is `docs/demo/narration.json`. Read it in a
 warm, natural male founder voice. Use contractions, preserve its configured scene
@@ -35,3 +35,24 @@ captions, deprecated labels, invented loading states, or fabricated terminal out
 
 Record only the real PWA with its English locale and versioned demo fixtures. Keep
 the visible labels above synchronized with the current product copy before capture.
+
+## Delivery and reproduction
+
+The default narration voice is Microsoft's English neural voice
+`en-US-AndrewMultilingualNeural`, configured scene by scene in
+`docs/demo/narration.json`. The soundtrack uses a deterministic, procedurally
+generated original music bed; it does not include a licensed stock track or a
+third-party composition.
+
+With the English capture, narration, and generated music artifacts available under
+the ignored `docs/demo/.build/` directory, build the final master with:
+
+```bash
+backend/.venv/bin/python scripts/build_demo_video.py --reuse-capture --reuse-audio --output docs/demo/onedish-demo.mp4
+```
+
+Validate the delivery contract with:
+
+```bash
+backend/.venv/bin/python scripts/validate_demo_video.py docs/demo/onedish-demo.mp4
+```

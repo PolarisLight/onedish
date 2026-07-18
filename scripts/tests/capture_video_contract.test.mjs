@@ -11,6 +11,33 @@ import {
   validateMediaDuration,
 } from "../capture_video_contract.mjs";
 
+test("route transitions finish in English before their scene clocks start", async () => {
+  const source = await readFile(new URL("../capture_demo.mjs", import.meta.url), "utf8");
+  for (const [route, scene, heading] of [
+    ["history", "orbit", "Your taste is taking shape."],
+    ["privacy", "privacy", "Your body is not the product."],
+  ]) {
+    const preparation = new RegExp(
+      `page\\.goto\\(new URL\\("${route}"[\\s\\S]{0,900}`
+      + `forceEnglish\\(\\)[\\s\\S]{0,900}`
+      + `heading[^\\n]+${heading.replaceAll(".", "\\.")}[\\s\\S]{0,900}`
+      + `await mark\\("${scene}"`,
+    );
+    assert.match(source, preparation);
+  }
+  assert.match(
+    source,
+    /page\.goto\(baseUrl\.href[\s\S]{0,900}forceEnglish\(\)[\s\S]{0,900}Pick my meal[\s\S]{0,900}await mark\("home"/,
+  );
+  const afterHome = source.slice(source.indexOf('await mark("home"') + 1);
+  assert.match(
+    afterHome,
+    /page\.goto\(baseUrl\.href[\s\S]{0,900}forceEnglish\(\)[\s\S]{0,900}Pick my meal[\s\S]{0,900}await mark\("close"/,
+  );
+  const closeBlock = source.slice(source.indexOf('await mark("close"'), source.indexOf("const timeline"));
+  assert.doesNotMatch(closeBlock, /\.focus\(\)/);
+});
+
 test("accepts physical media that covers the full required duration", () => {
   assert.equal(validateMediaDuration(134.568, 134.568), 134.568);
   assert.equal(validateMediaDuration(135.02, 134.568), 135.02);

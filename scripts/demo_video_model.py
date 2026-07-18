@@ -18,7 +18,13 @@ class Scene:
 def load_scenes(path: Path) -> list[Scene]:
     raw = json.loads(path.read_text(encoding="utf-8"))
     scenes = [Scene(**item) for item in raw]
-    if not scenes or any(
+    if not scenes:
+        raise ValueError("Narration requires at least one scene")
+    if any(not scene.id.strip() for scene in scenes):
+        raise ValueError("Every scene requires a non-empty scene id")
+    if any(not scene.text.strip() for scene in scenes):
+        raise ValueError("Every scene requires non-empty scene text")
+    if any(
         not scene.text.isascii()
         or not scene.voice.startswith("en-")
         or not scene.voice.endswith("Neural")

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
 import json
 import math
 import os
@@ -15,6 +16,7 @@ import tempfile
 import textwrap
 import uuid
 from pathlib import Path
+from typing import Iterator
 
 try:
     from .burn_captions import burn_captions
@@ -295,6 +297,17 @@ def _publish_copy(source: Path, destination: Path) -> None:
         temporary.unlink(missing_ok=True)
 
 
+@contextmanager
+def staged_master_for(output: Path) -> Iterator[Path]:
+    """Yield one invocation-owned stage and remove exactly that path on exit."""
+    output = output.resolve()
+    staged = output.with_name(f".{output.stem}-stage-{uuid.uuid4().hex}.mp4")
+    try:
+        yield staged
+    finally:
+        staged.unlink(missing_ok=True)
+
+
 def build(output: Path) -> float:
     scenes = load_scenes(NARRATION_PATH)
     if tuple(scene.id for scene in scenes) != SCENE_ORDER:
@@ -307,10 +320,9 @@ def build(output: Path) -> float:
     output = output.resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
     WORK.mkdir(parents=True, exist_ok=True)
-    staged_master = output.with_name(f".{output.stem}-stage-{uuid.uuid4().hex}.mp4")
-    staged_master.unlink(missing_ok=True)
-
-    with tempfile.TemporaryDirectory(prefix="assembly-", dir=WORK) as temporary_dir:
+    with staged_master_for(output) as staged_master, tempfile.TemporaryDirectory(
+        prefix="assembly-", dir=WORK
+    ) as temporary_dir:
         temporary = Path(temporary_dir)
         clips: list[Path] = []
         voice_parts: list[Path] = []
@@ -464,12 +476,6 @@ def main() -> int:
         result = build(arguments.output)
     except (FileNotFoundError, ValueError) as error:
         parser.error(str(error))
-    finally:
-        # Preserve an accepted master and remove only this process's stage files.
-        for path in arguments.output.resolve().parent.glob(
-            f".{arguments.output.stem}-stage-*.mp4"
-        ):
-            path.unlink(missing_ok=True)
     print(f"Built {arguments.output.resolve()} ({result:.2f}s)")
     return 0
 

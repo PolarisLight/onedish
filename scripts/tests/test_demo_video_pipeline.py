@@ -20,8 +20,13 @@ import scripts.synthesize_narration as narration
 import scripts.generate_demo_bed as bed
 from scripts.synthesize_narration import edge_tts_command, scene_stem
 from scripts.generate_demo_bed import music_filter, validate_duration
-from scripts.build_demo_video import fit_caption_cues, scene_output_duration, stamp
-from scripts.burn_captions import master_output_duration, wrap_caption
+from scripts.build_demo_video import (
+    fit_caption_cues,
+    scene_output_duration,
+    staged_master_for,
+    stamp,
+)
+from scripts.burn_captions import _entries, master_output_duration, wrap_caption
 
 
 NARRATION_PATH = ROOT / "docs" / "demo" / "narration.json"
@@ -77,6 +82,59 @@ def test_master_stops_with_the_soundtrack_instead_of_hanging_on_video_tail() -> 
     )
     with pytest.raises(ValueError, match="shorter"):
         master_output_duration(visuals=128.0, soundtrack=129.0)
+
+
+def test_staged_master_cleanup_never_matches_foreign_files_or_final_output(
+    tmp_path: Path,
+) -> None:
+    output = tmp_path / "demo[*]?.mp4"
+    output.write_bytes(b"accepted master")
+    foreign = tmp_path / ".demo[*]?-stage-foreign.mp4"
+    foreign.write_bytes(b"another build")
+
+    with pytest.raises(RuntimeError, match="injected build failure"):
+        with staged_master_for(output) as own_stage:
+            own_stage.write_bytes(b"partial master")
+            raise RuntimeError("injected build failure")
+
+    assert output.read_bytes() == b"accepted master"
+    assert foreign.read_bytes() == b"another build"
+    assert not own_stage.exists()
+
+
+@pytest.mark.parametrize(
+    "contents",
+    [
+        "",
+        "1\n00:00:00,000 --> 00:00:01,000\n   \n",
+        "1\n00:00:00.000 --> 00:00:01,000\nBad timestamp\n",
+        "1\n00:00:01,000 --> 00:00:01,000\nZero duration\n",
+        (
+            "1\n00:00:00,000 --> 00:00:02,000\nFirst\n\n"
+            "2\n00:00:01,500 --> 00:00:03,000\nOverlap\n"
+        ),
+        (
+            "1\n00:00:02,000 --> 00:00:03,000\nFirst\n\n"
+            "2\n00:00:00,000 --> 00:00:01,000\nOut of order\n"
+        ),
+    ],
+    ids=[
+        "empty-file",
+        "empty-text",
+        "malformed-timestamp",
+        "non-positive-range",
+        "overlap",
+        "out-of-order",
+    ],
+)
+def test_standalone_caption_burn_rejects_every_malformed_cue(
+    tmp_path: Path, contents: str
+) -> None:
+    subtitles = tmp_path / "bad.srt"
+    subtitles.write_text(contents, encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Malformed caption cue"):
+        _entries(subtitles)
 
 
 def write_capture_timeline(

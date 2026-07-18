@@ -13,6 +13,11 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 
+SRT_TIMESTAMP = re.compile(
+    r"^(\d{2}:\d{2}:\d{2},\d{3}) --> (\d{2}:\d{2}:\d{2},\d{3})$"
+)
+
+
 def wrap_caption(text: str, width: int = 44) -> list[str]:
     """Wrap a caption into at most two readable safe-area lines."""
     lines = textwrap.wrap(
@@ -78,15 +83,30 @@ def _font(size: int) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
 
 
 def _entries(srt: Path) -> list[tuple[float, float, str]]:
-    blocks = re.split(r"\n\s*\n", srt.read_text(encoding="utf-8").strip())
+    contents = srt.read_text(encoding="utf-8").strip()
+    if not contents:
+        raise ValueError("Malformed caption cue 1")
+    blocks = re.split(r"\n[ \t]*\n", contents)
     entries: list[tuple[float, float, str]] = []
+    previous_end = -1.0
     for expected, block in enumerate(blocks, start=1):
         lines = block.splitlines()
         if len(lines) < 3 or lines[0].strip() != str(expected):
             raise ValueError(f"Malformed caption cue {expected}")
-        start, end = lines[1].split(" --> ")
+        match = SRT_TIMESTAMP.fullmatch(lines[1].strip())
+        if match is None:
+            raise ValueError(f"Malformed caption cue {expected}: timestamp")
+        start = _seconds(match.group(1))
+        end = _seconds(match.group(2))
         text = " ".join(line.strip() for line in lines[2:] if line.strip())
-        entries.append((_seconds(start), _seconds(end), text))
+        if not text:
+            raise ValueError(f"Malformed caption cue {expected}: empty text")
+        if end <= start:
+            raise ValueError(f"Malformed caption cue {expected}: non-positive range")
+        if start < previous_end:
+            raise ValueError(f"Malformed caption cue {expected}: overlapping range")
+        entries.append((start, end, text))
+        previous_end = end
     return entries
 
 

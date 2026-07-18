@@ -1,21 +1,22 @@
 import { createRequire } from "node:module";
 import { execFile } from "node:child_process";
-import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { performance } from "node:perf_hooks";
 import { promisify } from "node:util";
 
-import { validateMediaDuration } from "./capture_video_contract.mjs";
+import {
+  containsVisibleCjk,
+  finalizeCaptureArtifacts,
+} from "./capture_video_contract.mjs";
 
 const SCENE_IDS = ["home", "context", "elimination", "winner", "orbit", "privacy", "close"];
-const FORBIDDEN_TEXT = ["中文", "隐私", "口味轨道", "帮我选一餐"];
 const root = resolve(import.meta.dirname, "..");
 const require = createRequire(resolve(root, "web/package.json"));
 const { chromium } = require("@playwright/test");
+const buildDir = resolve(root, "docs/demo/.build");
 const captureDir = resolve(root, "docs/demo/.build/capture");
 const timingPath = resolve(root, "docs/demo/.build/audio/timing.json");
-const outputVideo = resolve(captureDir, "capture-session.webm");
-const outputTimeline = resolve(captureDir, "capture-timeline.json");
 const execFileAsync = promisify(execFile);
 const RECORDER_TAIL_MS = 500;
 
@@ -70,17 +71,20 @@ function roundSeconds(value) {
 const baseUrl = parseBaseUrl(process.argv.slice(2));
 const timing = await loadTiming();
 const requiredMediaSeconds = timing.reduce((total, scene) => total + scene.minimumSeconds, 0);
-await rm(captureDir, { recursive: true, force: true });
-await mkdir(captureDir, { recursive: true });
+await mkdir(buildDir, { recursive: true });
+const stageDir = await mkdtemp(resolve(buildDir, ".capture-stage-"));
+const stagedVideo = resolve(stageDir, "capture-session.webm");
+const stagedTimeline = resolve(stageDir, "capture-timeline.json");
 
-const browser = await chromium.launch({ headless: true });
+let browser;
 let context;
 try {
+  browser = await chromium.launch({ headless: true });
   context = await browser.newContext({
     viewport: { width: 390, height: 844 },
     deviceScaleFactor: 2,
     locale: "en-US",
-    recordVideo: { dir: captureDir, size: { width: 390, height: 844 } },
+    recordVideo: { dir: stageDir, size: { width: 390, height: 844 } },
   });
   const page = await context.newPage();
   const video = page.video();
@@ -116,16 +120,15 @@ try {
   }
 
   async function requireEnglishBoundary(id) {
-    const state = await page.evaluate((forbidden) => ({
+    const state = await page.evaluate(() => ({
       language: document.documentElement.lang,
       body: document.body?.innerText ?? "",
-      forbidden: forbidden.filter((term) => (document.body?.innerText ?? "").includes(term)),
-    }), FORBIDDEN_TEXT);
+    }));
     if (state.language !== "en") {
       throw new Error(`Scene ${id} boundary language was ${state.language}, not en`);
     }
-    if (state.forbidden.length) {
-      throw new Error(`Scene ${id} boundary contained forbidden text: ${state.forbidden.join(", ")}`);
+    if (containsVisibleCjk(state.body)) {
+      throw new Error(`Scene ${id} boundary contained visible CJK text`);
     }
   }
 
@@ -270,20 +273,29 @@ try {
   if (scenes.map(({ id }) => id).join(",") !== SCENE_IDS.join(",")) {
     throw new Error("Capture timeline scene order is invalid");
   }
-  await writeFile(outputTimeline, `${JSON.stringify(timeline, null, 2)}\n`, "utf8");
+  await writeFile(stagedTimeline, `${JSON.stringify(timeline, null, 2)}\n`, "utf8");
   await page.waitForTimeout(RECORDER_TAIL_MS);
   await context.close();
   context = undefined;
-  await video.saveAs(outputVideo);
-  const { stdout } = await execFileAsync("ffprobe", [
-    "-v", "error",
-    "-show_entries", "format=duration",
-    "-of", "default=noprint_wrappers=1:nokey=1",
-    outputVideo,
-  ]);
-  validateMediaDuration(Number(stdout.trim()), requiredMediaSeconds);
+  await video.saveAs(stagedVideo);
+  await finalizeCaptureArtifacts({
+    stagedVideo,
+    stagedTimeline,
+    captureDir,
+    requiredSeconds: requiredMediaSeconds,
+    probeDuration: async (path) => {
+      const { stdout } = await execFileAsync("ffprobe", [
+        "-v", "error",
+        "-show_entries", "format=duration",
+        "-of", "default=noprint_wrappers=1:nokey=1",
+        path,
+      ]);
+      return Number(stdout.trim());
+    },
+  });
   console.log("Captured 7 English scenes");
 } finally {
   if (context) await context.close();
-  await browser.close();
+  if (browser) await browser.close();
+  await rm(stageDir, { recursive: true, force: true });
 }

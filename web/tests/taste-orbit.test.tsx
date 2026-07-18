@@ -61,6 +61,6 @@ test("localizes canonical tags in the Chinese interface", async () => {
 
 test("shows a truthful empty state instead of demo history", async () => {
   await renderOrbit();
-  expect(await screen.findByRole("heading", { name: "Your orbit starts with your next meal." })).toBeVisible();
+  expect(await screen.findByRole("heading", { name: "Your next choice starts the orbit." })).toBeVisible();
   expect(screen.queryByRole("button", { name: /warm/i })).not.toBeInTheDocument();
 });

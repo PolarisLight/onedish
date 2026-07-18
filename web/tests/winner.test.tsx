@@ -33,7 +33,7 @@ test("winner exposes one dish, bounded estimates, provenance, and one reserve", 
   );
   await act(async () => { render(<LocaleProvider><RouterProvider router={router} /></LocaleProvider>); });
   expect(await screen.findByRole("heading", { name: record.winner.dish.name })).toBeVisible();
-  expect(screen.getByText("Fictional demo menu")).toBeVisible();
+  expect(screen.getByText("Preview menu")).toBeVisible();
   expect(screen.getByText("Nutrition estimate")).toBeVisible();
   fireEvent.click(screen.getByRole("button", { name: "Not today" }));
   expect(screen.getAllByRole("button", { name: /heavy|craving|expensive|recently/i })).toHaveLength(4);

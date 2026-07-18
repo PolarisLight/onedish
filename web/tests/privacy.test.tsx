@@ -16,7 +16,7 @@ test("explains all protected categories and marks sync as future capability", as
   }
   fireEvent.click(screen.getByRole("button", { name: "Precise location" }));
   expect(screen.getAllByText("OpenStreetMap")).toHaveLength(2);
-  expect(screen.getByText(/nothing is uploaded/i)).toBeVisible();
+  expect(screen.getByText("Cloud sync is off. Your data stays on this device.")).toBeVisible();
   expect(screen.getByRole("checkbox", { name: "Allow location requests" })).toBeChecked();
 });
 

@@ -7,6 +7,8 @@ import { restaurantResponse } from "./support/restaurant-fixtures";
 import type { HistoryEventRow } from "../src/db/db";
 import type { UserProfile } from "../src/recommendation/types";
 
+const localLunch = () => new Date(2026, 6, 19, 12, 0, 0);
+
 it("sends minimized context and creates an active session", async () => {
   clearRestaurantSessions();
   const recommend = vi.fn().mockResolvedValue(
@@ -24,7 +26,7 @@ it("sends minimized context and creates an active session", async () => {
       id: "h1", occurred_at: new Date().toISOString(), kind: "accepted",
       cuisine_tags: ["fujian"],
     }],
-    now: new Date("2026-07-19T12:00:00+08:00"),
+    now: localLunch(),
   }, { request: recommend });
   expect(recommend).toHaveBeenCalledWith(expect.objectContaining({
     latitude: 24.48,
@@ -61,7 +63,7 @@ it.each([
   await startRestaurantRecommendation({
     point: { latitude: 24.48, longitude: 118.09 }, locale: "en", profile,
     history: [{ id: kind, occurred_at: new Date().toISOString(), kind, cuisine_tags: ["fujian"] } satisfies HistoryEventRow],
-    now: new Date("2026-07-19T12:00:00+08:00"),
+    now: localLunch(),
   }, { request: recommend });
 
   expect(recommend).toHaveBeenCalledWith(expect.objectContaining({
@@ -81,7 +83,7 @@ it("sends only explicit normalized cuisines, never taste-orbit or unknown tags",
   await startRestaurantRecommendation({
     point: { latitude: 24.48, longitude: 118.09 }, locale: "en", profile,
     history: [{ id: "h", occurred_at: new Date().toISOString(), kind: "eaten", cuisine_tags: ["sichuan", "asian", "warm"] }],
-    now: new Date("2026-07-19T12:00:00+08:00"),
+    now: localLunch(),
   }, { request: recommend });
 
   expect(recommend).toHaveBeenCalledWith(expect.objectContaining({
@@ -114,7 +116,7 @@ it("does not send a repaired default budget as explicit", async () => {
     locale: "zh-CN",
     profile,
     history: [],
-    now: new Date("2026-07-19T12:00:00+08:00"),
+    now: localLunch(),
   }, { request: recommend });
 
   expect(recommend).toHaveBeenCalledWith(expect.objectContaining({

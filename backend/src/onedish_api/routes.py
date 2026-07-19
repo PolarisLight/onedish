@@ -21,6 +21,14 @@ from onedish_api.engine import NoSafeCandidate, recommend
 from onedish_api.history import PreferenceWeights, RepetitionProfile
 from onedish_api.providers.base import PlaceQuery, PlacesProvider
 from onedish_api.providers.gpt56 import deterministic_craving_fallback
+from onedish_api.restaurant_domain import (
+    RestaurantRecommendRequest,
+    RestaurantRecommendResponse,
+)
+from onedish_api.restaurants.service import (
+    RestaurantDiscoveryUnavailable,
+    RestaurantRecommendationService,
+)
 
 
 class RepetitionPayload(StrictFrozenModel):
@@ -70,7 +78,9 @@ def build_router(
     *,
     catalog: Catalog,
     places_provider: PlacesProvider,
+    recommendation_places_provider: PlacesProvider,
     decision_rules: DecisionRules,
+    restaurant_service: RestaurantRecommendationService,
 ) -> APIRouter:
     router = APIRouter()
 
@@ -103,7 +113,7 @@ def build_router(
     async def make_recommendation(request: RecommendRequest) -> Any:
         fixture_query = PlaceQuery(latitude=0, longitude=0, radius_m=100_000, limit=50)
         try:
-            places = await places_provider.nearby(fixture_query)
+            places = await recommendation_places_provider.nearby(fixture_query)
             candidates = _candidates(catalog, places)
             if not candidates:
                 raise HTTPException(
@@ -126,5 +136,19 @@ def build_router(
                 detail={"message": "no safe candidate", "reason_counts": exc.reason_counts},
             ) from None
         return decision
+
+    @router.post(
+        "/api/v1/restaurants/recommend",
+        response_model=RestaurantRecommendResponse,
+    )
+    async def recommend_restaurant(
+        request: RestaurantRecommendRequest,
+    ) -> RestaurantRecommendResponse:
+        try:
+            return await restaurant_service.recommend(request)
+        except RestaurantDiscoveryUnavailable:
+            raise HTTPException(
+                status_code=503, detail="restaurant discovery unavailable"
+            ) from None
 
     return router

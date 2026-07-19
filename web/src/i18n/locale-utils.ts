@@ -12,10 +12,14 @@ export function localizedPriceMinor(
   return Math.round(usdMinor * spec.locales[locale].usd_multiplier);
 }
 
-export function formatMoney(minor: number, locale: SupportedLocale): string {
+export function formatMoney(
+  minor: number,
+  locale: SupportedLocale,
+  currency: "CNY" | "USD" = locale === "en" ? "USD" : "CNY",
+): string {
   return new Intl.NumberFormat(locale === "en" ? "en-US" : "zh-CN", {
     style: "currency",
-    currency: locale === "en" ? "USD" : "CNY",
+    currency,
     minimumFractionDigits: 2,
   }).format(minor / 100);
 }

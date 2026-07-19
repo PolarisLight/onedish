@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { SupportedLocale, UserProfile } from "../recommendation/types";
 import { useLocale } from "../i18n/locale";
+import { RESTAURANT_CUISINES, type RestaurantCuisine } from "../restaurants/cuisines";
 
 const allergens = ["peanuts", "milk", "soy", "gluten", "sesame"] as const;
 
@@ -32,11 +33,21 @@ export function DailyContextForm({
     }));
   }
 
+  function toggleCuisine(cuisine: RestaurantCuisine) {
+    setProfile((current) => ({
+      ...current,
+      preferred_cuisines: current.preferred_cuisines.includes(cuisine)
+        ? current.preferred_cuisines.filter((item) => item !== cuisine)
+        : [...current.preferred_cuisines, cuisine],
+    }));
+  }
+
   function changeLocale(locale: SupportedLocale) {
     setProfile((current) => ({
       ...current,
       locale,
       budget_minor: locale === "en" ? 2500 : 6000,
+      budget_is_explicit: false,
     }));
   }
 
@@ -74,10 +85,20 @@ export function DailyContextForm({
           ))}
         </div>
       </fieldset>
+      <fieldset className="allergen-fieldset cuisine-fieldset">
+        <legend>{t("profile.cuisines")}</legend>
+        <p>{t("profile.cuisinesHint")}</p>
+        <div className="check-grid">
+          {RESTAURANT_CUISINES.map((value) => <label key={value}>
+            <input type="checkbox" checked={profile.preferred_cuisines.includes(value)} onChange={() => toggleCuisine(value)} />
+            <span>{t(`cuisine.${value}`)}</span>
+          </label>)}
+        </div>
+      </fieldset>
       <div className="form-grid compact-form-grid">
         <div className="field">
           <label htmlFor="profile-budget">{t("profile.maximum", { symbol: profile.locale === "en" ? "$" : "¥" })}</label>
-          <input id="profile-budget" type="number" min="1" max="1000" step="1" value={profile.budget_minor / 100} onChange={(event) => setProfile({ ...profile, budget_minor: Math.round(Number(event.target.value) * 100) })} />
+          <input id="profile-budget" type="number" min="1" max="1000" step="1" value={profile.budget_minor / 100} onChange={(event) => setProfile({ ...profile, budget_minor: Math.round(Number(event.target.value) * 100), budget_is_explicit: true })} />
         </div>
         <div className="field">
           <label htmlFor="profile-duration">{t("profile.duration")}</label>

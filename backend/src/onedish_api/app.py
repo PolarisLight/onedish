@@ -19,8 +19,12 @@ from onedish_api.privacy import (
     RequestBodyLimitMiddleware,
     sanitized_validation_error,
 )
+from onedish_api.providers.amap import AmapPlacesProvider
 from onedish_api.providers.fixtures import FixturePlacesProvider
 from onedish_api.providers.foursquare import FoursquarePlacesProvider
+from onedish_api.providers.overture import OverturePlacesProvider
+from onedish_api.rerankers.openai import OpenAIRestaurantReranker
+from onedish_api.restaurants.service import RestaurantRecommendationService
 from onedish_api.routes import build_router
 from onedish_api.settings import Settings
 
@@ -42,22 +46,43 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         asset_root=config.web_public_path,
     )
     decision_rules = load_decision_rules(config.decision_rules_path)
-    if config.mode == "live" and config.foursquare_api_key:
+    recommendation_places_provider = FixturePlacesProvider(config.places_path)
+    if config.amap_web_key:
+        places_provider = AmapPlacesProvider(config.amap_web_key)
+    elif config.mode == "live" and config.foursquare_api_key:
         places_provider = FoursquarePlacesProvider(config.foursquare_api_key)
     else:
-        places_provider = FixturePlacesProvider(config.places_path)
+        places_provider = recommendation_places_provider
+
+    restaurant_providers = [OverturePlacesProvider(config.overture_places_path)]
+    if config.amap_web_key:
+        restaurant_providers.append(AmapPlacesProvider(config.amap_web_key))
+    restaurant_reranker = (
+        OpenAIRestaurantReranker(config.openai_api_key, config.openai_rerank_model)
+        if config.openai_api_key
+        else None
+    )
+    restaurant_service = RestaurantRecommendationService(
+        providers=restaurant_providers,
+        reranker=restaurant_reranker,
+        rerank_timeout_seconds=config.restaurant_rerank_timeout_seconds,
+    )
 
     app = FastAPI(title="OneDish API", version="0.1.0", docs_url=None, redoc_url=None)
     app.state.settings = config
     app.state.catalog = catalog
     app.state.decision_rules = decision_rules
     app.state.places_provider = places_provider
+    app.state.recommendation_places_provider = recommendation_places_provider
+    app.state.restaurant_service = restaurant_service
     app.add_exception_handler(RequestValidationError, sanitized_validation_error)
     app.include_router(
         build_router(
             catalog=catalog,
             places_provider=places_provider,
+            recommendation_places_provider=recommendation_places_provider,
             decision_rules=decision_rules,
+            restaurant_service=restaurant_service,
         )
     )
 

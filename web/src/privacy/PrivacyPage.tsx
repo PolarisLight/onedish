@@ -36,6 +36,7 @@ export function PrivacyPage() {
     <p className="hero-kicker">{t("privacy.kicker")}</p>
     <h1 className="page-title">{t("privacy.title")}</h1>
     <p className="page-lede privacy-promise">{t("privacy.promise")}</p>
+    <section className="privacy-restaurant-boundary" aria-label={t("privacy.restaurantBoundaryTitle")}><h2>{t("privacy.restaurantBoundaryTitle")}</h2><p>{t("privacy.restaurantBoundaryPlaces")}</p><p>{t("privacy.restaurantBoundaryAI")}</p></section>
     <PrivacyBoundaryExplorer />
     <section className="privacy-controls">
       <label className="privacy-toggle"><input type="checkbox" checked={locationEnabled} onChange={(event) => void changeLocation(event.target.checked)} /><span>{t("privacy.allowLocation")}</span></label>

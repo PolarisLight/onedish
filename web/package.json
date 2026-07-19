@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:e2e": "node scripts/e2e-runtime.mjs build",
+    "serve:e2e": "node scripts/e2e-runtime.mjs serve",
     "test": "vitest",
     "lint": "eslint . --max-warnings 0",
     "e2e": "playwright test"

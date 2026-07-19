@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("one tap creates a live decision and can pick another", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/demo");
   await expect(page.getByRole("heading", { name: "What should I eat?" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Pick my meal" })).toBeInViewport();
   await page.getByRole("button", { name: "Pick my meal" }).click();
@@ -20,7 +20,7 @@ test("one tap creates a live decision and can pick another", async ({ page }) =>
 
 test("320px mobile actions stay above the fold", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 640 });
-  await page.goto("/");
+  await page.goto("/demo");
   await expect(page.getByRole("button", { name: "Pick my meal" })).toBeInViewport();
   await page.getByRole("button", { name: "Pick my meal" }).click();
   await page.getByRole("button", { name: "Skip" }).click();

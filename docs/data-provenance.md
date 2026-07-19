@@ -15,7 +15,7 @@
 
 The catalog contains ninety reviewed fictional dishes across ten fictional restaurants. Nutrition is
 represented as a range and labeled estimated unless an explicitly authoritative source is present.
-Foursquare results, when enabled, describe nearby places only. They are not evidence that a place
+AMap or Foursquare results, when enabled, describe nearby places only. They are not evidence that a place
 stocks a demo dish, delivers to the user, or accepts orders through OneDish.
 
 Detailed image generation dates and rights are stored in `web/public/food/attribution.json`.

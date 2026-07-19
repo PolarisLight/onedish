@@ -26,7 +26,9 @@ export function defaultProfile(
     excluded_allergens: [],
     excluded_ingredients: [],
     desired_taste_tags: [],
+    preferred_cuisines: [],
     budget_minor: defaults.budget_minor,
+    budget_is_explicit: false,
     duration_minutes: defaults.duration_minutes,
   };
 }

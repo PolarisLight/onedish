@@ -18,7 +18,7 @@ export function Layout() {
           <Link to="/history">{t("nav.orbit")}</Link>
           <Link to="/privacy">{t("nav.privacy")}</Link>
           <LocaleSwitch />
-          <DemoBadge />
+          {location.pathname === "/demo" || /^\/(choose|winner|nearby)\//.test(location.pathname) ? <DemoBadge /> : null}
         </nav>
       </header>
       <Outlet />

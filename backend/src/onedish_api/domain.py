@@ -91,8 +91,16 @@ class Place(StrictFrozenModel):
     rating: float | None = Field(default=None, ge=0, le=10)
     open_state: Literal["open", "closed", "unknown"]
     order_destination: str | None = None
-    source_kind: Literal["foursquare_place", "fixture_place"]
+    source_kind: Literal[
+        "amap_place", "foursquare_place", "fixture_place", "overture_place"
+    ]
     attribution: str = Field(min_length=1, max_length=100)
+    address: str | None = Field(default=None, max_length=300)
+    average_cost_minor: int | None = Field(default=None, ge=0, le=10_000_000)
+    currency: Currency | None = None
+    latitude: float | None = Field(default=None, ge=-90, le=90)
+    longitude: float | None = Field(default=None, ge=-180, le=180)
+    photo_url: str | None = None
 
 
 class LocalizedDishText(StrictFrozenModel):

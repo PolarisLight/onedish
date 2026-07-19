@@ -5,6 +5,7 @@ import type {
   MealContext,
   Place,
 } from "../domain/contracts";
+import type { RestaurantCuisine } from "../restaurants/cuisines";
 
 
 export type SupportedLocale = "en" | "zh-CN";
@@ -49,7 +50,9 @@ export interface UserProfile {
   readonly excluded_allergens: readonly string[];
   readonly excluded_ingredients: readonly string[];
   readonly desired_taste_tags: readonly string[];
+  readonly preferred_cuisines: readonly RestaurantCuisine[];
   readonly budget_minor: number;
+  readonly budget_is_explicit: boolean;
   readonly duration_minutes: number;
 }
 

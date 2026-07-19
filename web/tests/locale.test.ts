@@ -23,3 +23,8 @@ test("formats converted prices and locale distance units", () => {
   expect(formatDistance(1609, "en")).toContain("mi");
   expect(formatDistance(1609, "zh-CN")).toContain("公里");
 });
+
+test("formats an explicit currency independently from the interface locale", () => {
+  expect(formatMoney(5000, "en", "CNY")).toBe("CN¥50.00");
+  expect(formatMoney(5000, "zh-CN", "USD")).toBe("US$50.00");
+});

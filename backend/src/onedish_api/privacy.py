@@ -123,9 +123,15 @@ async def sanitized_validation_error(
 ) -> JSONResponse:
     safe_errors: list[dict[str, Any]] = []
     for error in exc.errors():
+        location = tuple(error.get("loc", ()))
+        safe_location = tuple(
+            part
+            for index, part in enumerate(location)
+            if index + 1 >= len(location) or location[index + 1] != "[key]"
+        )
         safe_errors.append(
             {
-                "loc": error.get("loc", ()),
+                "loc": safe_location,
                 "msg": error.get("msg", "Invalid value"),
                 "type": error.get("type", "validation_error"),
             }

@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 async function createHistory(page: import("@playwright/test").Page) {
-  await page.goto("/");
+  await page.goto("/demo");
   await page.getByRole("button", { name: "Pick my meal" }).click();
   const skip = page.getByRole("button", { name: "Skip" });
   const meet = page.getByRole("button", { name: "Meet your dish" });

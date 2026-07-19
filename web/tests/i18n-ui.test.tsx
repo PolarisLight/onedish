@@ -59,7 +59,7 @@ test("switches shell navigation without hiding the language control", async () =
 test("switches home and profile interface copy to Chinese", async () => {
   render(<LocaleProvider><MemoryRouter><LocaleSwitch /><HomePage /></MemoryRouter></LocaleProvider>);
   fireEvent.click(screen.getByRole("button", { name: "中文" }));
-  await waitFor(() => expect(screen.getByRole("button", { name: "帮我选一餐" })).toBeVisible());
+  await waitFor(() => expect(screen.getByRole("button", { name: "看看吃什么" })).toBeVisible());
   fireEvent.click(screen.getByRole("button", { name: "调整" }));
   expect(screen.getByRole("dialog", { name: "用餐偏好" })).toBeVisible();
   expect(screen.getByRole("checkbox", { name: "花生" })).toBeVisible();

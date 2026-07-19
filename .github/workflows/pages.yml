@@ -32,6 +32,7 @@ jobs:
       - run: pnpm --dir web build
         env:
           VITE_BASE_PATH: /onedish/
+          VITE_RESTAURANT_FIRST: "0"
       - run: cp web/dist/index.html web/dist/404.html
       - run: touch web/dist/.nojekyll
       - uses: actions/configure-pages@v5

@@ -4,9 +4,13 @@ import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 
 const basePath = process.env.VITE_BASE_PATH ?? "/";
+const webRoot = fileURLToPath(new URL(".", import.meta.url));
+const repositoryRoot = fileURLToPath(new URL("..", import.meta.url));
+const isolatedE2eEnvDir = fileURLToPath(new URL("./e2e-env", import.meta.url));
 
-export default defineConfig({
-  root: fileURLToPath(new URL(".", import.meta.url)),
+export default defineConfig(({ mode }) => ({
+  root: webRoot,
+  envDir: mode === "e2e" ? isolatedE2eEnvDir : repositoryRoot,
   base: basePath,
   plugins: [
     react(),
@@ -43,4 +47,4 @@ export default defineConfig({
     include: ["tests/**/*.test.{ts,tsx}"],
     setupFiles: "./tests/setup.ts",
   },
-});
+}));

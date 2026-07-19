@@ -32,6 +32,7 @@ packages = ["src/onedish_api"]
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+markers = ["live: opt-in external provider smoke tests"]
 
 [tool.ruff]
 line-length = 100

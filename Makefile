@@ -1,7 +1,8 @@
 PYTHON := backend/.venv/bin/python
 PNPM := pnpm --dir web
+TEST_ENV := AMAP_WEB_KEY= ONEDISH_AMAP_WEB_KEY= OPENAI_API_KEY= ONEDISH_OPENAI_API_KEY= FOURSQUARE_API_KEY= ONEDISH_FOURSQUARE_API_KEY=
 
-.PHONY: install test lint build demo-data runtime-data dev
+.PHONY: install test lint build demo-data runtime-data dev dev-api dev-web
 
 install:
 	python3 -m venv backend/.venv
@@ -9,7 +10,7 @@ install:
 	pnpm --dir web install
 
 test: runtime-data
-	backend/.venv/bin/pytest backend/tests -q
+	$(TEST_ENV) backend/.venv/bin/pytest backend/tests -q
 	pnpm --dir web test -- --run
 
 lint:
@@ -28,4 +29,10 @@ runtime-data:
 	backend/.venv/bin/python scripts/sync_runtime_data.py
 
 dev:
-	@echo "Run backend and web development servers in separate terminals."
+	@echo "Run 'make dev-api' and 'make dev-web' in separate terminals."
+
+dev-api:
+	backend/.venv/bin/uvicorn onedish_api.app:app --host 127.0.0.1 --port 8000
+
+dev-web:
+	pnpm --dir web dev

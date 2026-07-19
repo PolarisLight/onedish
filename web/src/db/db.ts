@@ -1,5 +1,6 @@
 import Dexie, { type EntityTable } from "dexie";
 import type { UserProfile } from "../recommendation/types";
+import { normalizeRestaurantCuisines } from "../restaurants/cuisines";
 
 export interface SettingRow { key: string; value: unknown }
 export interface DailyContextRow { date: string; payload: unknown }
@@ -22,7 +23,7 @@ export interface PrivacyAccessEventRow {
   occurred_at: string;
   category: ProtectedDataCategory;
   purpose: "nearby_map" | "profile_read" | "profile_delete";
-  recipient: "device" | "OpenStreetMap";
+  recipient: "device" | "OpenStreetMap" | "AMap" | "AMap Places + OpenStreetMap";
 }
 
 class OneDishDB extends Dexie {
@@ -67,12 +68,53 @@ export async function saveDecision(session: DecisionSessionRow) {
 }
 
 export async function saveProfile(profile: UserProfile) {
-  await db.settings.put({ key: "profile.v2", value: profile });
+  await db.settings.put({
+    key: "profile.v2",
+    value: { ...profile, preferred_cuisines: normalizeRestaurantCuisines(profile.preferred_cuisines) },
+  });
+}
+
+type StoredUserProfile = Omit<UserProfile, "budget_is_explicit" | "preferred_cuisines"> & {
+  readonly budget_is_explicit?: boolean;
+  readonly preferred_cuisines?: readonly string[];
+};
+
+function isStringArray(value: unknown): value is readonly string[] {
+  return Array.isArray(value) && value.every((item) => typeof item === "string");
+}
+
+function isStoredUserProfile(value: unknown): value is StoredUserProfile {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) return false;
+  const profile = value as Record<string, unknown>;
+  return (profile.locale === "en" || profile.locale === "zh-CN")
+    && isStringArray(profile.excluded_allergens)
+    && isStringArray(profile.excluded_ingredients)
+    && isStringArray(profile.desired_taste_tags)
+    && (profile.preferred_cuisines === undefined || isStringArray(profile.preferred_cuisines))
+    && typeof profile.budget_minor === "number"
+    && (profile.budget_is_explicit === undefined || typeof profile.budget_is_explicit === "boolean")
+    && typeof profile.duration_minutes === "number";
+}
+
+function validInteger(value: number, minimum: number, maximum: number): boolean {
+  return Number.isFinite(value) && Number.isInteger(value) && value >= minimum && value <= maximum;
 }
 
 export async function getProfile(): Promise<UserProfile | null> {
   const row = await db.settings.get("profile.v2");
-  return row?.value ? row.value as UserProfile : null;
+  if (!isStoredUserProfile(row?.value)) return null;
+  const defaults = row.value.locale === "en"
+    ? { budget_minor: 2500, duration_minutes: 20 }
+    : { budget_minor: 6000, duration_minutes: 20 };
+  const budgetIsValid = validInteger(row.value.budget_minor, 100, 100_000);
+  const durationIsValid = [15, 20, 30, 45].includes(row.value.duration_minutes);
+  return {
+    ...row.value,
+    preferred_cuisines: normalizeRestaurantCuisines(row.value.preferred_cuisines),
+    budget_minor: budgetIsValid ? row.value.budget_minor : defaults.budget_minor,
+    budget_is_explicit: budgetIsValid ? (row.value.budget_is_explicit ?? false) : false,
+    duration_minutes: durationIsValid ? row.value.duration_minutes : defaults.duration_minutes,
+  };
 }
 
 export async function getRecentHistory(days: number, now: Date): Promise<HistoryEventRow[]> {

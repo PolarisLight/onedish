@@ -3,6 +3,8 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from onedish_api.app import create_app
+from onedish_api.providers.amap import AmapPlacesProvider
+from onedish_api.providers.fixtures import FixturePlacesProvider
 from onedish_api.settings import Settings
 
 
@@ -132,3 +134,17 @@ def test_production_serves_pwa_and_deep_link_fallback() -> None:
     assert deep_link.status_code == 200
     assert "root" in deep_link.text
     assert api.json()["status"] == "ready"
+
+
+def test_amap_key_only_replaces_nearby_discovery_provider() -> None:
+    settings = Settings(
+        mode="demo",
+        root_path=ROOT,
+        allowed_hosts=("testserver",),
+        amap_web_key="private-amap-key",
+    )
+
+    app = create_app(settings)
+
+    assert isinstance(app.state.places_provider, AmapPlacesProvider)
+    assert isinstance(app.state.recommendation_places_provider, FixturePlacesProvider)

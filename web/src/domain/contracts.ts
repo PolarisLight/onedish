@@ -66,12 +66,20 @@ export interface Dish {
 export interface Place {
   readonly id: string;
   readonly name: string;
+  readonly category?: string;
   readonly distance_m: number;
+  readonly price_tier?: number | null;
   readonly rating: number | null;
   readonly open_state: "open" | "closed" | "unknown";
   readonly order_destination: string | null;
-  readonly source_kind: "fixture_place" | "foursquare_place";
+  readonly source_kind: "amap_place" | "fixture_place" | "foursquare_place";
   readonly attribution: string;
+  readonly address?: string | null;
+  readonly average_cost_minor?: number | null;
+  readonly currency?: string | null;
+  readonly latitude?: number | null;
+  readonly longitude?: number | null;
+  readonly photo_url?: string | null;
 }
 
 export interface Candidate {

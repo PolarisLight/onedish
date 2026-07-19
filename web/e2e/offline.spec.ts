@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("installed demo remains usable after the network disappears", async ({ context, page }) => {
-  await page.goto("/");
+  await page.goto("/demo");
   await page.evaluate(async () => { await navigator.serviceWorker.ready; });
   await page.reload();
   await context.setOffline(true);

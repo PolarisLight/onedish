@@ -2,114 +2,134 @@
 
 **English** | [简体中文](README.zh-CN.md)
 
-![OneDish: The right meal, right now](docs/assets/onedish-devpost-thumbnail.png)
+![OneDish: one real nearby restaurant](docs/assets/onedish-devpost-thumbnail.png)
 
-**Stop browsing. Eat this.** OneDish turns nearby meal options into one auditable answer, using your budget, dietary rules, current context, and recent meals.
+**Stop browsing. Go here.** OneDish turns the restaurants around you—or around a landmark you choose—into one grounded choice with evidence-backed reasons.
 
-[Try the live demo](https://polarislight.github.io/onedish/) · [Watch the 2:08 demo](docs/demo/onedish-demo.mp4)
+[Open the static offline demo](https://polarislight.github.io/onedish/)
 
-## The problem
+GitHub Pages hosts the 90-dish offline showcase only. It has no FastAPI service, live AMap discovery, or real restaurant recommendation. Run or deploy both the web app and API to use the map-first restaurant flow.
 
-Dinner should be a small decision. Instead, most food apps hand you an endless feed and ask you to compare everything yourself. The problem gets worse when price, allergies, energy, cravings, and yesterday's meal all matter at once.
+## Map-first restaurant flow
 
-OneDish makes the decision. It returns one dish and shows exactly how it got there.
+Current location stays the one-tap default, while a map-backed meeting-place flow supports plans away from where you are now:
 
-## What OneDish does
+1. **See what to eat** explains why location is needed, then requests the device position once.
+2. **Choose another place** opens AMap. Search for a station, park, school, mall, or other real POI, select its marker or result, then confirm it.
+3. OneDish discovers restaurants once within a fixed **3 km** radius of that coordinate. It never silently starts at 1.5 km or expands beyond 3 km.
+4. Deterministic scoring uses only available rating, explicit budget, explicit taste, real history, confidence, and distance evidence. Distance is a weak signal, not the main rule.
+5. The response is labeled `exploration` when no supported personal signal exists, and `personalized` only when an explicit preference or meaningful history is actually available.
+6. OpenAI may select only from the top ten real candidate IDs. Invalid or late output is discarded after 2,000 ms.
+7. **Pick another** rotates the complete active in-memory record—restaurant, facts, and candidate-specific reasons—without another provider or model request.
 
-- Gives you one winner instead of another recommendation list.
-- Treats allergen exclusions as hard rules that can never be relaxed.
-- Explains every elimination stage with the stored evidence from that decision.
-- Learns from meals you accept, reject, or mark as eaten on the device.
-- Turns that history into an interactive Taste Orbit you can inspect and reset.
-- Shows where location, health context, and preference data would go before you grant access.
+The original 90-dish deterministic experience remains available at `/demo`, clearly labeled as an offline showcase.
 
-The default demo needs no API key. It works from ten fictional restaurants and 90 versioned demo dishes, then remains available offline after its first load.
+## Deployment topology
 
-## How a decision is made
-
-1. OneDish reads the context you choose to provide. Missing information stays unknown.
-2. Hard constraints remove unsafe or impossible dishes.
-3. The deterministic engine scores the remaining dishes against budget, distance, nutrition estimates, variety, and taste signals.
-4. OneDish stores the complete decision record before the animation begins.
-5. The winner page shows the dish, the reasons it survived, and a bounded alternative when you choose **Pick another**.
-
-The elimination animation explains a decision that already exists. It does not simulate model thinking or manufacture survivor counts.
-
-## Where AI fits
-
-OpenAI's Responses API is optional and deliberately narrow. It can turn natural food language such as "warm, spicy, but not too heavy" into validated fields. It cannot select the winner, change a score, or override an allergy rule.
-
-Deterministic code owns the final decision. If the model or network is unavailable, the local browser engine still works.
+- **GitHub Pages:** static offline demo, built with `VITE_RESTAURANT_FIRST=0`; it makes no restaurant API claim.
+- **Map-first product:** deploy FastAPI with its runtime data and provider secrets, then deploy the web app with `/api` routed to that service. Public AMap map usage also requires the documented same-origin security proxy.
 
 ## Architecture
 
 ```text
-React PWA + IndexedDB
-  ├─ local settings, daily context, and meal history
-  ├─ deterministic recommendation engine
-  ├─ versioned catalog, place fixtures, and decision rules
-  └─ optional FastAPI service
-       ├─ Foursquare or fixture place discovery
-       ├─ OpenAI Responses semantic interpretation
-       └─ deterministic server-side engine
+Current location (after consent) or confirmed AMap POI
+        │
+        ▼
+FastAPI restaurant service
+  ├─ AMap live observations (active use only, never cached or saved)
+  └─ Overture local artifact (licensed open data + attribution)
+        │
+        ▼
+fixed 3 km discovery → normalize → deduplicate → evidence-only score
+        │
+        ├─ optional constrained OpenAI rerank (≤ 2,000 ms)
+        └─ complete deterministic fallback
+        │
+        ▼
+React active-memory session → real elimination trace → one restaurant
 ```
 
-The browser stores the complete immutable decision session in IndexedDB. Demo assets, food imagery, and the application shell are precached; `/api` requests remain network-only.
-
-## Run it locally
+## Run locally
 
 Requirements: Python 3.12+, Node.js 22+, and pnpm.
 
 ```bash
 make install
-make runtime-data
-pnpm --dir web dev
+cp .env.example .env.local
 ```
 
-Open <http://127.0.0.1:5173> and choose **Pick my meal**.
-
-The browser demo runs without the API. To start the optional service:
-
-```bash
-backend/.venv/bin/uvicorn onedish_api.app:app --host 127.0.0.1 --port 8000
-```
-
-## Optional live providers
-
-Copy `.env.example` to `.env` and configure only the providers you want:
+Configure the server-side restaurant provider and the browser map separately in `.env.local`:
 
 ```text
-ONEDISH_MODE=live
-ONEDISH_FOURSQUARE_API_KEY=...
-ONEDISH_OPENAI_API_KEY=...
+AMAP_WEB_KEY=your_server_side_key
+VITE_AMAP_JS_KEY=your_browser_js_key
+VITE_AMAP_SECURITY_CODE=development_only_security_code
+VITE_RESTAURANT_FIRST=1
 ```
 
-Foursquare can discover nearby places in live mode. It does not prove delivery coverage or provide the fictional demo menus. No provider key is bundled into the browser.
+- `AMAP_WEB_KEY` is used only by FastAPI for AMap Web Service restaurant discovery. Do not expose it to the browser.
+- `VITE_AMAP_JS_KEY` loads AMap JavaScript API 2.0 for map display, POI search, and marker selection. Restrict the key to the intended domains in AMap.
+- `VITE_AMAP_SECURITY_CODE` is supported for local development only. Any `VITE_` value is compiled into browser assets, so never use this mode for a public production build.
+
+For production, omit `VITE_AMAP_SECURITY_CODE` and configure the browser to use a same-origin AMap security proxy:
+
+```text
+VITE_AMAP_JS_KEY=your_domain_restricted_browser_js_key
+VITE_AMAP_SERVICE_HOST=/_AMapService
+```
+
+The service host must be same-origin and end at `/_AMapService`; deploy that proxy according to AMap's security configuration. Keep the security code on the proxy side—never commit it, print it, or return it to the browser.
+
+From the repository root, start the API and web app in separate terminals:
+
+```bash
+make dev-api
+make dev-web
+```
+
+Both commands load the same repository-root `.env.local`: FastAPI resolves it by absolute repository path, and Vite uses the repository root as its `envDir`. No manual `export` is required. Vite proxies `/api` to the backend in development. Open <http://127.0.0.1:5173>, then use current location or **Choose another place**. Set `VITE_RESTAURANT_FIRST=0` to make the offline demo the root experience; `/demo` always remains available.
+
+When running an installed wheel, container image, or another layout without the source-checkout markers, set `ONEDISH_ROOT_PATH` to the runtime asset root containing `data/`, `web/public/`, and `web/dist/` when FastAPI serves the production frontend. Supply deployment secrets through the platform environment or secret manager. Installed deployments do not search virtual-environment parent directories and do not automatically load a nearby `.env.local`. Code that embeds the application may instead pass `Settings(root_path=...)` explicitly.
+
+## Optional OpenAI reranking
+
+Set `OPENAI_API_KEY` to enable the constrained Responses API adapter. `ONEDISH_OPENAI_API_KEY` remains a backward-compatible fallback; when both are set, the standard name wins. The model receives only candidate IDs, coarse distance/cost buckets, supported fields, deterministic scores, summarized preferences, and allowlisted reason codes. It never receives the requested meal period, coordinates, addresses, navigation URLs, or the complete profile. The product works without this key.
+
+## Open restaurant artifact
+
+`data/restaurants.xiamen.v1.json` is the licensed local place artifact. Regenerate it from an Overture places Parquet file with:
+
+```bash
+backend/.venv/bin/python scripts/build_xiamen_restaurants.py \
+  --input /path/to/overture-places.parquet \
+  --output data/restaurants.xiamen.v1.json
+```
+
+Upstream attribution must be retained per record. An empty artifact is valid during AMap-only development but does not provide the open-data fallback.
 
 ## Privacy and honest limits
 
-Preferences, daily context, history, and decision records stay in local IndexedDB. There is no account, advertising identifier, third-party analytics, or background synchronization. Demo reset deletes all four local tables.
+- Device coordinates, a selected POI, and AMap observations are active-use only. OneDish does not persist, cache, analyze, or log their IDs, names, addresses, coordinates, or provider payloads.
+- Restaurant sessions live in JavaScript module memory and disappear on reload.
+- Licensed open-place records may be stored with attribution.
+- Local preferences and abstract meal-history signals remain in IndexedDB.
+- Dragging the map changes only the viewport. OneDish accepts only a real POI marker or map-backed result, never an arbitrary coordinate.
+- OneDish does not claim live menu inventory, delivery, ordering, nutrition, opening status, price, rating, or allergen safety unless the active provider evidence supports that field.
 
-OneDish does not claim live menu inventory, delivery availability, cart access, payment, or completed ordering. Search links open a platform search. Food photos, prices, calories, protein, and distance are labeled demo data or estimates where appropriate.
+Read [privacy](docs/privacy.md), [operations](docs/runbook.md), the approved [restaurant-first design](docs/superpowers/specs/2026-07-19-onedish-restaurant-first-design.md), and the [map-selection and cold-start design](docs/superpowers/specs/2026-07-19-restaurant-map-cold-start-design.md).
 
-Precise location reaches a map or place provider only after permission. Raw health samples are outside the API contract. Read the full [privacy boundary](docs/privacy.md) and [data provenance](docs/data-provenance.md).
-
-## Verification
+## Verify
 
 ```bash
 make test
 make lint
 make build
-backend/.venv/bin/python scripts/build_offline_demo.py --check
-backend/.venv/bin/python scripts/validate_catalog.py
-backend/.venv/bin/python scripts/verify_public_artifacts.py
+pnpm --dir web e2e
 ```
-
-The repository also includes the [demo script](docs/demo-script.md), captions, narration source, and a validator for the final video bundle.
 
 ## Built with
 
-OpenAI Responses API, Codex, React, TypeScript, Dexie, Vite, FastAPI, Pydantic, Vitest, Playwright, and vite-plugin-pwa.
+OpenAI Responses API, React, TypeScript, Vite, Motion, FastAPI, Pydantic, httpx, AMap, Overture Maps, Vitest, and Playwright.
 
 ## License
 

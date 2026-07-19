@@ -1,4 +1,6 @@
-import { parseDemoRecord, type DemoRecord } from "../domain/contracts";
+import { parseDemoRecord, type DemoRecord, type Place } from "../domain/contracts";
+import { parseRestaurantRecommendation } from "../restaurants/parser";
+import type { RestaurantRecommendRequest, RestaurantRecommendResponse } from "../restaurants/types";
 
 async function boundedFetch(input: string, init: RequestInit, signal?: AbortSignal) {
   const timeout = new AbortController();
@@ -21,6 +23,45 @@ export async function recommend(payload: unknown, signal?: AbortSignal) {
     { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) },
     signal,
   );
+}
+
+export async function recommendRestaurant(
+  payload: RestaurantRecommendRequest,
+  signal?: AbortSignal,
+): Promise<RestaurantRecommendResponse> {
+  const value = await boundedFetch(
+    "/api/v1/restaurants/recommend",
+    { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) },
+    signal,
+  );
+  return parseRestaurantRecommendation(value);
+}
+
+export async function findNearbyPlaces(
+  point: { readonly latitude: number; readonly longitude: number },
+  signal?: AbortSignal,
+): Promise<readonly Place[]> {
+  const payload = await boundedFetch(
+    "/api/v1/places/nearby",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        latitude: point.latitude,
+        longitude: point.longitude,
+        radius_m: 3000,
+        limit: 10,
+      }),
+    },
+    signal,
+  );
+  if (!Array.isArray(payload)) throw new Error("Invalid nearby response");
+  return payload.filter((place): place is Place => (
+    typeof place === "object" && place !== null
+    && typeof (place as Place).id === "string"
+    && typeof (place as Place).name === "string"
+    && typeof (place as Place).distance_m === "number"
+  ));
 }
 
 export async function loadDemo(

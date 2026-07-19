@@ -21,8 +21,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `${process.execPath} node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 4174`,
+    command: "pnpm run serve:e2e",
     port: 4174,
-    reuseExistingServer: true,
+    reuseExistingServer: false,
   },
 });

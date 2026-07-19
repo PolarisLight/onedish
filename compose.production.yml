@@ -1,0 +1,34 @@
+name: onedish
+
+services:
+  onedish:
+    container_name: onedish
+    image: "onedish:${ONEDISH_IMAGE_TAG:-local}"
+    build:
+      context: .
+      args:
+        VITE_AMAP_JS_KEY: "${VITE_AMAP_JS_KEY:?VITE_AMAP_JS_KEY is required}"
+    env_file:
+      - "${ONEDISH_RUNTIME_ENV_FILE:-/opt/onedish/secrets/runtime.env}"
+    environment:
+      ONEDISH_ENVIRONMENT: production
+      ONEDISH_MODE: live
+      ONEDISH_ROOT_PATH: /app
+      ONEDISH_ALLOWED_HOSTS: '["onedish.cyhao.space","127.0.0.1","localhost"]'
+    ports:
+      - "127.0.0.1:18080:8000"
+    restart: unless-stopped
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=2).read()"]
+      interval: 15s
+      timeout: 3s
+      start_period: 20s
+      retries: 4

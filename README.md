@@ -6,9 +6,9 @@
 
 **Stop browsing. Go here.** OneDish turns the restaurants around you—or around a landmark you choose—into one grounded choice with evidence-backed reasons.
 
-[Open the static offline demo](https://polarislight.github.io/onedish/)
+[Use the map-first product](https://onedish.cyhao.space/) | [Open the static offline demo](https://polarislight.github.io/onedish/)
 
-GitHub Pages hosts the 90-dish offline showcase only. It has no FastAPI service, live AMap discovery, or real restaurant recommendation. Run or deploy both the web app and API to use the map-first restaurant flow.
+The VPS product uses the live FastAPI and AMap integrations. GitHub Pages keeps the fixture-backed 90-dish offline showcase as a durable fallback.
 
 ## Map-first restaurant flow
 
@@ -27,7 +27,7 @@ The original 90-dish deterministic experience remains available at `/demo`, clea
 ## Deployment topology
 
 - **GitHub Pages:** static offline demo, built with `VITE_RESTAURANT_FIRST=0`; it makes no restaurant API claim.
-- **Map-first product:** deploy FastAPI with its runtime data and provider secrets, then deploy the web app with `/api` routed to that service. Public AMap map usage also requires the documented same-origin security proxy.
+- **Map-first product:** `onedish.cyhao.space` serves FastAPI and the PWA from one origin, with `/api` routed locally and `/_AMapService` handled by the documented same-origin security proxy.
 
 ## Architecture
 

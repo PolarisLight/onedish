@@ -22,7 +22,11 @@ export function OfflineDemoHomePage() {
     <div className="hero-copy"><p className="hero-kicker">{t("offline.kicker")}</p>
       <h1>{t("home.title.before")}<span>{t("home.title.accent")}</span></h1>
       <p className="hero-lede">{t("offline.body")}</p>
-      <div className="hero-actions"><button className="primary-button" onClick={() => void choose()} disabled={busy}>{busy ? t("home.picking") : t("home.pick")}</button></div>
+      <div className="hero-actions">
+        <button className="primary-button" onClick={() => void choose()} disabled={busy}>{busy ? t("home.picking") : t("home.pick")}</button>
+        <a className="secondary-button" href="https://onedish.cyhao.space/">{t("offline.liveProduct")}</a>
+      </div>
+      <p className="hero-action-note">{t("offline.liveNote")}</p>
       <p className="home-error">{error}</p>
     </div>
     <div className="hero-visual"><img className="hero-photo" src={`${import.meta.env.BASE_URL}food/ember-bowl-charred-chicken-rice.webp`} alt={t("home.previewAlt")} /></div>

@@ -1,0 +1,1 @@
+23 4 * * * root /opt/onedish/current/scripts/renew_tls_vps.sh >> /var/log/onedish-cert-renew.log 2>&1

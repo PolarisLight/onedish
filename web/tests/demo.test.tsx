@@ -1,5 +1,7 @@
 import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router";
 import { DemoBadge } from "../src/demo/DemoBadge";
+import { OfflineDemoHomePage } from "../src/demo/OfflineDemoHomePage";
 import { parseDemoRecord } from "../src/domain/contracts";
 import { LocaleProvider } from "../src/i18n/locale";
 
@@ -7,6 +9,15 @@ describe("demo boundary", () => {
   it("shows a persistent preview-mode label", () => {
     render(<LocaleProvider><DemoBadge /></LocaleProvider>);
     expect(screen.getByText("Preview mode")).toBeVisible();
+  });
+
+  it("keeps the offline demo while pointing visitors to the live product", () => {
+    render(<MemoryRouter><LocaleProvider><OfflineDemoHomePage /></LocaleProvider></MemoryRouter>);
+    expect(screen.getByRole("link", { name: "Open live map product" })).toHaveAttribute(
+      "href",
+      "https://onedish.cyhao.space/",
+    );
+    expect(screen.getByRole("button", { name: "Pick my meal" })).toBeVisible();
   });
 
   it("rejects a non-monotonic decision record", () => {

@@ -6,9 +6,9 @@
 
 **别再刷了，就去这里。** OneDish 把你周围——或者你选定的地标附近——的餐厅变成一个有真实依据的选择。
 
-[打开静态离线演示](https://polarislight.github.io/onedish/)
+[使用地图优先正式版](https://onedish.cyhao.space/) | [打开静态离线演示](https://polarislight.github.io/onedish/)
 
-GitHub Pages 只托管 90 道菜的离线展示，不包含 FastAPI、高德实时发现或真实餐厅推荐。地图优先的餐厅流程需要同时运行或部署网页与 API。
+VPS 正式版使用实时 FastAPI 与高德集成；GitHub Pages 保留基于固定数据的 90 道菜离线展示，作为稳定的备用入口。
 
 ## 地图优先的餐厅流程
 
@@ -25,7 +25,7 @@ GitHub Pages 只托管 90 道菜的离线展示，不包含 FastAPI、高德实�
 ## 部署拓扑
 
 - **GitHub Pages：**使用 `VITE_RESTAURANT_FIRST=0` 构建的静态离线演示，不声称能够请求真实餐厅。
-- **地图优先产品：**部署包含运行时数据和服务端供应商密钥的 FastAPI，再部署将 `/api` 路由到该服务的网页。公开使用高德地图还需要下文所述的同源安全代理。
+- **地图优先产品：**`onedish.cyhao.space` 同源提供 FastAPI 与 PWA，`/api` 在服务器本地转发，`/_AMapService` 由下文所述的同源安全代理处理。
 
 ## 架构
 

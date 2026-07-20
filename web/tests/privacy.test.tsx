@@ -21,7 +21,7 @@ test("explains all protected categories and marks sync as future capability", as
   expect(screen.getByText("Cloud sync is off. Your data stays on this device.")).toBeVisible();
   expect(screen.getByRole("checkbox", { name: "Allow location requests" })).toBeChecked();
   expect(screen.getByText(/AMap observations and precise coordinates stay only in the active search/i)).toBeVisible();
-  expect(screen.getByText(/AI receives minimized candidate fields, never your coordinates/i)).toBeVisible();
+  expect(screen.getByText(/No AI model receives this request/i)).toBeVisible();
 });
 
 test("requires confirmation before deleting local profile data", async () => {

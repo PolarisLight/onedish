@@ -23,7 +23,6 @@ from onedish_api.providers.amap import AmapPlacesProvider
 from onedish_api.providers.fixtures import FixturePlacesProvider
 from onedish_api.providers.foursquare import FoursquarePlacesProvider
 from onedish_api.providers.overture import OverturePlacesProvider
-from onedish_api.rerankers.openai import OpenAIRestaurantReranker
 from onedish_api.restaurants.service import RestaurantRecommendationService
 from onedish_api.routes import build_router
 from onedish_api.settings import Settings
@@ -57,16 +56,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     restaurant_providers = [OverturePlacesProvider(config.overture_places_path)]
     if config.amap_web_key:
         restaurant_providers.append(AmapPlacesProvider(config.amap_web_key))
-    restaurant_reranker = (
-        OpenAIRestaurantReranker(config.openai_api_key, config.openai_rerank_model)
-        if config.openai_api_key
-        else None
-    )
-    restaurant_service = RestaurantRecommendationService(
-        providers=restaurant_providers,
-        reranker=restaurant_reranker,
-        rerank_timeout_seconds=config.restaurant_rerank_timeout_seconds,
-    )
+    restaurant_service = RestaurantRecommendationService(providers=restaurant_providers)
 
     app = FastAPI(title="OneDish API", version="0.1.0", docs_url=None, redoc_url=None)
     app.state.settings = config

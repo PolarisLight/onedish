@@ -16,11 +16,11 @@ Current location stays the one-tap default, while a map-backed meeting-place flo
 
 1. **See what to eat** explains why location is needed, then requests the device position once.
 2. **Choose another place** opens AMap. Search for a station, park, school, mall, or other real POI, select its marker or result, then confirm it.
-3. OneDish discovers restaurants once within a fixed **3 km** radius of that coordinate. It never silently starts at 1.5 km or expands beyond 3 km.
-4. Deterministic scoring uses only available rating, explicit budget, explicit taste, real history, confidence, and distance evidence. Distance is a weak signal, not the main rule.
-5. The response is labeled `exploration` when no supported personal signal exists, and `personalized` only when an explicit preference or meaningful history is actually available.
-6. OpenAI may select only from the top ten real candidate IDs. Invalid or late output is discarded after 2,000 ms.
-7. **Pick another** rotates the complete active in-memory record—restaurant, facts, and candidate-specific reasons—without another provider or model request.
+3. OneDish searches **2 km**, then **3 km**, then **5 km**, stopping at the first radius with an eligible restaurant. It never goes beyond 5 km.
+4. Selected categories are hard OR conditions: every result must match at least one. A known price may stretch only to `budget + min(25%, ¥30/$5)`; larger known overruns are excluded, while missing prices are labeled unverified.
+5. Eligibility is followed by a fixed evidence score: 55% rating, 35% distance, and 10% recent-intent diversity. Missing evidence gets an explicit neutral or unverified treatment—never an invented fact.
+6. Controlled randomization draws without replacement from at most five options within eight score points of the leader. This creates variety without crossing the user's explicit conditions.
+7. **Pick another** rotates the complete active in-memory record—restaurant, facts, and candidate-specific reasons—without another provider request. No AI model participates in the Restaurant V2 decision.
 
 The original 90-dish deterministic experience remains available at `/demo`, clearly labeled as an offline showcase.
 
@@ -40,10 +40,13 @@ FastAPI restaurant service
   └─ Overture local artifact (licensed open data + attribution)
         │
         ▼
-fixed 3 km discovery → normalize → deduplicate → evidence-only score
+2 km → 3 km → 5 km discovery → hard eligibility rules
         │
-        ├─ optional constrained OpenAI rerank (≤ 2,000 ms)
-        └─ complete deterministic fallback
+        ▼
+fixed 55/35/10 evidence score → five-item quality pool
+        │
+        ▼
+controlled random order without replacement
         │
         ▼
 React active-memory session → real elimination trace → one restaurant
@@ -91,10 +94,6 @@ Both commands load the same repository-root `.env.local`: FastAPI resolves it by
 
 When running an installed wheel, container image, or another layout without the source-checkout markers, set `ONEDISH_ROOT_PATH` to the runtime asset root containing `data/`, `web/public/`, and `web/dist/` when FastAPI serves the production frontend. Supply deployment secrets through the platform environment or secret manager. Installed deployments do not search virtual-environment parent directories and do not automatically load a nearby `.env.local`. Code that embeds the application may instead pass `Settings(root_path=...)` explicitly.
 
-## Optional OpenAI reranking
-
-Set `OPENAI_API_KEY` to enable the constrained Responses API adapter. `ONEDISH_OPENAI_API_KEY` remains a backward-compatible fallback; when both are set, the standard name wins. The model receives only candidate IDs, coarse distance/cost buckets, supported fields, deterministic scores, summarized preferences, and allowlisted reason codes. It never receives the requested meal period, coordinates, addresses, navigation URLs, or the complete profile. The product works without this key.
-
 ## Open restaurant artifact
 
 `data/restaurants.xiamen.v1.json` is the licensed local place artifact. Regenerate it from an Overture places Parquet file with:
@@ -112,11 +111,11 @@ Upstream attribution must be retained per record. An empty artifact is valid dur
 - Device coordinates, a selected POI, and AMap observations are active-use only. OneDish does not persist, cache, analyze, or log their IDs, names, addresses, coordinates, or provider payloads.
 - Restaurant sessions live in JavaScript module memory and disappear on reload.
 - Licensed open-place records may be stored with attribution.
-- Local preferences and abstract meal-history signals remain in IndexedDB.
+- Local restaurant history contains only `{id, occurred_at, action, selected_tags, budget_band_minor}`. These user-originated intent fields help vary future results; they contain no restaurant, POI, address, coordinate, rating, price, photo, or navigation field.
 - Dragging the map changes only the viewport. OneDish accepts only a real POI marker or map-backed result, never an arbitrary coordinate.
 - OneDish does not claim live menu inventory, delivery, ordering, nutrition, opening status, price, rating, or allergen safety unless the active provider evidence supports that field.
 
-Read [privacy](docs/privacy.md), [operations](docs/runbook.md), the approved [restaurant-first design](docs/superpowers/specs/2026-07-19-onedish-restaurant-first-design.md), and the [map-selection and cold-start design](docs/superpowers/specs/2026-07-19-restaurant-map-cold-start-design.md).
+Read [privacy](docs/privacy.md), [operations](docs/runbook.md), [Restaurant Decision V2](docs/superpowers/specs/2026-07-20-restaurant-decision-v2-design.md), and the [map-selection design](docs/superpowers/specs/2026-07-19-restaurant-map-cold-start-design.md).
 
 ## Verify
 
@@ -129,7 +128,7 @@ pnpm --dir web e2e
 
 ## Built with
 
-OpenAI Responses API, React, TypeScript, Vite, Motion, FastAPI, Pydantic, httpx, AMap, Overture Maps, Vitest, and Playwright.
+React, TypeScript, Vite, Motion, FastAPI, Pydantic, httpx, AMap, Overture Maps, Vitest, and Playwright. OpenAI-generated original artwork remains part of the hackathon-era offline demo; Restaurant V2 itself uses no model call.
 
 ## License
 

@@ -25,7 +25,7 @@ def test_source_ids_and_persistence_are_explicit() -> None:
     values = normalize_places((place("amap_place", "A1", "沙茶里", 200),))
     assert values[0].id == "amap:A1"
     assert values[0].persistence == "active_only"
-    assert values[0].cuisine_tags == ("fujian",)
+    assert values[0].intent_tags == ("minnan_fujian",)
 
 
 def test_recognizes_japanese_from_full_amap_type_when_business_tag_is_generic() -> None:
@@ -41,7 +41,24 @@ def test_recognizes_japanese_from_full_amap_type_when_business_tag_is_generic() 
         longitude=118.09,
     )
 
-    assert normalize_places((value,))[0].cuisine_tags == ("japanese",)
+    assert normalize_places((value,))[0].intent_tags == ("japanese",)
+
+
+def test_recognizes_format_from_provider_type_code() -> None:
+    value = Place(
+        id="H1",
+        name="锅物",
+        category="餐饮服务;中餐厅",
+        category_code="050117",
+        distance_m=200,
+        open_state="unknown",
+        source_kind="amap_place",
+        attribution="高德地图",
+        latitude=24.48,
+        longitude=118.09,
+    )
+
+    assert normalize_places((value,))[0].intent_tags == ("hot_pot",)
 
 
 def test_deduplicates_same_name_within_eighty_metres() -> None:

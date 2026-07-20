@@ -124,6 +124,8 @@ async def sanitized_validation_error(
     safe_errors: list[dict[str, Any]] = []
     for error in exc.errors():
         location = tuple(error.get("loc", ()))
+        if error.get("type") == "extra_forbidden":
+            location = location[:-1]
         safe_location = tuple(
             part
             for index, part in enumerate(location)

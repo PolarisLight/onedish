@@ -1,32 +1,48 @@
-"""Stateless orchestration for one restaurant recommendation."""
+"""Stateless orchestration for one active restaurant recommendation session."""
 
 from __future__ import annotations
 
 import asyncio
 import secrets
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
+from random import Random, SystemRandom
+from typing import Literal
 
 from onedish_api.providers.base import PlaceQuery, PlacesProvider
-from onedish_api.rerankers.base import RestaurantReranker, choose_with_timeout
 from onedish_api.restaurant_domain import (
+    ExclusionCounts,
+    RestaurantCandidate,
     RestaurantRecommendRequest,
     RestaurantRecommendResponse,
+    SearchRound,
 )
 from onedish_api.restaurants.normalizer import deduplicate, normalize_places
-from onedish_api.restaurants.scoring import recommendation_mode, score_restaurants
+from onedish_api.restaurants.scoring import build_quality_pool, score_restaurants, weighted_permutation
+from onedish_api.restaurants.taxonomy import query_filter
 
 
-CUISINE_SEARCH_KEYWORDS = {
-    "fujian": "福建菜",
-    "sichuan": "川菜",
-    "cantonese": "粤菜",
-    "japanese": "日本料理",
-    "western": "西餐",
-}
+SEARCH_RADII = (2000, 3000, 5000)
+RecoveryAction = Literal["clear_tags", "ignore_budget"]
 
 
-class RestaurantDiscoveryUnavailable(RuntimeError):
-    pass
+class ProviderUnavailable(RuntimeError):
+    """Every live provider call failed for the request."""
+
+
+class NoRestaurantMatch(RuntimeError):
+    """At least one provider succeeded, but no candidate met the request."""
+
+    def __init__(
+        self,
+        *,
+        search_rounds: tuple[SearchRound, ...],
+        exclusions: ExclusionCounts,
+        recovery_actions: tuple[RecoveryAction, ...],
+    ) -> None:
+        super().__init__("no restaurant matched the current request")
+        self.search_rounds = search_rounds
+        self.exclusions = exclusions
+        self.recovery_actions = recovery_actions
 
 
 class RestaurantRecommendationService:
@@ -34,62 +50,104 @@ class RestaurantRecommendationService:
         self,
         *,
         providers: Sequence[PlacesProvider],
-        reranker: RestaurantReranker | None = None,
-        rerank_timeout_seconds: float = 2.0,
+        rng_factory: Callable[[], Random] = SystemRandom,
     ) -> None:
+        if not providers:
+            raise ValueError("at least one restaurant provider is required")
         self._providers = tuple(providers)
-        self._reranker = reranker
-        self._rerank_timeout_seconds = rerank_timeout_seconds
+        self._rng_factory = rng_factory
 
-    async def _discover(self, request: RestaurantRecommendRequest) -> tuple:
-        query = PlaceQuery(
-            latitude=request.latitude,
-            longitude=request.longitude,
-            radius_m=request.profile.max_distance_m,
-            limit=50,
-            keywords=tuple(
-                CUISINE_SEARCH_KEYWORDS[cuisine]
-                for cuisine in request.profile.preferred_cuisines
-            ),
-        )
+    @staticmethod
+    def _queries(request: RestaurantRecommendRequest, radius_m: int) -> tuple[PlaceQuery, ...]:
+        if not request.profile.selected_tags:
+            return (
+                PlaceQuery(
+                    latitude=request.latitude,
+                    longitude=request.longitude,
+                    radius_m=radius_m,
+                    limit=50,
+                    type_codes=("050000",),
+                ),
+            )
+        queries: list[PlaceQuery] = []
+        for tag in request.profile.selected_tags:
+            filters = query_filter(tag)
+            queries.append(
+                PlaceQuery(
+                    latitude=request.latitude,
+                    longitude=request.longitude,
+                    radius_m=radius_m,
+                    limit=50,
+                    keywords=filters.keywords,
+                    type_codes=filters.type_codes,
+                )
+            )
+        return tuple(queries)
+
+    async def _discover_round(
+        self,
+        request: RestaurantRecommendRequest,
+        radius_m: int,
+    ) -> tuple[tuple[RestaurantCandidate, ...], int]:
+        queries = self._queries(request, radius_m)
         results = await asyncio.gather(
-            *(provider.nearby(query) for provider in self._providers),
+            *(
+                provider.nearby(query)
+                for provider in self._providers
+                for query in queries
+            ),
             return_exceptions=True,
         )
-        places = tuple(
-            place for result in results if not isinstance(result, BaseException) for place in result
-        )
-        return deduplicate(normalize_places(places))
+        successful = tuple(result for result in results if not isinstance(result, BaseException))
+        places = tuple(place for result in successful for place in result)
+        candidates = deduplicate(normalize_places(places))
+        return candidates, len(successful)
 
-    async def recommend(self, request: RestaurantRecommendRequest) -> RestaurantRecommendResponse:
-        candidates = await self._discover(request)
-        scoring = score_restaurants(candidates, request)
-        if not scoring.ranked:
-            raise RestaurantDiscoveryUnavailable("no nearby restaurant candidates")
+    async def recommend(
+        self,
+        request: RestaurantRecommendRequest,
+    ) -> RestaurantRecommendResponse:
+        search_rounds: list[SearchRound] = []
+        successful_call_count = 0
+        final_exclusions = ExclusionCounts()
 
-        ranked = scoring.ranked
-        selection_source = "deterministic"
-        model_status = "disabled"
-        if self._reranker is not None:
-            outcome = await choose_with_timeout(
-                self._reranker,
-                ranked[:10],
-                request,
-                timeout_seconds=self._rerank_timeout_seconds,
+        for radius_m in SEARCH_RADII:
+            candidates, successful = await self._discover_round(request, radius_m)
+            successful_call_count += successful
+            scoring = score_restaurants(candidates, request, radius_m=radius_m)
+            final_exclusions = scoring.exclusions
+            search_rounds.append(
+                SearchRound(
+                    radius_m=radius_m,
+                    discovered_count=len(candidates),
+                    eligible_count=len(scoring.ranked),
+                )
             )
-            model_status = outcome.status
-            if outcome.selected is not None:
-                index = ranked.index(outcome.selected)
-                ranked = (ranked[index], *ranked[:index], *ranked[index + 1 :])
-                selection_source = "ai_rerank"
+            if not scoring.ranked:
+                continue
+            pool = build_quality_pool(
+                scoring.ranked,
+                budget_is_explicit=request.profile.budget_is_explicit,
+            )
+            randomized = weighted_permutation(pool, self._rng_factory())
+            return RestaurantRecommendResponse(
+                session_id=secrets.token_hex(16),
+                active_radius_m=radius_m,
+                search_rounds=tuple(search_rounds),
+                exclusions=scoring.exclusions,
+                quality_pool_count=len(randomized),
+                ranked=randomized,
+            )
 
-        return RestaurantRecommendResponse(
-            schema_version="restaurant-recommendation.v1",
-            session_id=secrets.token_hex(16),
-            ranked=ranked[:25],
-            trace=scoring.trace,
-            selection_source=selection_source,
-            model_status=model_status,
-            recommendation_mode=recommendation_mode(request),
-            radius_m=request.profile.max_distance_m,
+        if successful_call_count == 0:
+            raise ProviderUnavailable("restaurant providers unavailable")
+        actions: list[RecoveryAction] = []
+        if request.profile.selected_tags:
+            actions.append("clear_tags")
+        if request.profile.budget_is_explicit:
+            actions.append("ignore_budget")
+        raise NoRestaurantMatch(
+            search_rounds=tuple(search_rounds),
+            exclusions=final_exclusions,
+            recovery_actions=tuple(actions),
         )

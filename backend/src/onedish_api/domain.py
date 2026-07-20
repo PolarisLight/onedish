@@ -86,6 +86,7 @@ class Place(StrictFrozenModel):
     id: str = Field(min_length=1, max_length=128)
     name: str = Field(min_length=1, max_length=160)
     category: str = Field(min_length=1, max_length=100)
+    category_code: str | None = Field(default=None, max_length=32)
     distance_m: int = Field(ge=0, le=100_000)
     price_tier: int | None = Field(default=None, ge=1, le=4)
     rating: float | None = Field(default=None, ge=0, le=10)

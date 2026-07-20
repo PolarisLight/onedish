@@ -58,6 +58,25 @@ describe("production container deployment", () => {
     expect(example).not.toMatch(/[A-Za-z0-9_-]{32,}/);
   });
 
+  test("documents Restaurant V2 without provider ownership or AI reranking claims", () => {
+    const english = read("README.md");
+    const chinese = read("README.zh-CN.md");
+    const privacy = read("docs/privacy.md");
+    const provenance = read("docs/data-provenance.md");
+    const publicDocs = [english, chinese, privacy, provenance].join("\n");
+
+    expect(english).toMatch(/2 km.*3 km.*5 km/is);
+    expect(chinese).toMatch(/2 公里.*3 公里.*5 公里/is);
+    expect(publicDocs).toContain("min(25%, ¥30/$5)");
+    expect(publicDocs).toContain("budget_band_minor");
+    expect(publicDocs).toContain("selected_tags");
+    expect(publicDocs).toMatch(/controlled (?:randomization|variety)/i);
+    expect(publicDocs).not.toMatch(/optional constrained OpenAI rerank|OpenAI 受限重排/i);
+    expect(publicDocs).not.toMatch(/AI receives at most ten candidate IDs|AI 只会收到.*候选/i);
+    expect(provenance).toMatch(/AMap.*active request/i);
+    expect(provenance).toContain("not OneDish-owned records");
+  });
+
   test("deployment script validates inputs and waits for health", () => {
     const script = read("scripts/deploy_vps.sh");
     expect(script).toContain("set -euo pipefail");

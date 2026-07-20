@@ -15,6 +15,7 @@ class PlaceQuery(StrictFrozenModel):
     radius_m: int = Field(default=5_000, ge=100, le=100_000)
     limit: int = Field(default=50, ge=1, le=50)
     keywords: tuple[str, ...] = Field(default=(), max_length=5)
+    type_codes: tuple[str, ...] = Field(default=(), max_length=5)
 
 
 class PlacesProvider(Protocol):

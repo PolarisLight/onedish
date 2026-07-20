@@ -1,24 +1,35 @@
-import pytest
+from datetime import UTC, datetime, timedelta
+from random import Random
 
 from onedish_api.restaurant_domain import (
+    AcceptedIntent,
+    RankedRestaurant,
     RestaurantCandidate,
     RestaurantEvidence,
-    RestaurantHistorySummary,
     RestaurantProfile,
     RestaurantRecommendRequest,
 )
-from onedish_api.restaurants.scoring import recommendation_mode, score_restaurants
+from onedish_api.restaurants.scoring import (
+    build_quality_pool,
+    eligible_candidates,
+    recent_tag_counts,
+    score_candidate,
+    score_restaurants,
+    weighted_permutation,
+)
+
+
+NOW = datetime(2026, 7, 20, 12, tzinfo=UTC)
 
 
 def candidate(
     identifier: str,
     *,
-    distance: int,
-    cuisine: str = "fujian",
-    cost: int | None = 5000,
-    rating: float | None = None,
-    confidence: float = 0.8,
-    state: str = "unknown",
+    distance: int = 1000,
+    tags: tuple[str, ...] = ("japanese",),
+    cost: int | None = 4000,
+    rating: float | None = 4.0,
+    state: str = "open",
     currency: str | None = None,
     cost_evidence: bool | None = None,
 ) -> RestaurantCandidate:
@@ -26,7 +37,7 @@ def candidate(
         id=f"overture:{identifier}",
         name=identifier,
         category="restaurant",
-        cuisine_tags=(cuisine,),
+        intent_tags=tags,
         distance_m=distance,
         rating=rating,
         average_cost_minor=cost,
@@ -35,276 +46,194 @@ def candidate(
         navigation_url="https://www.openstreetmap.org/",
         source_kind="overture_place",
         attribution="Overture",
-        confidence=confidence,
         persistence="licensed_open_data",
         evidence=RestaurantEvidence(
             distance=True,
             rating=rating is not None,
             average_cost=cost is not None if cost_evidence is None else cost_evidence,
             category=True,
+            open_state=state != "unknown",
         ),
     )
 
 
 def request(
     *,
-    history: RestaurantHistorySummary | None = None,
-    **profile,
+    selected_tags: tuple[str, ...] = (),
+    budget: int | None = None,
+    budget_is_explicit: bool = False,
+    recent_intents: tuple[AcceptedIntent, ...] = (),
 ) -> RestaurantRecommendRequest:
     return RestaurantRecommendRequest(
         latitude=24.48,
         longitude=118.09,
-        meal_period="lunch",
-        profile=RestaurantProfile(**profile),
-        history=history or RestaurantHistorySummary(),
-    )
-
-
-def test_filters_closed_and_ranks_deterministically() -> None:
-    result = score_restaurants(
-        (
-            candidate("closed", distance=10, state="closed"),
-            candidate("far", distance=1200),
-            candidate("near", distance=200),
+        profile=RestaurantProfile(
+            selected_tags=selected_tags,
+            budget_minor=budget,
+            budget_is_explicit=budget_is_explicit,
         ),
-        request(budget_minor=6000, budget_is_explicit=True),
-    )
-    assert [item.candidate.name for item in result.ranked] == ["near", "far"]
-    assert result.trace[-1].survivor_count == 1
-    assert all(
-        after.survivor_count <= before.survivor_count
-        for before, after in zip(result.trace, result.trace[1:])
+        recent_intents=recent_intents,
     )
 
 
-def test_keeps_cuisine_hard_but_relaxes_budget_when_it_would_empty_results() -> None:
-    result = score_restaurants(
-        (candidate("only", distance=300, cuisine="sichuan", cost=8000),),
-        request(
-            budget_minor=3000,
-            budget_is_explicit=True,
-            preferred_cuisines=("sichuan",),
-        ),
-    )
-    assert result.ranked[0].candidate.name == "only"
-
-
-def test_preferred_cuisine_filters_when_a_match_exists() -> None:
-    result = score_restaurants(
-        (
-            candidate("match", distance=1000, cuisine="sichuan"),
-            candidate("other", distance=100, cuisine="fujian"),
-        ),
-        request(preferred_cuisines=("sichuan",)),
-    )
-    assert [item.candidate.name for item in result.ranked] == ["match"]
-    assert "taste_match" in result.ranked[0].reason_codes
-    assert recommendation_mode(request(preferred_cuisines=("sichuan",))) == "personalized"
-
-
-def test_preferred_cuisine_never_falls_back_to_a_different_cuisine() -> None:
-    result = score_restaurants(
-        (
-            candidate("first", distance=100, cuisine="fujian"),
-            candidate("second", distance=1000, cuisine="cantonese"),
-        ),
-        request(preferred_cuisines=("sichuan",)),
-    )
-    assert result.ranked == ()
-
-
-def test_explicit_budget_filters_when_eligible_candidates_exist() -> None:
-    result = score_restaurants(
-        (
-            candidate("affordable", distance=1000, cost=5000),
-            candidate("unknown", distance=1200, cost=None),
-            candidate("expensive", distance=100, cost=9000),
-        ),
-        request(budget_minor=6000, budget_is_explicit=True),
-    )
-    assert {item.candidate.name for item in result.ranked} == {"affordable", "unknown"}
-
-
-def test_explicit_budget_falls_back_when_every_known_cost_is_over_budget() -> None:
-    result = score_restaurants(
-        (
-            candidate("first", distance=100, cost=8000),
-            candidate("second", distance=1000, cost=9000),
-        ),
-        request(budget_minor=6000, budget_is_explicit=True),
-    )
-    assert {item.candidate.name for item in result.ranked} == {"first", "second"}
-
-
-def test_currency_mismatched_cost_is_retained_and_neutral() -> None:
-    recommendation = request(budget_minor=6000, budget_is_explicit=True)
-    result = score_restaurants(
-        (
-            candidate("affordable", distance=1200, cost=5000),
-            candidate("usd", distance=1000, cost=9000, currency="USD"),
-        ),
-        recommendation,
-    )
-    neutral = score_restaurants(
-        (candidate("unknown", distance=1000, cost=None),), recommendation
-    ).ranked[0]
-    usd = next(item for item in result.ranked if item.candidate.name == "usd")
-
-    assert {item.candidate.name for item in result.ranked} == {"affordable", "usd"}
-    assert usd.score == neutral.score
-    assert "budget_match" not in usd.reason_codes
-
-
-def test_unsupported_cost_evidence_is_retained_and_neutral() -> None:
-    recommendation = request(budget_minor=6000, budget_is_explicit=True)
-    result = score_restaurants(
-        (
-            candidate("affordable", distance=1200, cost=5000),
-            candidate("unsupported", distance=1000, cost=9000, cost_evidence=False),
-        ),
-        recommendation,
-    )
-    neutral = score_restaurants(
-        (candidate("unknown", distance=1000, cost=None),), recommendation
-    ).ranked[0]
-    unsupported = next(item for item in result.ranked if item.candidate.name == "unsupported")
-
-    assert {item.candidate.name for item in result.ranked} == {"affordable", "unsupported"}
-    assert unsupported.score == neutral.score
-    assert "budget_match" not in unsupported.reason_codes
-
-
-def test_missing_cost_is_neutral_and_does_not_claim_budget_match() -> None:
-    result = score_restaurants(
-        (candidate("unknown-cost", distance=300, cost=None),),
-        request(budget_minor=3000, budget_is_explicit=True),
-    )
-    assert "budget_match" not in result.ranked[0].reason_codes
-    assert 0 <= result.ranked[0].score <= 100
-
-
-def test_cold_start_uses_no_false_personalization_and_rating_can_beat_distance() -> None:
-    result = score_restaurants(
-        (
-            candidate("near-low", distance=100, rating=3.0, confidence=0.5),
-            candidate("far-high", distance=2400, rating=4.9, confidence=0.5),
-        ),
-        request(budget_minor=6000),
-    )
-
-    assert result.ranked[0].candidate.name == "far-high"
-    assert all(
-        not ({"budget_match", "taste_match", "history_diversity"} & set(item.reason_codes))
-        for item in result.ranked
-    )
-
-
-def test_reasons_are_candidate_specific_and_limited_to_supported_evidence() -> None:
-    result = score_restaurants(
-        (
-            candidate(
-                "supported",
-                distance=500,
-                cuisine="fujian",
-                cost=5000,
-                rating=4.8,
-                confidence=0.9,
+def scored(*scores: float, states: tuple[str, ...] | None = None) -> tuple[RankedRestaurant, ...]:
+    budget_states = states or tuple("not_requested" for _ in scores)
+    return tuple(
+        RankedRestaurant(
+            candidate=candidate(str(index)),
+            score=score,
+            matched_tags=(),
+            budget_state=budget_states[index],
+            budget_overage_minor=100 if budget_states[index] == "stretch" else None,
+            reason_codes=(
+                ("budget_unknown",)
+                if budget_states[index] == "unknown"
+                else ("budget_stretch",)
+                if budget_states[index] == "stretch"
+                else ("within_budget",)
+                if budget_states[index] == "within"
+                else ()
             ),
-            candidate(
-                "unsupported",
-                distance=2000,
-                cuisine="sichuan",
-                cost=None,
-                rating=4.0,
-                confidence=0.7,
+        )
+        for index, score in enumerate(scores)
+    )
+
+
+def test_eligibility_enforces_closed_radius_tag_and_excessive_budget() -> None:
+    result = eligible_candidates(
+        (
+            candidate("closed", state="closed"),
+            candidate("far", distance=2100),
+            candidate("wrong", tags=("western",)),
+            candidate("expensive", cost=7000),
+            candidate("match", cost=6000),
+        ),
+        request(selected_tags=("japanese",), budget=5000, budget_is_explicit=True),
+        radius_m=2000,
+    )
+    assert [item.name for item in result.eligible] == ["match"]
+    assert result.exclusions.model_dump() == {
+        "closed": 1,
+        "outside_radius": 1,
+        "tag_mismatch": 1,
+        "excessive_budget": 1,
+    }
+
+
+def test_explicit_tag_never_falls_back_to_an_unrelated_candidate() -> None:
+    result = eligible_candidates(
+        (candidate("western", tags=("western",)),),
+        request(selected_tags=("japanese",)),
+        radius_m=2000,
+    )
+    assert result.eligible == ()
+
+
+def test_missing_rating_uses_the_fixed_neutral_signal() -> None:
+    current = request(selected_tags=("japanese",))
+    missing = score_candidate(candidate("missing", rating=None), current, radius_m=2000)
+    rated = score_candidate(candidate("rated", rating=4.0), current, radius_m=2000)
+    assert missing.score == 50.0
+    assert rated.score == 66.5
+
+
+def test_explicit_tags_disable_history_diversity_for_the_current_choice() -> None:
+    current = request(selected_tags=("japanese",))
+    low = score_candidate(
+        candidate("low"), current, radius_m=2000, recent_counts={"japanese": 0}
+    )
+    frequent = score_candidate(
+        candidate("frequent"), current, radius_m=2000, recent_counts={"japanese": 20}
+    )
+    assert low.score == frequent.score
+    assert "intent_diversity" not in frequent.reason_codes
+
+
+def test_recent_intents_apply_only_inside_the_fourteen_day_window() -> None:
+    counts = recent_tag_counts(
+        (
+            AcceptedIntent(
+                occurred_at=NOW - timedelta(days=2),
+                selected_tags=("japanese",),
+            ),
+            AcceptedIntent(
+                occurred_at=NOW - timedelta(days=15),
+                selected_tags=("japanese",),
             ),
         ),
-        request(
-            budget_minor=6000,
-            budget_is_explicit=True,
-            history=RestaurantHistorySummary(
-                recent_cuisines={"sichuan": 2},
-                cuisine_preferences={"fujian": 1.0},
-            ),
-        ),
+        NOW,
     )
-
-    by_name = {item.candidate.name: item.reason_codes for item in result.ranked}
-    assert by_name["supported"] == ("higher_rating", "budget_match", "taste_match")
-    assert by_name["unsupported"] == ()
+    assert counts == {"japanese": 1}
 
 
-def test_real_history_can_support_a_diversity_reason() -> None:
-    result = score_restaurants(
-        (candidate("fresh", distance=1000, cuisine="fujian", confidence=0.5),),
-        request(history=RestaurantHistorySummary(recent_cuisines={"sichuan": 2})),
+def test_unknown_or_currency_mismatched_cost_is_penalized_and_never_claims_match() -> None:
+    current = request(budget=5000, budget_is_explicit=True)
+    unknown = score_candidate(candidate("unknown", cost=None), current, radius_m=2000)
+    mismatch = score_candidate(
+        candidate("usd", cost=4000, currency="USD"), current, radius_m=2000
     )
-    assert result.ranked[0].reason_codes == ("history_diversity",)
+    assert unknown.budget_state == mismatch.budget_state == "unknown"
+    assert unknown.score == mismatch.score
+    assert unknown.reason_codes == ("budget_unknown", "nearby")
 
 
-def test_zero_value_history_does_not_activate_personalized_scoring() -> None:
-    values = (candidate("only", distance=1500, cost=None, confidence=0.5),)
-    empty = request()
-    zero_value = request(history=RestaurantHistorySummary(cuisine_preferences={"fujian": 0.0}))
-
-    assert score_restaurants(values, zero_value).ranked[0].score == (
-        score_restaurants(values, empty).ranked[0].score
-    )
-    assert recommendation_mode(zero_value) == "exploration"
-
-
-def test_available_zero_rating_remains_active_negative_evidence() -> None:
-    without_rating = score_restaurants(
-        (candidate("missing", distance=3000, rating=None, cost=None, confidence=1.0),),
-        request(),
-    ).ranked[0]
-    with_zero_rating = score_restaurants(
-        (candidate("zero", distance=3000, rating=0.0, cost=None, confidence=1.0),),
-        request(),
-    ).ranked[0]
-
-    assert with_zero_rating.score < without_rating.score
-
-
-def test_reason_limit_keeps_largest_candidate_specific_contributions() -> None:
+def test_stretch_candidate_can_win_only_by_overcoming_penalty() -> None:
     result = score_restaurants(
         (
-            candidate(
-                "supported",
-                distance=500,
-                cuisine="fujian",
-                cost=5000,
-                rating=0.1,
-                confidence=0.9,
-            ),
-            candidate(
-                "baseline",
-                distance=2500,
-                cuisine="fujian",
-                cost=None,
-                rating=0.0,
-                confidence=0.5,
-            ),
+            candidate("within", distance=1500, rating=3.0, cost=5000),
+            candidate("stretch", distance=100, rating=4.8, cost=6000),
         ),
-        request(
-            budget_minor=6000,
-            budget_is_explicit=True,
-            preferred_cuisines=("fujian",),
-            history=RestaurantHistorySummary(recent_cuisines={"sichuan": 2}),
-        ),
+        request(budget=5000, budget_is_explicit=True),
+        radius_m=2000,
+        now=NOW,
     )
-    supported = next(item for item in result.ranked if item.candidate.name == "supported")
-    assert supported.reason_codes == ("budget_match", "taste_match", "history_diversity")
+    assert result.ranked[0].candidate.name == "stretch"
+    assert result.ranked[0].budget_state == "stretch"
+    assert result.ranked[0].budget_overage_minor == 1000
 
 
-@pytest.mark.parametrize(
-    ("profile", "history"),
-    [
-        ({"budget_minor": 6000, "budget_is_explicit": True}, None),
-        ({"preferred_cuisines": ("fujian",)}, None),
-        ({}, RestaurantHistorySummary(recent_cuisines={"sichuan": 1})),
-        ({}, RestaurantHistorySummary(cuisine_preferences={"fujian": 0.5})),
-    ],
-)
-def test_real_user_signals_enable_personalized_mode(profile, history) -> None:
-    assert recommendation_mode(request(history=history, **profile)) == "personalized"
+def test_quality_pool_uses_eight_point_band_and_five_item_cap() -> None:
+    pool = build_quality_pool(scored(90, 86, 82, 81, 80, 79))
+    assert [item.score for item in pool] == [90, 86, 82]
+
+
+def test_unknown_price_enters_pool_only_below_three_known_candidates() -> None:
+    enough_known = build_quality_pool(
+        scored(90, 89, 88, 87, states=("within", "stretch", "within", "unknown")),
+        budget_is_explicit=True,
+    )
+    sparse_known = build_quality_pool(
+        scored(90, 89, 88, states=("within", "unknown", "unknown")),
+        budget_is_explicit=True,
+    )
+    assert all(item.budget_state != "unknown" for item in enough_known)
+    assert any(item.budget_state == "unknown" for item in sparse_known)
+
+
+def test_sparse_known_price_candidates_cannot_be_displaced_by_unknowns() -> None:
+    pool = build_quality_pool(
+        scored(
+            90,
+            89,
+            88,
+            87,
+            86,
+            85,
+            states=("unknown", "unknown", "unknown", "unknown", "within", "stretch"),
+        ),
+        budget_is_explicit=True,
+    )
+    assert [item.budget_state for item in pool[:2]] == ["within", "stretch"]
+    assert len(pool) == 5
+
+
+def test_random_order_is_seeded_varied_and_without_replacement() -> None:
+    pool = scored(90, 88, 86)
+    first = weighted_permutation(pool, Random(7))
+    second = weighted_permutation(pool, Random(7))
+    assert [item.candidate.id for item in first] == [item.candidate.id for item in second]
+    assert len({item.candidate.id for item in first}) == len(first)
+    winners = {
+        weighted_permutation(pool, Random(seed))[0].candidate.id for seed in range(20)
+    }
+    assert len(winners) > 1

@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
+from pydantic import ValidationError
 
 from onedish_api.app import create_app
 from onedish_api.domain import Place
@@ -13,143 +14,119 @@ from onedish_api.settings import Settings
 ROOT = Path(__file__).parents[2]
 
 
-def test_restaurant_endpoint_is_strict_and_fails_safely_without_places() -> None:
-    app = create_app(Settings(mode="demo", root_path=ROOT, allowed_hosts=("testserver",)))
-    with TestClient(app) as client:
-        invalid = client.post(
-            "/api/v1/restaurants/recommend",
-            json={
-                "latitude": 24.48,
-                "longitude": 118.09,
-                "meal_period": "lunch",
-                "weight": 70,
-            },
-        )
-        unavailable = client.post(
-            "/api/v1/restaurants/recommend",
-            json={
-                "latitude": 24.48,
-                "longitude": 118.09,
-                "meal_period": "lunch",
-            },
-        )
-        old = client.get("/api/health")
-    assert invalid.status_code == 422
-    assert unavailable.status_code == 503
-    assert old.status_code == 200
-
-
-@pytest.mark.parametrize(
-    "history",
-    [
-        {"recent_cuisines": {"fujian": -1}},
-        {"recent_cuisines": {"fujian": 1001}},
-        {"cuisine_preferences": {"fujian": -0.1}},
-        {"cuisine_preferences": {"fujian": 1.1}},
-    ],
-)
-def test_restaurant_endpoint_rejects_invalid_history_values(history) -> None:
+def test_restaurant_endpoint_rejects_unknown_request_fields_without_echoing_them() -> None:
     app = create_app(Settings(mode="demo", root_path=ROOT, allowed_hosts=("testserver",)))
     with TestClient(app) as client:
         response = client.post(
             "/api/v1/restaurants/recommend",
             json={
+                "schema_version": "restaurant-request.v2",
                 "latitude": 24.48,
                 "longitude": 118.09,
-                "meal_period": "lunch",
-                "history": history,
+                "weight-sensitive-value": 70,
             },
         )
     assert response.status_code == 422
+    assert "weight-sensitive-value" not in response.text
 
 
-@pytest.mark.parametrize(
-    ("field", "value"),
-    [
-        ("recent_cuisines", 1),
-        ("cuisine_preferences", 0.5),
-    ],
-)
-@pytest.mark.parametrize("cuisine", ["spicy", "warm", "fresh", "unknown-sensitive-input"])
-def test_restaurant_endpoint_rejects_and_does_not_echo_invalid_history_cuisines(
-    field: str, value: int | float, cuisine: str
-) -> None:
+def test_restaurant_endpoint_rejects_provider_fields_in_recent_intents() -> None:
     app = create_app(Settings(mode="demo", root_path=ROOT, allowed_hosts=("testserver",)))
     with TestClient(app) as client:
         response = client.post(
             "/api/v1/restaurants/recommend",
             json={
+                "schema_version": "restaurant-request.v2",
                 "latitude": 24.48,
                 "longitude": 118.09,
-                "meal_period": "lunch",
-                "history": {field: {cuisine: value}},
+                "recent_intents": [
+                    {
+                        "occurred_at": "2026-07-19T00:00:00Z",
+                        "selected_tags": ["japanese"],
+                        "restaurant_name": "sensitive-provider-value",
+                    }
+                ],
             },
         )
-
     assert response.status_code == 422
-    assert cuisine not in response.text
+    assert "sensitive-provider-value" not in response.text
 
 
-def test_recommendation_response_accepts_explicit_exploration_contract() -> None:
-    response = RestaurantRecommendResponse.model_validate(
-        {
-            "schema_version": "restaurant-recommendation.v1",
-            "session_id": "a" * 32,
-            "ranked": [
-                {
-                    "candidate": {
-                        "id": "amap:B0TEST",
-                        "name": "沙茶里",
-                        "distance_m": 620,
-                        "rating": 4.6,
-                        "source_kind": "amap_place",
-                        "attribution": "高德地图",
-                        "evidence": {"distance": True, "rating": True},
-                    },
-                    "score": 88,
-                    "reason_codes": ["higher_rating"],
-                }
-            ],
-            "trace": [{"id": "winner", "input_count": 1, "survivor_count": 1}],
-            "selection_source": "deterministic",
-            "model_status": "disabled",
-            "recommendation_mode": "exploration",
-            "radius_m": 3000,
-        }
-    )
-
-    assert response.recommendation_mode == "exploration"
-    assert response.radius_m == 3000
-    assert response.ranked[0].reason_codes == ("higher_rating",)
+def test_v2_response_rejects_old_ai_and_personalization_fields() -> None:
+    with pytest.raises(ValidationError):
+        RestaurantRecommendResponse.model_validate(
+            {
+                "schema_version": "restaurant-recommendation.v2",
+                "session_id": "a" * 32,
+                "active_radius_m": 2000,
+                "search_rounds": [
+                    {"radius_m": 2000, "discovered_count": 1, "eligible_count": 1}
+                ],
+                "exclusions": {},
+                "quality_pool_count": 1,
+                "ranked": [],
+                "selection_source": "ai_rerank",
+                "recommendation_mode": "personalized",
+            }
+        )
 
 
-def test_restaurant_endpoint_serializes_provider_backed_response(monkeypatch) -> None:
+def test_no_match_is_structured_and_does_not_echo_request_values(monkeypatch) -> None:
+    async def empty(_provider: OverturePlacesProvider, _query):
+        return ()
+
+    monkeypatch.setattr(OverturePlacesProvider, "nearby", empty)
+    app = create_app(Settings(mode="demo", root_path=ROOT, allowed_hosts=("testserver",)))
+    with TestClient(app) as client:
+        response = client.post(
+            "/api/v1/restaurants/recommend",
+            json={
+                "latitude": 24.481234,
+                "longitude": 118.091234,
+                "profile": {
+                    "selected_tags": ["japanese"],
+                    "budget_minor": 5000,
+                    "budget_is_explicit": True,
+                },
+            },
+        )
+    assert response.status_code == 409
+    assert response.json()["detail"]["code"] == "no_match"
+    assert response.json()["detail"]["recovery_actions"] == ["clear_tags", "ignore_budget"]
+    assert "24.481234" not in response.text
+    assert "118.091234" not in response.text
+    assert "japanese" not in response.text
+
+
+def test_all_provider_failure_returns_sanitized_503(monkeypatch) -> None:
+    async def fail(_provider: OverturePlacesProvider, _query):
+        raise RuntimeError("sensitive upstream failure")
+
+    monkeypatch.setattr(OverturePlacesProvider, "nearby", fail)
+    app = create_app(Settings(mode="demo", root_path=ROOT, allowed_hosts=("testserver",)))
+    with TestClient(app) as client:
+        response = client.post(
+            "/api/v1/restaurants/recommend",
+            json={"latitude": 24.48, "longitude": 118.09},
+        )
+    assert response.status_code == 503
+    assert response.json() == {"detail": {"code": "provider_unavailable"}}
+    assert "sensitive upstream failure" not in response.text
+
+
+def test_restaurant_endpoint_serializes_provider_backed_v2_without_ai_fields(monkeypatch) -> None:
     async def nearby(_provider: OverturePlacesProvider, query):
-        assert query.radius_m == 3000
         return (
             Place(
-                id="near",
-                name="Near",
-                category="restaurant",
-                distance_m=100,
-                rating=3.0,
-                open_state="unknown",
+                id="japanese",
+                name="Japanese",
+                category="日本料理",
+                distance_m=min(query.radius_m, 500),
+                rating=4.7,
+                open_state="open",
                 source_kind="overture_place",
                 attribution="Overture",
-                latitude=24.48,
-                longitude=118.09,
-            ),
-            Place(
-                id="rated",
-                name="Rated",
-                category="restaurant",
-                distance_m=2400,
-                rating=4.9,
-                open_state="unknown",
-                source_kind="overture_place",
-                attribution="Overture",
-                latitude=24.49,
-                longitude=118.10,
+                order_destination="https://www.openstreetmap.org/",
             ),
         )
 
@@ -159,7 +136,7 @@ def test_restaurant_endpoint_serializes_provider_backed_response(monkeypatch) ->
             mode="demo",
             root_path=ROOT,
             allowed_hosts=("testserver",),
-            openai_api_key=None,
+            openai_api_key="must-not-affect-restaurant-v2",
         )
     )
     with TestClient(app) as client:
@@ -168,13 +145,13 @@ def test_restaurant_endpoint_serializes_provider_backed_response(monkeypatch) ->
             json={
                 "latitude": 24.48,
                 "longitude": 118.09,
-                "meal_period": "lunch",
+                "profile": {"selected_tags": ["japanese"]},
             },
         )
-
     assert response.status_code == 200
     payload = response.json()
-    assert payload["recommendation_mode"] == "exploration"
-    assert payload["radius_m"] == 3000
-    assert payload["ranked"][0]["candidate"]["id"] == "overture:rated"
-    assert payload["ranked"][0]["reason_codes"] == ["higher_rating"]
+    assert payload["schema_version"] == "restaurant-recommendation.v2"
+    assert payload["active_radius_m"] == 2000
+    assert payload["ranked"][0]["candidate"]["name"] == "Japanese"
+    assert "selection_source" not in payload
+    assert "model_status" not in payload

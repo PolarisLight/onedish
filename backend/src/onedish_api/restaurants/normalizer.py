@@ -7,32 +7,12 @@ from collections.abc import Iterable
 
 from onedish_api.domain import Place
 from onedish_api.restaurant_domain import RestaurantCandidate, RestaurantEvidence
-
-
-_CUISINES = {
-    "闽菜": "fujian",
-    "闽南": "fujian",
-    "福建": "fujian",
-    "川菜": "sichuan",
-    "四川": "sichuan",
-    "粤菜": "cantonese",
-    "广东": "cantonese",
-    "日料": "japanese",
-    "日本": "japanese",
-    "西餐": "western",
-    "restaurant": "mixed",
-}
+from onedish_api.restaurants.taxonomy import tags_for_place
 
 
 def normalize_name(value: str) -> str:
     normalized = unicodedata.normalize("NFKC", value).casefold()
     return "".join(character for character in normalized if character.isalnum())
-
-
-def _cuisines(category: str) -> tuple[str, ...]:
-    return tuple(dict.fromkeys(
-        tag for token, tag in _CUISINES.items() if token.casefold() in category.casefold()
-    ))[:6]
 
 
 def normalize_places(places: Iterable[Place]) -> tuple[RestaurantCandidate, ...]:
@@ -45,7 +25,7 @@ def normalize_places(places: Iterable[Place]) -> tuple[RestaurantCandidate, ...]
             id=f"{source}:{place.id}",
             name=place.name,
             category=place.category,
-            cuisine_tags=_cuisines(place.category),
+            intent_tags=tags_for_place(place.category, place.category_code)[:6],
             distance_m=place.distance_m,
             rating=place.rating,
             average_cost_minor=place.average_cost_minor,
@@ -54,7 +34,6 @@ def normalize_places(places: Iterable[Place]) -> tuple[RestaurantCandidate, ...]
             navigation_url=place.order_destination,
             source_kind=place.source_kind,
             attribution=place.attribution,
-            confidence=0.7 if place.source_kind == "amap_place" else 0.65,
             persistence=(
                 "active_only" if place.source_kind == "amap_place" else "licensed_open_data"
             ),
@@ -64,7 +43,6 @@ def normalize_places(places: Iterable[Place]) -> tuple[RestaurantCandidate, ...]
                 average_cost=place.average_cost_minor is not None,
                 category=bool(place.category),
                 open_state=place.open_state != "unknown",
-                menu=False,
             ),
         ))
     return tuple(result)

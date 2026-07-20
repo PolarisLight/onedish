@@ -1,53 +1,49 @@
 import { recommendRestaurant } from "../api/client";
-import type { HistoryEventRow } from "../db/db";
-import { inferMealPeriod } from "../recommendation/context";
-import type { SupportedLocale, UserProfile } from "../recommendation/types";
+import type { RestaurantIntentEventRow } from "../db/db";
+import type { SupportedLocale } from "../recommendation/types";
 import { createRestaurantSession } from "./session-store";
+import type { RestaurantPreferences } from "./preferences";
 import type { RestaurantRecommendRequest, RestaurantRecommendResponse } from "./types";
-import { normalizeRestaurantCuisines } from "./cuisines";
+
 
 interface StartInput {
   readonly point: { readonly latitude: number; readonly longitude: number };
   readonly locale: SupportedLocale;
-  readonly profile: UserProfile;
-  readonly history: readonly HistoryEventRow[];
-  readonly now: Date;
+  readonly preferences: RestaurantPreferences;
+  readonly recentIntents: readonly RestaurantIntentEventRow[];
 }
 
-type RestaurantRequest = (payload: RestaurantRecommendRequest) => Promise<RestaurantRecommendResponse>;
+type RestaurantRequest = (
+  payload: RestaurantRecommendRequest,
+) => Promise<RestaurantRecommendResponse>;
 
 interface StartOptions {
   readonly request?: RestaurantRequest;
   readonly canCommit?: () => boolean;
 }
 
-const CONSUMED_HISTORY_KINDS = new Set<HistoryEventRow["kind"]>(["accepted", "eaten"]);
-
 export async function startRestaurantRecommendation(
   input: StartInput,
   options: StartOptions = {},
 ): Promise<string | null> {
-  const recentCuisines: Record<string, number> = {};
-  for (const event of input.history) {
-    if (!CONSUMED_HISTORY_KINDS.has(event.kind)) continue;
-    for (const cuisine of normalizeRestaurantCuisines(event.cuisine_tags)) {
-      recentCuisines[cuisine] = (recentCuisines[cuisine] ?? 0) + 1;
-    }
-  }
-  const response = await (options.request ?? recommendRestaurant)({
+  const request: RestaurantRecommendRequest = {
+    schema_version: "restaurant-request.v2",
     latitude: input.point.latitude,
     longitude: input.point.longitude,
     locale: input.locale,
-    meal_period: inferMealPeriod(input.now),
     profile: {
-      budget_minor: input.profile.budget_minor,
-      budget_is_explicit: input.profile.budget_is_explicit,
+      selected_tags: [...input.preferences.selected_tags],
+      budget_minor: input.preferences.budget_minor,
+      budget_is_explicit: input.preferences.budget_is_explicit,
       currency: input.locale === "en" ? "USD" : "CNY",
-      preferred_cuisines: normalizeRestaurantCuisines(input.profile.preferred_cuisines),
-      max_distance_m: input.profile.preferred_cuisines.length > 0 ? 10000 : 3000,
     },
-    history: { recent_cuisines: recentCuisines, cuisine_preferences: {} },
-  });
+    recent_intents: input.recentIntents.map((event) => ({
+      occurred_at: event.occurred_at,
+      selected_tags: [...event.selected_tags],
+      budget_band_minor: event.budget_band_minor,
+    })),
+  };
+  const response = await (options.request ?? recommendRestaurant)(request);
   if (options.canCommit && !options.canCommit()) return null;
-  return createRestaurantSession(response);
+  return createRestaurantSession(request, response);
 }

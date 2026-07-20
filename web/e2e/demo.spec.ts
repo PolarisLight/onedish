@@ -15,7 +15,7 @@ test("one tap creates a live decision and can pick another", async ({ page }) =>
   await page.getByRole("button", { name: "Pick another" }).click();
   await expect(page).not.toHaveURL(firstDecisionUrl);
   await page.getByRole("button", { name: "Edit preferences" }).click();
-  await expect(page.getByRole("dialog", { name: "Meal preferences" })).toBeVisible();
+  await expect(page.getByRole("dialog", { name: "Restaurant preferences" })).toBeVisible();
 });
 
 test("320px mobile actions stay above the fold", async ({ page }) => {

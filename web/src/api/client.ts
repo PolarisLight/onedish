@@ -1,20 +1,47 @@
 import { parseDemoRecord, type DemoRecord, type Place } from "../domain/contracts";
-import { parseRestaurantRecommendation } from "../restaurants/parser";
-import type { RestaurantRecommendRequest, RestaurantRecommendResponse } from "../restaurants/types";
+import {
+  parseRestaurantExclusions,
+  parseRestaurantRecommendation,
+  parseRestaurantSearchRounds,
+} from "../restaurants/parser";
+import type {
+  RestaurantExclusionCounts,
+  RestaurantRecommendRequest,
+  RestaurantRecommendResponse,
+  RestaurantRecoveryAction,
+  RestaurantSearchRound,
+} from "../restaurants/types";
 
-async function boundedFetch(input: string, init: RequestInit, signal?: AbortSignal) {
+export class RestaurantRequestError extends Error {
+  constructor(
+    readonly status: 409 | 503,
+    readonly code: "no_match" | "provider_unavailable",
+    readonly recoveryActions: readonly RestaurantRecoveryAction[] = [],
+    readonly searchRounds: readonly RestaurantSearchRound[] = [],
+    readonly exclusions: RestaurantExclusionCounts | null = null,
+  ) {
+    super(code);
+    this.name = "RestaurantRequestError";
+  }
+}
+
+async function boundedResponse(input: string, init: RequestInit, signal?: AbortSignal) {
   const timeout = new AbortController();
   const timer = window.setTimeout(() => timeout.abort(), 15_000);
   const abort = () => timeout.abort();
   signal?.addEventListener("abort", abort, { once: true });
   try {
-    const response = await fetch(input, { ...init, signal: timeout.signal });
-    if (!response.ok) throw new Error(`Request failed (${response.status})`);
-    return response.json() as Promise<unknown>;
+    return await fetch(input, { ...init, signal: timeout.signal });
   } finally {
     window.clearTimeout(timer);
     signal?.removeEventListener("abort", abort);
   }
+}
+
+async function boundedFetch(input: string, init: RequestInit, signal?: AbortSignal) {
+  const response = await boundedResponse(input, init, signal);
+  if (!response.ok) throw new Error(`Request failed (${response.status})`);
+  return response.json() as Promise<unknown>;
 }
 
 export async function recommend(payload: unknown, signal?: AbortSignal) {
@@ -29,11 +56,37 @@ export async function recommendRestaurant(
   payload: RestaurantRecommendRequest,
   signal?: AbortSignal,
 ): Promise<RestaurantRecommendResponse> {
-  const value = await boundedFetch(
+  const response = await boundedResponse(
     "/api/v1/restaurants/recommend",
     { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) },
     signal,
   );
+  const value = await response.json().catch(() => null) as unknown;
+  if (!response.ok) {
+    const detail = typeof value === "object" && value !== null
+      && typeof (value as { detail?: unknown }).detail === "object"
+      && (value as { detail?: unknown }).detail !== null
+      ? (value as { detail: Record<string, unknown> }).detail
+      : null;
+    if (response.status === 409 && detail?.code === "no_match") {
+      const actions = Array.isArray(detail.recovery_actions)
+        ? detail.recovery_actions.filter(
+          (action): action is RestaurantRecoveryAction => action === "clear_tags" || action === "ignore_budget",
+        )
+        : [];
+      throw new RestaurantRequestError(
+        409,
+        "no_match",
+        actions,
+        parseRestaurantSearchRounds(detail.search_rounds),
+        parseRestaurantExclusions(detail.exclusions),
+      );
+    }
+    if (response.status === 503 && detail?.code === "provider_unavailable") {
+      throw new RestaurantRequestError(503, "provider_unavailable");
+    }
+    throw new Error(`Request failed (${response.status})`);
+  }
   return parseRestaurantRecommendation(value);
 }
 

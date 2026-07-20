@@ -16,7 +16,7 @@ test("language switch keeps each route in one interface language", async ({ page
   await page.goto("/");
   await page.getByRole("button", { name: "中文" }).click();
   await expect(page.getByRole("heading", { name: "今天 吃什么？" })).toBeVisible();
-  await expect(page.getByText(/¥60\.00/)).toBeVisible();
+  await expect(page.getByText("不限餐厅类型 · 不限制预算")).toBeVisible();
   await page.getByRole("link", { name: "隐私" }).first().click();
   await expect(page.getByRole("heading", { name: "你的身体不是商品。" })).toBeVisible();
   await expect(page.getByRole("button", { name: "精确位置" })).toBeVisible();

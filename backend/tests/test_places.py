@@ -97,6 +97,7 @@ async def test_amap_converts_gps_and_normalizes_restaurant_fields() -> None:
                         "location": "121.474200,31.231200",
                         "distance": "128",
                         "type": "餐饮服务;中餐厅;特色/地方风味餐厅",
+                        "typecode": "050118",
                         "address": "南京西路测试号",
                         "business": {
                             "opentime_today": "10:00-22:00",
@@ -118,6 +119,7 @@ async def test_amap_converts_gps_and_normalizes_restaurant_fields() -> None:
             radius_m=10_000,
             limit=10,
             keywords=("日本料理",),
+            type_codes=("050117",),
         )
     )
 
@@ -126,7 +128,7 @@ async def test_amap_converts_gps_and_normalizes_restaurant_fields() -> None:
     assert convert.calls[0].request.url.params["locations"] == "121.473700,31.230400"
     around_params = around.calls[0].request.url.params
     assert around_params["location"] == "121.474000,31.231000"
-    assert around_params["types"] == "050000"
+    assert around_params["types"] == "050117"
     assert around_params["keywords"] == "日本料理"
     assert around_params["radius"] == "10000"
     assert around_params["show_fields"] == "business,photos"
@@ -134,6 +136,7 @@ async def test_amap_converts_gps_and_normalizes_restaurant_fields() -> None:
         "id": "B0AMAP123",
         "name": "小杨生煎",
         "category": "生煎 · 餐饮服务;中餐厅;特色/地方风味餐厅",
+        "category_code": "050118",
         "distance_m": 128,
         "price_tier": 2,
         "rating": 4.7,

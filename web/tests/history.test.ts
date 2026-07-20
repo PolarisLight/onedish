@@ -12,7 +12,7 @@ describe("local history", () => {
       rejection_reason: "not_craving",
     });
     await saveDecision({ id: "decision-1", stateId: "day1", payload: { winner: "dish-1" } });
-    expect(db.verno).toBe(3);
+    expect(db.verno).toBe(4);
     expect(await db.historyEvents.count()).toBe(1);
     expect((await db.decisionSessions.get("decision-1"))?.payload).toEqual({ winner: "dish-1" });
   });

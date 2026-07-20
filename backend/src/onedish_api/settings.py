@@ -48,8 +48,6 @@ class Settings(BaseSettings):
         default=None,
         validation_alias=AliasChoices("OPENAI_API_KEY", "ONEDISH_OPENAI_API_KEY"),
     )
-    openai_rerank_model: str = "gpt-5-mini"
-    restaurant_rerank_timeout_seconds: float = Field(default=2.0, ge=2.0, le=2.0)
     foursquare_api_key: str | None = None
     amap_web_key: str | None = Field(
         default=None,

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { parseRestaurantRecommendation } from "../src/restaurants/parser";
-import { personalizedRestaurantResponse, restaurantResponse } from "./support/restaurant-fixtures";
+import { restaurantResponse } from "./support/restaurant-fixtures";
+
 
 function candidateWith(patch: Record<string, unknown>) {
   const response = restaurantResponse();
@@ -11,98 +12,90 @@ function candidateWith(patch: Record<string, unknown>) {
   return response;
 }
 
-describe("restaurant response parser", () => {
-  it("accepts a strict valid response", () => {
+describe("restaurant V2 response parser", () => {
+  it("accepts the strict V2 evidence contract", () => {
     const parsed = parseRestaurantRecommendation(restaurantResponse());
-    expect(parsed.recommendation_mode).toBe("exploration");
-    expect(parsed.radius_m).toBe(3000);
-    expect(parsed.ranked[0]!.reason_codes).toEqual(["higher_rating"]);
-  });
-
-  it("accepts personalized recommendation mode", () => {
-    const response = personalizedRestaurantResponse();
-    expect(parseRestaurantRecommendation(response).recommendation_mode).toBe("personalized");
+    expect(parsed.schema_version).toBe("restaurant-recommendation.v2");
+    expect(parsed.active_radius_m).toBe(3000);
+    expect(parsed.search_rounds.map((round) => round.radius_m)).toEqual([2000, 3000]);
+    expect(parsed.ranked[0]?.matched_tags).toEqual(["japanese"]);
+    expect(parsed.ranked[0]?.budget_state).toBe("within");
   });
 
   it.each([
-    "higher_rating",
-    "budget_match",
-    "taste_match",
-    "history_diversity",
-    "closer_than_typical",
-    "high_confidence",
-  ])("accepts current reason %s", (reason) => {
-    const response = restaurantResponse();
-    response.ranked[0]!.reason_codes = [reason];
-    expect(parseRestaurantRecommendation(response).ranked[0]!.reason_codes).toEqual([reason]);
-  });
-
-  it.each([
-    ["obsolete mode", { recommendation_mode: "default" }],
-    ["obsolete radius", { radius_m: 1500 }],
+    ["old schema", { schema_version: "restaurant-recommendation.v1" }],
+    ["old AI field", { selection_source: "ai_rerank" }],
+    ["old model field", { model_status: "selected" }],
+    ["old personalization field", { recommendation_mode: "personalized" }],
+    ["old trace", { trace: [] }],
   ])("rejects %s", (_label, patch) => {
     expect(() => parseRestaurantRecommendation({ ...restaurantResponse(), ...patch })).toThrow();
   });
 
-  it.each(["nearby", "meal_period_match"])("rejects obsolete reason %s", (reason) => {
-    const response = restaurantResponse();
-    response.ranked[0]!.reason_codes = [reason];
-    expect(() => parseRestaurantRecommendation(response)).toThrow("reason");
+  it.each([
+    [3000, [{ radius_m: 3000, discovered_count: 1, eligible_count: 1 }]],
+    [5000, [
+      { radius_m: 2000, discovered_count: 1, eligible_count: 0 },
+      { radius_m: 5000, discovered_count: 1, eligible_count: 1 },
+    ]],
+  ])("rejects a non-prefix radius sequence ending at %s", (activeRadius, rounds) => {
+    expect(() => parseRestaurantRecommendation({
+      ...restaurantResponse(),
+      active_radius_m: activeRadius,
+      search_rounds: rounds,
+    })).toThrow("radius");
   });
 
-  it("rejects unsafe navigation and non-monotonic counts", () => {
-    const unsafe = restaurantResponse();
-    unsafe.ranked[0]!.candidate.navigation_url = "javascript:alert(1)";
-    expect(() => parseRestaurantRecommendation(unsafe)).toThrow("navigation");
-    const growing = restaurantResponse();
-    growing.trace[1]!.survivor_count = 9;
-    expect(() => parseRestaurantRecommendation(growing)).toThrow("trace");
+  it("rejects duplicate candidates and a mismatched pool count", () => {
+    const duplicate = restaurantResponse();
+    duplicate.ranked[1] = duplicate.ranked[0]!;
+    expect(() => parseRestaurantRecommendation(duplicate)).toThrow("candidate");
+    expect(() => parseRestaurantRecommendation({
+      ...restaurantResponse(),
+      quality_pool_count: 1,
+    })).toThrow("pool");
+  });
+
+  it("requires stretch overage if and only if the state is stretch", () => {
+    const missing = restaurantResponse();
+    missing.ranked[0]!.budget_state = "stretch";
+    missing.ranked[0]!.reason_codes = ["budget_stretch"];
+    expect(() => parseRestaurantRecommendation(missing)).toThrow("budget");
+    const extra = restaurantResponse();
+    extra.ranked[0]!.budget_overage_minor = 800 as never;
+    expect(() => parseRestaurantRecommendation(extra)).toThrow("budget");
+  });
+
+  it("rejects unknown budget with a budget-match reason", () => {
+    const response = restaurantResponse();
+    response.ranked[0]!.budget_state = "unknown";
+    response.ranked[0]!.reason_codes = ["within_budget"];
+    expect(() => parseRestaurantRecommendation(response)).toThrow("budget");
   });
 
   it.each([
-    ["missing evidence", candidateWith({ evidence: undefined })],
-    ["non-array cuisine tags", candidateWith({ cuisine_tags: "fujian" })],
-    ["invalid ID prefix", candidateWith({ id: "fixture:1" })],
-    ["invalid source", candidateWith({ source_kind: "fixture_place" })],
-    ["source/persistence mismatch", candidateWith({ source_kind: "amap_place", persistence: "licensed_open_data" })],
+    ["unsafe navigation", candidateWith({ navigation_url: "http://example.com" })],
+    ["unknown intent", candidateWith({ intent_tags: ["unknown"] })],
+    ["invalid ID", candidateWith({ id: "fixture:1" })],
+    ["source mismatch", candidateWith({ source_kind: "amap_place", persistence: "licensed_open_data" })],
+    ["legacy cuisine tags", candidateWith({ cuisine_tags: ["fujian"] })],
+    ["legacy confidence", candidateWith({ confidence: 0.8 })],
   ])("rejects candidate with %s", (_label, response) => {
     expect(() => parseRestaurantRecommendation(response)).toThrow();
   });
 
-  it.each([
-    ["selection source", { selection_source: "fixture" }],
-    ["model status", { model_status: "ready" }],
-    ["schema", { schema_version: "restaurant-recommendation.v0" }],
-    ["session", { session_id: "not-a-session" }],
-  ])("rejects invalid %s", (_label, patch) => {
-    expect(() => parseRestaurantRecommendation({ ...restaurantResponse(), ...patch })).toThrow();
-  });
-
-  it.each([
-    ["NaN score", () => {
-      const response = restaurantResponse();
-      response.ranked[0]!.score = Number.NaN;
-      return response;
-    }],
-    ["infinite score", () => {
-      const response = restaurantResponse();
-      response.ranked[0]!.score = Number.POSITIVE_INFINITY;
-      return response;
-    }],
-    ["NaN rating", () => candidateWith({ rating: Number.NaN })],
-    ["infinite confidence", () => candidateWith({ confidence: Number.POSITIVE_INFINITY })],
-  ])("rejects %s", (_label, makeResponse) => {
-    expect(() => parseRestaurantRecommendation(makeResponse())).toThrow();
-  });
-
-  it.each([
-    ["fractional trace count", { input_count: 8.5 }],
-    ["negative trace count", { survivor_count: -1 }],
-    ["survivors above input", { input_count: 1, survivor_count: 2 }],
-    ["invalid stage ID", { id: "search" }],
-  ])("rejects %s", (_label, patch) => {
+  it("rejects matched tags without candidate category evidence", () => {
     const response = restaurantResponse();
-    response.trace[0] = { ...response.trace[0]!, ...patch } as typeof response.trace[0];
-    expect(() => parseRestaurantRecommendation(response)).toThrow("trace");
+    response.ranked[0]!.matched_tags = ["hot_pot"];
+    expect(() => parseRestaurantRecommendation(response)).toThrow("matched");
   });
+
+  it.each([Number.NaN, Number.POSITIVE_INFINITY, -1, 101])(
+    "rejects invalid score %s",
+    (score) => {
+      const response = restaurantResponse();
+      response.ranked[0]!.score = score;
+      expect(() => parseRestaurantRecommendation(response)).toThrow("score");
+    },
+  );
 });

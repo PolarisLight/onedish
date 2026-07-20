@@ -10,8 +10,6 @@ Outside a verified source checkout, set `ONEDISH_ROOT_PATH` to the runtime asset
 - `VITE_AMAP_JS_KEY`: browser AMap JavaScript API key, restricted to deployed domains.
 - `VITE_AMAP_SECURITY_CODE`: local-development-only AMap security code; never use in a public build.
 - `VITE_AMAP_SERVICE_HOST`: production same-origin security proxy path; use `/_AMapService` instead of exposing the security code.
-- `OPENAI_API_KEY`: optional constrained reranker key.
-- `ONEDISH_OPENAI_RERANK_MODEL`: defaults to `gpt-5-mini`.
 - `VITE_RESTAURANT_FIRST`: `1` enables the new root journey; `0` rolls root back to the offline demo.
 
 At least one place source must return candidates. The checked-in Overture artifact can be empty during AMap-only development.
@@ -20,13 +18,13 @@ At least one place source must return candidates. The checked-in Overture artifa
 
 1. Device-location failure offers central Xiamen or retry.
 2. Either provider may fail independently.
-3. Discovery uses one fixed 3,000 m request. Empty results stay empty; the service never silently expands the radius.
-4. Missing, invalid, failed, or late AI output uses deterministic rank zero.
-5. Empty 3 km results return HTTP 503 with a sanitized message.
+3. Discovery tries 2,000 m, 3,000 m, then 5,000 m and stops at the first eligible set.
+4. Successful provider calls with no eligible result return HTTP 409 with only applicable recovery actions.
+5. Failure of every provider call returns HTTP 503 with a sanitized message.
 
 ## Safe observability
 
-Record only request duration, provider status class, candidate count, model outcome, and anonymous error code. Never log request bodies, coordinates, restaurant fields, navigation URLs, keys, or reranker payloads.
+Record only request duration, provider status class, candidate count, and anonymous error code. Never log request bodies, coordinates, restaurant fields, navigation URLs, keys, or intent events.
 
 ## Live smoke test
 
@@ -52,7 +50,7 @@ The map-first service runs at `https://onedish.cyhao.space`. Docker binds FastAP
 The immutable release source is stored below `/opt/onedish/releases/RELEASE_ID`. Secrets live outside that directory:
 
 1. Store `VITE_AMAP_JS_KEY` in `/opt/onedish/secrets/build.env` with mode `0600`.
-2. Store `AMAP_WEB_KEY` and optional OpenAI variables in `/opt/onedish/secrets/runtime.env` with mode `0600`.
+2. Store `AMAP_WEB_KEY` in `/opt/onedish/secrets/runtime.env` with mode `0600`.
 3. Store only the AMap security code in `/opt/onedish/secrets/amap-security-code` with mode `0600`.
 4. Run `scripts/deploy_vps.sh /opt/onedish/releases/RELEASE_ID /opt/onedish/secrets/build.env /opt/onedish/secrets/runtime.env RELEASE_ID` as root.
 5. Render the edge configuration with the deployed Python 3.12 image, not the VPS system Python:

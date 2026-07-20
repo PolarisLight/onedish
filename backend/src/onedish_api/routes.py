@@ -26,7 +26,8 @@ from onedish_api.restaurant_domain import (
     RestaurantRecommendResponse,
 )
 from onedish_api.restaurants.service import (
-    RestaurantDiscoveryUnavailable,
+    NoRestaurantMatch,
+    ProviderUnavailable,
     RestaurantRecommendationService,
 )
 
@@ -146,9 +147,22 @@ def build_router(
     ) -> RestaurantRecommendResponse:
         try:
             return await restaurant_service.recommend(request)
-        except RestaurantDiscoveryUnavailable:
+        except NoRestaurantMatch as exc:
             raise HTTPException(
-                status_code=503, detail="restaurant discovery unavailable"
+                status_code=409,
+                detail={
+                    "code": "no_match",
+                    "search_rounds": [
+                        item.model_dump(mode="json") for item in exc.search_rounds
+                    ],
+                    "exclusions": exc.exclusions.model_dump(mode="json"),
+                    "recovery_actions": list(exc.recovery_actions),
+                },
+            ) from None
+        except ProviderUnavailable:
+            raise HTTPException(
+                status_code=503,
+                detail={"code": "provider_unavailable"},
             ) from None
 
     return router

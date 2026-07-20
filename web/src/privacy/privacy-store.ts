@@ -34,12 +34,14 @@ export async function setLocationPermission(enabled: boolean): Promise<void> {
 }
 
 export async function deleteLocalProfileData(): Promise<void> {
-  await db.transaction("rw", [db.settings, db.dailyContext, db.historyEvents, db.decisionSessions], async () => {
+  await db.transaction("rw", [db.settings, db.dailyContext, db.historyEvents, db.decisionSessions, db.restaurantIntentEvents], async () => {
     await Promise.all([
       db.settings.delete("profile.v2"),
       db.dailyContext.clear(),
       db.historyEvents.clear(),
       db.decisionSessions.clear(),
+      db.restaurantIntentEvents.clear(),
+      db.settings.delete("restaurant.preferences.v2"),
     ]);
   });
 }

@@ -61,6 +61,7 @@ test("switches home and profile interface copy to Chinese", async () => {
   fireEvent.click(screen.getByRole("button", { name: "中文" }));
   await waitFor(() => expect(screen.getByRole("button", { name: "看看吃什么" })).toBeVisible());
   fireEvent.click(screen.getByRole("button", { name: "调整" }));
-  expect(screen.getByRole("dialog", { name: "用餐偏好" })).toBeVisible();
-  expect(screen.getByRole("checkbox", { name: "花生" })).toBeVisible();
+  expect(screen.getByRole("dialog", { name: "餐厅偏好" })).toBeVisible();
+  expect(screen.getByRole("checkbox", { name: "日本料理" })).toBeVisible();
+  expect(screen.queryByRole("checkbox", { name: "花生" })).not.toBeInTheDocument();
 });

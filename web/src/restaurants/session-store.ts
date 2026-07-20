@@ -1,15 +1,23 @@
-import type { RankedRestaurant, RestaurantRecommendResponse } from "./types";
+import type {
+  RankedRestaurant,
+  RestaurantRecommendRequest,
+  RestaurantRecommendResponse,
+} from "./types";
 
 export interface ActiveRestaurantSession {
   readonly response: RestaurantRecommendResponse;
+  readonly request: RestaurantRecommendRequest;
   index: number;
 }
 
 const sessions = new Map<string, ActiveRestaurantSession>();
 
-export function createRestaurantSession(response: RestaurantRecommendResponse): string {
+export function createRestaurantSession(
+  request: RestaurantRecommendRequest,
+  response: RestaurantRecommendResponse,
+): string {
   sessions.clear();
-  sessions.set(response.session_id, { response, index: 0 });
+  sessions.set(response.session_id, { request, response, index: 0 });
   return response.session_id;
 }
 

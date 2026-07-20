@@ -12,11 +12,20 @@
 | Charred chicken image | Original OpenAI-generated project asset | Original food image |
 | SVG restaurant images | Original geometric OneDish placeholders | Demo illustration |
 | PWA icons | Original OpenAI-generated project asset | OneDish icon |
+| AMap restaurant observations | AMap Web Service, fetched for the active request | 高德地图 / active request only |
+| `data/restaurants.xiamen.v1.json` | Eligible Overture Maps place records with upstream attribution | Licensed open-place data |
 
 The catalog contains ninety reviewed fictional dishes across ten fictional restaurants. Nutrition is
 represented as a range and labeled estimated unless an explicitly authoritative source is present.
-AMap or Foursquare results, when enabled, describe nearby places only. They are not evidence that a place
-stocks a demo dish, delivers to the user, or accepts orders through OneDish.
+AMap observations, when enabled, describe nearby places only. They are third-party active-request data,
+not OneDish-owned records: OneDish does not persist, cache, encode, hash, or use them to enrich the open
+artifact. They are not evidence that a place stocks a demo dish, delivers to the user, or accepts orders
+through OneDish. Overture records are handled separately under their applicable open-data terms and retain
+upstream attribution.
+
+Restaurant V2 persists only the user-originated intent shape
+`{id, occurred_at, action, selected_tags, budget_band_minor}`. This controlled-variety signal contains no
+provider restaurant fields and is not a derived copy of an AMap result.
 
 Detailed image generation dates and rights are stored in `web/public/food/attribution.json`.
 

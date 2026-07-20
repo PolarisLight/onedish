@@ -7,14 +7,21 @@ const pois = [
 ] as const;
 
 const response = {
-  schema_version: "restaurant-recommendation.v1",
+  schema_version: "restaurant-recommendation.v2",
   session_id: "b".repeat(32),
+  active_radius_m: 3000,
+  search_rounds: [
+    { radius_m: 2000, discovered_count: 12, eligible_count: 0 },
+    { radius_m: 3000, discovered_count: 16, eligible_count: 2 },
+  ],
+  exclusions: { closed: 1, outside_radius: 0, tag_mismatch: 13, excessive_budget: 0 },
+  quality_pool_count: 2,
   ranked: ["Harbor Table", "Garden Noodles"].map((name, index) => ({
     candidate: {
       id: `amap:e2e-${index}`,
       name,
       category: "Fujian",
-      cuisine_tags: ["fujian"],
+      intent_tags: ["minnan_fujian"],
       distance_m: 1900 - index * 1400,
       rating: 4.9 - index * 0.7,
       average_cost_minor: 6800,
@@ -23,23 +30,15 @@ const response = {
       navigation_url: "https://uri.amap.com/marker?position=118.11,24.47",
       source_kind: "amap_place",
       attribution: "AMap",
-      confidence: 0.72 + index * 0.2,
       persistence: "active_only",
-      evidence: { distance: true, rating: true, average_cost: true, category: true, open_state: false, menu: false },
+      evidence: { distance: true, rating: true, average_cost: true, category: true, open_state: false },
     },
     score: 89 - index,
-    reason_codes: index === 0 ? ["higher_rating"] : ["closer_than_typical", "high_confidence"],
+    matched_tags: ["minnan_fujian"],
+    budget_state: "not_requested",
+    budget_overage_minor: null,
+    reason_codes: index === 0 ? ["above_median_rating"] : ["nearby"],
   })),
-  trace: [
-    { id: "nearby", input_count: 12, survivor_count: 12 },
-    { id: "constraints", input_count: 12, survivor_count: 7 },
-    { id: "habits", input_count: 7, survivor_count: 2 },
-    { id: "winner", input_count: 2, survivor_count: 1 },
-  ],
-  selection_source: "deterministic",
-  model_status: "disabled",
-  recommendation_mode: "exploration",
-  radius_m: 3000,
 };
 
 async function finishElimination(page: Page): Promise<void> {
@@ -74,7 +73,7 @@ test("map-backed landmark suggestion selection reaches candidate-specific altern
   ).__amapFixtureCalls)).toEqual({ autoComplete: 1, placeSearch: 1 });
   await page.getByRole("button", { name: "Search restaurants near this place" }).click();
   await finishElimination(page);
-  await expect(page.getByText("Selected from real nearby place data")).toBeVisible();
+  await expect(page.getByText("Search radius: 3 km")).toBeVisible();
   expect(requestedLocation).toEqual({ latitude: pois[0].latitude, longitude: pois[0].longitude });
   const serializedRequest = JSON.stringify(requestedPayload);
   expect(serializedRequest).not.toContain(pois[0].id);

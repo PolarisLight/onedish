@@ -1,47 +1,39 @@
-"""Deterministic, evidence-bounded restaurant scoring."""
+"""Pure evidence-bounded restaurant eligibility, scoring, and variety."""
 
 from __future__ import annotations
 
+from collections import Counter
+from dataclasses import dataclass
+from datetime import UTC, datetime, timedelta
+from random import Random
 from statistics import median
-from typing import NamedTuple
 
 from onedish_api.restaurant_domain import (
-    RecommendationMode,
+    BudgetState,
+    ExclusionCounts,
     RankedRestaurant,
     RestaurantCandidate,
     RestaurantReasonCode,
     RestaurantRecommendRequest,
-    RestaurantTraceStage,
 )
+from onedish_api.restaurants.budget import BudgetAssessment, budget_assessment
 
 
-WEIGHTS = {
-    "rating": 40.0,
-    "budget": 25.0,
-    "taste": 25.0,
-    "history": 15.0,
-    "confidence": 10.0,
-    "distance": 10.0,
-}
+@dataclass(frozen=True)
+class EligibilityResult:
+    eligible: tuple[RestaurantCandidate, ...]
+    exclusions: ExclusionCounts
 
 
-class ScoringResult(NamedTuple):
+@dataclass(frozen=True)
+class ScoringResult:
     ranked: tuple[RankedRestaurant, ...]
-    trace: tuple[RestaurantTraceStage, ...]
-
-
-def recommendation_mode(request: RestaurantRecommendRequest) -> RecommendationMode:
-    has_signal = (
-        request.profile.budget_is_explicit
-        or bool(request.profile.preferred_cuisines)
-        or any(count > 0 for count in request.history.recent_cuisines.values())
-        or any(value != 0 for value in request.history.cuisine_preferences.values())
-    )
-    return "personalized" if has_signal else "exploration"
+    exclusions: ExclusionCounts
 
 
 def _comparable_cost(
-    candidate: RestaurantCandidate, request: RestaurantRecommendRequest
+    candidate: RestaurantCandidate,
+    request: RestaurantRecommendRequest,
 ) -> int | None:
     if (
         candidate.evidence.average_cost
@@ -52,130 +44,203 @@ def _comparable_cost(
     return None
 
 
-def _taste_signal(
-    candidate: RestaurantCandidate, request: RestaurantRecommendRequest
-) -> float | None:
-    preferred = set(request.profile.preferred_cuisines)
-    learned = request.history.cuisine_preferences
-    has_learned_preference = any(value != 0 for value in learned.values())
-    if not candidate.cuisine_tags or (not preferred and not has_learned_preference):
-        return None
-    explicit_match = 1.0 if preferred & set(candidate.cuisine_tags) else 0.0
-    learned_match = max(
-        (learned.get(tag, 0.0) for tag in candidate.cuisine_tags),
-        default=0.0,
-    )
-    return max(0.0, min(1.0, max(explicit_match, learned_match)))
-
-
-def _has_taste_match(candidate: RestaurantCandidate, request: RestaurantRecommendRequest) -> bool:
-    tags = set(candidate.cuisine_tags)
-    return bool(tags & set(request.profile.preferred_cuisines)) or any(
-        request.history.cuisine_preferences.get(tag, 0.0) > 0 for tag in tags
+def _assessment(
+    candidate: RestaurantCandidate,
+    request: RestaurantRecommendRequest,
+) -> BudgetAssessment:
+    budget = request.profile.budget_minor if request.profile.budget_is_explicit else None
+    return budget_assessment(
+        _comparable_cost(candidate, request),
+        request.profile.currency,
+        budget,
     )
 
 
-def _score(
+def eligible_candidates(
+    candidates: tuple[RestaurantCandidate, ...],
+    request: RestaurantRecommendRequest,
+    *,
+    radius_m: int,
+) -> EligibilityResult:
+    selected = set(request.profile.selected_tags)
+    eligible: list[RestaurantCandidate] = []
+    counts = {
+        "closed": 0,
+        "outside_radius": 0,
+        "tag_mismatch": 0,
+        "excessive_budget": 0,
+    }
+    for candidate in candidates:
+        if candidate.open_state == "closed":
+            counts["closed"] += 1
+            continue
+        if candidate.distance_m > radius_m:
+            counts["outside_radius"] += 1
+            continue
+        if selected and not (selected & set(candidate.intent_tags)):
+            counts["tag_mismatch"] += 1
+            continue
+        if _assessment(candidate, request).state == "excessive":
+            counts["excessive_budget"] += 1
+            continue
+        eligible.append(candidate)
+    return EligibilityResult(
+        eligible=tuple(eligible),
+        exclusions=ExclusionCounts(**counts),
+    )
+
+
+def recent_tag_counts(
+    intents: tuple,
+    now: datetime | None = None,
+) -> dict[str, int]:
+    current = now or datetime.now(UTC)
+    cutoff = current - timedelta(days=14)
+    counter: Counter[str] = Counter()
+    for intent in intents:
+        occurred_at = intent.occurred_at.astimezone(UTC)
+        if cutoff <= occurred_at <= current:
+            counter.update(intent.selected_tags)
+    return dict(counter)
+
+
+def _budget_state(assessment: BudgetAssessment) -> BudgetState:
+    if assessment.state == "excessive":
+        raise ValueError("excessive budget candidate cannot be scored")
+    return assessment.state
+
+
+def score_candidate(
     candidate: RestaurantCandidate,
     request: RestaurantRecommendRequest,
     *,
-    median_rating: float | None,
-    median_distance: float,
+    radius_m: int,
+    recent_counts: dict[str, int] | None = None,
+    median_rating: float | None = None,
 ) -> RankedRestaurant:
-    signals: dict[str, float] = {"confidence": candidate.confidence}
-    if candidate.evidence.distance:
-        signals["distance"] = max(0.0, 1 - candidate.distance_m / 3000)
-    if candidate.evidence.rating and candidate.rating is not None:
-        signals["rating"] = min(1.0, candidate.rating / 5)
-    comparable_cost = _comparable_cost(candidate, request)
-    if request.profile.budget_is_explicit and comparable_cost is not None:
-        assert request.profile.budget_minor is not None
-        budget = request.profile.budget_minor
-        cost = comparable_cost
-        signals["budget"] = 1.0 if cost <= budget else max(0.0, 1 - (cost - budget) / budget)
-    taste = _taste_signal(candidate, request)
-    if taste is not None:
-        signals["taste"] = taste
-    has_recent_history = any(count > 0 for count in request.history.recent_cuisines.values())
-    if candidate.cuisine_tags and has_recent_history:
-        recent = sum(request.history.recent_cuisines.get(tag, 0) for tag in candidate.cuisine_tags)
-        signals["history"] = 1 / (1 + recent)
-    denominator = sum(WEIGHTS[key] for key in signals)
-    value = sum(WEIGHTS[key] * signal for key, signal in signals.items()) / denominator * 100
-    reasons: list[tuple[RestaurantReasonCode, float]] = []
+    rating_signal = (
+        candidate.rating / 5
+        if candidate.evidence.rating and candidate.rating is not None
+        else 0.5
+    )
+    distance_signal = max(0.0, min(1.0, 1 - candidate.distance_m / radius_m))
+    counts = recent_counts or {}
+    if request.profile.selected_tags:
+        diversity_signal = 0.5
+    else:
+        accepted_count = sum(counts.get(tag, 0) for tag in candidate.intent_tags)
+        diversity_signal = 1 / (1 + accepted_count)
+    assessment = _assessment(candidate, request)
+    score = (
+        55 * rating_signal
+        + 35 * distance_signal
+        + 10 * diversity_signal
+        - assessment.penalty
+    )
+
+    candidate_tags = set(candidate.intent_tags)
+    matched_tags = tuple(
+        tag for tag in request.profile.selected_tags if tag in candidate_tags
+    )
+    reasons: list[RestaurantReasonCode] = []
+    if matched_tags:
+        reasons.append("tag_match")
+    if assessment.state == "within":
+        reasons.append("within_budget")
+    elif assessment.state == "stretch":
+        reasons.append("budget_stretch")
+    elif assessment.state == "unknown":
+        reasons.append("budget_unknown")
     if (
         median_rating is not None
-        and candidate.rating is not None
         and candidate.evidence.rating
+        and candidate.rating is not None
         and candidate.rating > median_rating
     ):
-        reasons.append(("higher_rating", WEIGHTS["rating"] * signals["rating"]))
-    if "budget" in signals and signals["budget"] == 1:
-        reasons.append(("budget_match", WEIGHTS["budget"] * signals["budget"]))
-    if _has_taste_match(candidate, request):
-        reasons.append(("taste_match", WEIGHTS["taste"] * signals["taste"]))
-    if has_recent_history and signals.get("history") == 1:
-        reasons.append(("history_diversity", WEIGHTS["history"] * signals["history"]))
-    if candidate.evidence.distance and candidate.distance_m < median_distance:
-        reasons.append(("closer_than_typical", WEIGHTS["distance"] * signals["distance"]))
-    if candidate.confidence >= 0.8:
-        reasons.append(("high_confidence", WEIGHTS["confidence"] * signals["confidence"]))
-    reasons.sort(key=lambda item: (-item[1], item[0]))
+        reasons.append("above_median_rating")
+    if candidate.evidence.distance and candidate.distance_m <= radius_m / 2:
+        reasons.append("nearby")
+    if not request.profile.selected_tags and counts:
+        accepted_count = sum(counts.get(tag, 0) for tag in candidate.intent_tags)
+        if accepted_count < max(counts.values()):
+            reasons.append("intent_diversity")
+
     return RankedRestaurant(
         candidate=candidate,
-        score=round(value, 4),
-        reason_codes=tuple(reason for reason, _contribution in reasons[:3]),
+        score=round(max(0.0, min(100.0, score)), 4),
+        matched_tags=matched_tags,
+        budget_state=_budget_state(assessment),
+        budget_overage_minor=assessment.overage_minor if assessment.state == "stretch" else None,
+        reason_codes=tuple(reasons[:4]),
     )
 
 
 def score_restaurants(
-    candidates: tuple[RestaurantCandidate, ...], request: RestaurantRecommendRequest
+    candidates: tuple[RestaurantCandidate, ...],
+    request: RestaurantRecommendRequest,
+    *,
+    radius_m: int,
+    now: datetime | None = None,
 ) -> ScoringResult:
-    active = tuple(
-        item
-        for item in candidates
-        if item.open_state != "closed" and item.distance_m <= request.profile.max_distance_m
-    )
-    eligible = active
-    if request.profile.preferred_cuisines:
-        preferred = set(request.profile.preferred_cuisines)
-        eligible = tuple(item for item in eligible if preferred & set(item.cuisine_tags))
-    if request.profile.budget_is_explicit:
-        assert request.profile.budget_minor is not None
-        budget_matches = tuple(
-            item
-            for item in eligible
-            if (comparable_cost := _comparable_cost(item, request)) is None
-            or comparable_cost <= request.profile.budget_minor
-        )
-        if budget_matches:
-            eligible = budget_matches
+    eligibility = eligible_candidates(candidates, request, radius_m=radius_m)
     ratings = tuple(
-        item.rating for item in eligible if item.evidence.rating and item.rating is not None
+        item.rating
+        for item in eligibility.eligible
+        if item.evidence.rating and item.rating is not None
     )
-    median_rating = median(ratings) if ratings else None
-    median_distance = median(item.distance_m for item in eligible) if eligible else 0
+    middle_rating = median(ratings) if ratings else None
+    counts = recent_tag_counts(request.recent_intents, now)
     ranked = tuple(
         sorted(
             (
-                _score(
+                score_candidate(
                     item,
                     request,
-                    median_rating=median_rating,
-                    median_distance=median_distance,
+                    radius_m=radius_m,
+                    recent_counts=counts,
+                    median_rating=middle_rating,
                 )
-                for item in eligible
+                for item in eligibility.eligible
             ),
             key=lambda item: (-item.score, item.candidate.distance_m, item.candidate.id),
         )
     )
-    habits_count = min(len(ranked), 10)
-    trace = (
-        RestaurantTraceStage(id="nearby", input_count=len(candidates), survivor_count=len(active)),
-        RestaurantTraceStage(id="constraints", input_count=len(active), survivor_count=len(ranked)),
-        RestaurantTraceStage(id="habits", input_count=len(ranked), survivor_count=habits_count),
-        RestaurantTraceStage(
-            id="winner", input_count=habits_count, survivor_count=1 if ranked else 0
-        ),
+    return ScoringResult(ranked=ranked, exclusions=eligibility.exclusions)
+
+
+def build_quality_pool(
+    ranked: tuple[RankedRestaurant, ...],
+    *,
+    budget_is_explicit: bool = False,
+) -> tuple[RankedRestaurant, ...]:
+    if not ranked:
+        return ()
+    ordered = tuple(
+        sorted(ranked, key=lambda item: (-item.score, item.candidate.distance_m, item.candidate.id))
     )
-    return ScoringResult(ranked=ranked, trace=trace)
+    band = tuple(item for item in ordered if item.score >= ordered[0].score - 8)
+    if budget_is_explicit:
+        known = tuple(item for item in band if item.budget_state in {"within", "stretch"})
+        unknown = tuple(item for item in band if item.budget_state == "unknown")
+        if len(known) >= 3:
+            band = known
+        elif known:
+            band = known + unknown
+    return band[:5]
+
+
+def weighted_permutation(
+    pool: tuple[RankedRestaurant, ...],
+    rng: Random,
+) -> tuple[RankedRestaurant, ...]:
+    if not pool:
+        return ()
+    minimum_score = min(item.score for item in pool)
+    remaining = list(pool)
+    ordered: list[RankedRestaurant] = []
+    while remaining:
+        weights = [1 + item.score - minimum_score for item in remaining]
+        selected = rng.choices(remaining, weights=weights, k=1)[0]
+        ordered.append(selected)
+        remaining.remove(selected)
+    return tuple(ordered)

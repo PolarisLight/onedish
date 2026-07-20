@@ -1,6 +1,11 @@
 import Dexie, { type EntityTable } from "dexie";
 import type { UserProfile } from "../recommendation/types";
 import { normalizeRestaurantCuisines } from "../restaurants/cuisines";
+import {
+  normalizeRestaurantIntentTags,
+  type RestaurantIntentTag,
+} from "../restaurants/intent-tags";
+import type { RestaurantPreferences } from "../restaurants/preferences";
 
 export interface SettingRow { key: string; value: unknown }
 export interface DailyContextRow { date: string; payload: unknown }
@@ -25,6 +30,13 @@ export interface PrivacyAccessEventRow {
   purpose: "nearby_map" | "profile_read" | "profile_delete";
   recipient: "device" | "OpenStreetMap" | "AMap" | "AMap Places + OpenStreetMap";
 }
+export interface RestaurantIntentEventRow {
+  readonly id: string;
+  readonly occurred_at: string;
+  readonly action: "accepted";
+  readonly selected_tags: readonly RestaurantIntentTag[];
+  readonly budget_band_minor: number | null;
+}
 
 class OneDishDB extends Dexie {
   settings!: EntityTable<SettingRow, "key">;
@@ -32,6 +44,7 @@ class OneDishDB extends Dexie {
   historyEvents!: EntityTable<HistoryEventRow, "id">;
   decisionSessions!: EntityTable<DecisionSessionRow, "id">;
   privacyAccessEvents!: EntityTable<PrivacyAccessEventRow, "id">;
+  restaurantIntentEvents!: EntityTable<RestaurantIntentEventRow, "id">;
 
   constructor() {
     super("onedish");
@@ -53,6 +66,14 @@ class OneDishDB extends Dexie {
       historyEvents: "id, occurred_at, kind, dish_id",
       decisionSessions: "id, stateId",
       privacyAccessEvents: "id, occurred_at, category, recipient",
+    });
+    this.version(4).stores({
+      settings: "key",
+      dailyContext: "date",
+      historyEvents: "id, occurred_at, kind, dish_id",
+      decisionSessions: "id, stateId",
+      privacyAccessEvents: "id, occurred_at, category, recipient",
+      restaurantIntentEvents: "id, occurred_at, action",
     });
   }
 }
@@ -125,10 +146,112 @@ export async function getRecentHistory(days: number, now: Date): Promise<History
     .sortBy("occurred_at");
 }
 
+const RESTAURANT_INTENT_KEYS = new Set([
+  "id",
+  "occurred_at",
+  "action",
+  "selected_tags",
+  "budget_band_minor",
+]);
+const RESTAURANT_PREFERENCE_KEYS = new Set([
+  "selected_tags",
+  "budget_minor",
+  "budget_is_explicit",
+]);
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isIsoTimestamp(value: unknown): value is string {
+  return typeof value === "string" && Number.isFinite(Date.parse(value));
+}
+
+function isSafePositiveInteger(value: unknown): value is number {
+  return typeof value === "number"
+    && Number.isSafeInteger(value)
+    && value >= 100
+    && value <= 1_000_000;
+}
+
+function hasExactKeys(value: Record<string, unknown>, keys: Set<string>): boolean {
+  const actual = Object.keys(value);
+  return actual.length === keys.size && actual.every((key) => keys.has(key));
+}
+
+function hasValidTags(value: unknown, minimum: number): value is readonly RestaurantIntentTag[] {
+  if (!Array.isArray(value) || value.length < minimum || value.length > 6) return false;
+  return normalizeRestaurantIntentTags(value).length === value.length;
+}
+
+function assertRestaurantIntentEvent(value: unknown): asserts value is RestaurantIntentEventRow {
+  if (!isPlainObject(value) || !hasExactKeys(value, RESTAURANT_INTENT_KEYS)) {
+    throw new Error("Invalid restaurant intent");
+  }
+  if (
+    typeof value.id !== "string"
+    || !isIsoTimestamp(value.occurred_at)
+    || value.action !== "accepted"
+    || !hasValidTags(value.selected_tags, 1)
+    || (value.budget_band_minor !== null && !isSafePositiveInteger(value.budget_band_minor))
+  ) {
+    throw new Error("Invalid restaurant intent");
+  }
+}
+
+function isRestaurantPreferences(value: unknown): value is RestaurantPreferences {
+  if (!isPlainObject(value) || !hasExactKeys(value, RESTAURANT_PREFERENCE_KEYS)) return false;
+  return hasValidTags(value.selected_tags, 0)
+    && isSafePositiveInteger(value.budget_minor)
+    && typeof value.budget_is_explicit === "boolean";
+}
+
+export async function saveRestaurantIntent(event: RestaurantIntentEventRow): Promise<void> {
+  assertRestaurantIntentEvent(event);
+  await db.restaurantIntentEvents.put({ ...event, selected_tags: [...event.selected_tags] });
+}
+
+export async function getRecentRestaurantIntents(
+  days: number,
+  now: Date,
+): Promise<RestaurantIntentEventRow[]> {
+  const cutoff = now.getTime() - days * 86_400_000;
+  return (await db.restaurantIntentEvents.toArray())
+    .filter((row) => {
+      const timestamp = Date.parse(row.occurred_at);
+      return timestamp >= cutoff && timestamp <= now.getTime();
+    })
+    .sort((left, right) => right.occurred_at.localeCompare(left.occurred_at))
+    .slice(0, 100);
+}
+
+export async function saveRestaurantPreferences(preferences: RestaurantPreferences): Promise<void> {
+  if (!isRestaurantPreferences(preferences)) throw new Error("Invalid restaurant preferences");
+  await db.settings.put({
+    key: "restaurant.preferences.v2",
+    value: { ...preferences, selected_tags: [...preferences.selected_tags] },
+  });
+}
+
+export async function getRestaurantPreferences(
+  defaults: RestaurantPreferences,
+): Promise<RestaurantPreferences> {
+  const value = (await db.settings.get("restaurant.preferences.v2"))?.value;
+  if (!isRestaurantPreferences(value)) return defaults;
+  return { ...value, selected_tags: [...value.selected_tags] };
+}
+
 export async function resetLocalData() {
   await db.transaction(
     "rw",
-    [db.settings, db.dailyContext, db.historyEvents, db.decisionSessions, db.privacyAccessEvents],
+    [
+      db.settings,
+      db.dailyContext,
+      db.historyEvents,
+      db.decisionSessions,
+      db.privacyAccessEvents,
+      db.restaurantIntentEvents,
+    ],
     async () => {
       await Promise.all([
         db.settings.clear(),
@@ -136,6 +259,7 @@ export async function resetLocalData() {
         db.historyEvents.clear(),
         db.decisionSessions.clear(),
         db.privacyAccessEvents.clear(),
+        db.restaurantIntentEvents.clear(),
       ]);
     },
   );

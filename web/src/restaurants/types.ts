@@ -55,7 +55,7 @@ export interface RestaurantRecommendResponse {
   readonly selection_source: "ai_rerank" | "deterministic";
   readonly model_status: "selected" | "disabled" | "timeout" | "invalid" | "error";
   readonly recommendation_mode: "exploration" | "personalized";
-  readonly radius_m: 3000;
+  readonly radius_m: 3000 | 10000;
 }
 
 export interface RestaurantRecommendRequest {
@@ -68,7 +68,7 @@ export interface RestaurantRecommendRequest {
     readonly budget_is_explicit: boolean;
     readonly currency: "CNY" | "USD";
     readonly preferred_cuisines: readonly RestaurantCuisine[];
-    readonly max_distance_m: 3000;
+    readonly max_distance_m: 3000 | 10000;
   };
   readonly history: {
     readonly recent_cuisines: Readonly<Record<string, number>>;

@@ -77,9 +77,9 @@ def test_filters_closed_and_ranks_deterministically() -> None:
     )
 
 
-def test_relaxes_cuisine_then_budget_when_each_would_empty_results() -> None:
+def test_keeps_cuisine_hard_but_relaxes_budget_when_it_would_empty_results() -> None:
     result = score_restaurants(
-        (candidate("only", distance=300, cuisine="fujian", cost=8000),),
+        (candidate("only", distance=300, cuisine="sichuan", cost=8000),),
         request(
             budget_minor=3000,
             budget_is_explicit=True,
@@ -102,7 +102,7 @@ def test_preferred_cuisine_filters_when_a_match_exists() -> None:
     assert recommendation_mode(request(preferred_cuisines=("sichuan",))) == "personalized"
 
 
-def test_preferred_cuisine_falls_back_when_no_match_exists() -> None:
+def test_preferred_cuisine_never_falls_back_to_a_different_cuisine() -> None:
     result = score_restaurants(
         (
             candidate("first", distance=100, cuisine="fujian"),
@@ -110,7 +110,7 @@ def test_preferred_cuisine_falls_back_when_no_match_exists() -> None:
         ),
         request(preferred_cuisines=("sichuan",)),
     )
-    assert {item.candidate.name for item in result.ranked} == {"first", "second"}
+    assert result.ranked == ()
 
 
 def test_explicit_budget_filters_when_eligible_candidates_exist() -> None:

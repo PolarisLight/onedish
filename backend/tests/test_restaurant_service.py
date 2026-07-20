@@ -50,8 +50,13 @@ class Reranker:
         )
 
 
-def request() -> RestaurantRecommendRequest:
-    return RestaurantRecommendRequest(latitude=24.4798, longitude=118.0894, meal_period="lunch")
+def request(**profile) -> RestaurantRecommendRequest:
+    return RestaurantRecommendRequest(
+        latitude=24.4798,
+        longitude=118.0894,
+        meal_period="lunch",
+        profile=profile,
+    )
 
 
 @pytest.mark.asyncio
@@ -77,6 +82,34 @@ async def test_discovers_once_at_fixed_radius() -> None:
     response = await RestaurantRecommendationService(providers=(provider,)).recommend(request())
     assert [query.radius_m for query in provider.queries] == [3000]
     assert response.radius_m == 3000
+
+
+@pytest.mark.asyncio
+async def test_explicit_cuisine_expands_discovery_and_passes_provider_keyword() -> None:
+    provider = Provider((
+        open_place("near-other", 300),
+        Place(
+            id="japanese",
+            name="远一点的日料",
+            category="日本料理",
+            distance_m=6200,
+            open_state="unknown",
+            source_kind="overture_place",
+            attribution="Overture",
+            latitude=24.48,
+            longitude=118.09,
+            order_destination="https://www.openstreetmap.org/",
+        ),
+    ))
+
+    response = await RestaurantRecommendationService(providers=(provider,)).recommend(
+        request(preferred_cuisines=("japanese",), max_distance_m=10_000)
+    )
+
+    assert provider.queries[0].radius_m == 10_000
+    assert provider.queries[0].keywords == ("日本料理",)
+    assert [item.candidate.name for item in response.ranked] == ["远一点的日料"]
+    assert response.radius_m == 10_000
 
 
 @pytest.mark.asyncio

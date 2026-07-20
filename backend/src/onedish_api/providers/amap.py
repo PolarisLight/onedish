@@ -34,18 +34,21 @@ class AmapPlacesProvider:
                 )
                 converted.raise_for_status()
                 gcj_location = self._converted_location(converted.json())
+                around_params = {
+                    "key": self._api_key,
+                    "location": gcj_location,
+                    "radius": str(min(query.radius_m, 50_000)),
+                    "types": "050000",
+                    "sortrule": "weight",
+                    "show_fields": "business,photos",
+                    "page_size": str(min(query.limit, 25)),
+                    "page_num": "1",
+                }
+                if query.keywords:
+                    around_params["keywords"] = "|".join(query.keywords)[:80]
                 response = await client.get(
                     self.AROUND_URL,
-                    params={
-                        "key": self._api_key,
-                        "location": gcj_location,
-                        "radius": str(min(query.radius_m, 50_000)),
-                        "types": "050000",
-                        "sortrule": "weight",
-                        "show_fields": "business,photos",
-                        "page_size": str(min(query.limit, 25)),
-                        "page_num": "1",
-                    },
+                    params=around_params,
                 )
                 response.raise_for_status()
                 payload = response.json()
@@ -94,7 +97,8 @@ class AmapPlacesProvider:
         rating = cls._number(business.get("rating"))
         distance = cls._number(raw.get("distance")) or 0
         poi_type = cls._text(raw.get("type")) or "餐饮服务"
-        category = cls._text(business.get("tag")) or poi_type.rsplit(";", 1)[-1]
+        business_tag = cls._text(business.get("tag"))
+        category = f"{business_tag} · {poi_type}" if business_tag else poi_type
         photo = photos[0].get("url") if photos and isinstance(photos[0], dict) else None
         photo_url = photo if isinstance(photo, str) and photo.startswith("https://") else None
         marker_url = "https://uri.amap.com/marker?" + urlencode(

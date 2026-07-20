@@ -112,7 +112,13 @@ async def test_amap_converts_gps_and_normalizes_restaurant_fields() -> None:
     )
 
     places = await AmapPlacesProvider("private-amap-key").nearby(
-        PlaceQuery(latitude=31.2304, longitude=121.4737, radius_m=3_000, limit=10)
+        PlaceQuery(
+            latitude=31.2304,
+            longitude=121.4737,
+            radius_m=10_000,
+            limit=10,
+            keywords=("日本料理",),
+        )
     )
 
     assert convert.called and around.called
@@ -121,11 +127,13 @@ async def test_amap_converts_gps_and_normalizes_restaurant_fields() -> None:
     around_params = around.calls[0].request.url.params
     assert around_params["location"] == "121.474000,31.231000"
     assert around_params["types"] == "050000"
+    assert around_params["keywords"] == "日本料理"
+    assert around_params["radius"] == "10000"
     assert around_params["show_fields"] == "business,photos"
     assert places[0].model_dump() == {
         "id": "B0AMAP123",
         "name": "小杨生煎",
-        "category": "生煎",
+        "category": "生煎 · 餐饮服务;中餐厅;特色/地方风味餐厅",
         "distance_m": 128,
         "price_tier": 2,
         "rating": 4.7,

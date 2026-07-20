@@ -28,6 +28,22 @@ def test_source_ids_and_persistence_are_explicit() -> None:
     assert values[0].cuisine_tags == ("fujian",)
 
 
+def test_recognizes_japanese_from_full_amap_type_when_business_tag_is_generic() -> None:
+    value = Place(
+        id="J1",
+        name="寿司店",
+        category="寿司 · 餐饮服务;外国餐厅;日本料理",
+        distance_m=200,
+        open_state="unknown",
+        source_kind="amap_place",
+        attribution="高德地图",
+        latitude=24.48,
+        longitude=118.09,
+    )
+
+    assert normalize_places((value,))[0].cuisine_tags == ("japanese",)
+
+
 def test_deduplicates_same_name_within_eighty_metres() -> None:
     values = normalize_places((
         place("overture_place", "O1", "沙茶里", 240),

@@ -44,7 +44,7 @@ export async function startRestaurantRecommendation(
       budget_is_explicit: input.profile.budget_is_explicit,
       currency: input.locale === "en" ? "USD" : "CNY",
       preferred_cuisines: normalizeRestaurantCuisines(input.profile.preferred_cuisines),
-      max_distance_m: 3000,
+      max_distance_m: input.profile.preferred_cuisines.length > 0 ? 10000 : 3000,
     },
     history: { recent_cuisines: recentCuisines, cuisine_preferences: {} },
   });

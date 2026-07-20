@@ -171,7 +171,7 @@ export function parseRestaurantRecommendation(value: unknown): RestaurantRecomme
   for (let index = 1; index < trace.length; index += 1) {
     if (trace[index]!.survivor_count > trace[index - 1]!.survivor_count) throw new Error("Invalid trace counts");
   }
-  if (root.radius_m !== 3000) throw new Error("Invalid radius");
+  if (root.radius_m !== 3000 && root.radius_m !== 10000) throw new Error("Invalid radius");
   return {
     schema_version: root.schema_version,
     session_id: root.session_id,

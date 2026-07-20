@@ -66,7 +66,7 @@ class RestaurantProfile(StrictFrozenModel):
     budget_is_explicit: bool = False
     currency: Literal["CNY", "USD"] = "CNY"
     preferred_cuisines: tuple[NormalizedRestaurantCuisine, ...] = Field(default=(), max_length=8)
-    max_distance_m: Literal[3000] = 3000
+    max_distance_m: Literal[3000, 10000] = 3000
 
     @model_validator(mode="after")
     def explicit_budget_has_value(self) -> "RestaurantProfile":
@@ -119,7 +119,7 @@ class RestaurantRecommendResponse(StrictFrozenModel):
     selection_source: Literal["ai_rerank", "deterministic"]
     model_status: Literal["selected", "disabled", "timeout", "invalid", "error"]
     recommendation_mode: RecommendationMode
-    radius_m: Literal[3000]
+    radius_m: Literal[3000, 10000]
 
     @model_validator(mode="after")
     def trace_is_monotonic(self) -> "RestaurantRecommendResponse":

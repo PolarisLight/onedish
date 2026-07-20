@@ -139,9 +139,7 @@ def score_restaurants(
     eligible = active
     if request.profile.preferred_cuisines:
         preferred = set(request.profile.preferred_cuisines)
-        cuisine_matches = tuple(item for item in eligible if preferred & set(item.cuisine_tags))
-        if cuisine_matches:
-            eligible = cuisine_matches
+        eligible = tuple(item for item in eligible if preferred & set(item.cuisine_tags))
     if request.profile.budget_is_explicit:
         assert request.profile.budget_minor is not None
         budget_matches = tuple(

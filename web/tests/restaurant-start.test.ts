@@ -37,7 +37,7 @@ it("sends minimized context and creates an active session", async () => {
       budget_is_explicit: true,
       currency: "CNY",
       preferred_cuisines: ["fujian"],
-      max_distance_m: 3000,
+      max_distance_m: 10000,
     },
     history: expect.objectContaining({ recent_cuisines: { fujian: 1 } }),
   }));

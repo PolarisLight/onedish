@@ -16,6 +16,15 @@ from onedish_api.restaurants.normalizer import deduplicate, normalize_places
 from onedish_api.restaurants.scoring import recommendation_mode, score_restaurants
 
 
+CUISINE_SEARCH_KEYWORDS = {
+    "fujian": "福建菜",
+    "sichuan": "川菜",
+    "cantonese": "粤菜",
+    "japanese": "日本料理",
+    "western": "西餐",
+}
+
+
 class RestaurantDiscoveryUnavailable(RuntimeError):
     pass
 
@@ -36,8 +45,12 @@ class RestaurantRecommendationService:
         query = PlaceQuery(
             latitude=request.latitude,
             longitude=request.longitude,
-            radius_m=3000,
+            radius_m=request.profile.max_distance_m,
             limit=50,
+            keywords=tuple(
+                CUISINE_SEARCH_KEYWORDS[cuisine]
+                for cuisine in request.profile.preferred_cuisines
+            ),
         )
         results = await asyncio.gather(
             *(provider.nearby(query) for provider in self._providers),
@@ -78,5 +91,5 @@ class RestaurantRecommendationService:
             selection_source=selection_source,
             model_status=model_status,
             recommendation_mode=recommendation_mode(request),
-            radius_m=3000,
+            radius_m=request.profile.max_distance_m,
         )
